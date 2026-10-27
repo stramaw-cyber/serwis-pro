@@ -2,7 +2,7 @@ importScripts("https://www.gstatic.com/firebasejs/12.4.0/firebase-app-compat.js"
 importScripts("https://www.gstatic.com/firebasejs/12.4.0/firebase-messaging-compat.js");
 
 firebase.initializeApp({
-  apiKey: "AIzaSyAm5PrX7rfGU0stdq2mZ2phSjinL5VP8OA",
+  apiKey: "AIzaSyAm5PrX7rfGUQgtgq2mZ2nhSjjnL5VP8OA",
   authDomain: "serwis-pro-ecd90.firebaseapp.com",
   projectId: "serwis-pro-ecd90",
   storageBucket: "serwis-pro-ecd90.firebasestorage.app",
@@ -22,4 +22,3 @@ messaging.onBackgroundMessage((payload) => {
 
   self.registration.showNotification(title, options);
 });
-
