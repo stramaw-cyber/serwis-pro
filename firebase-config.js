@@ -1,13 +1,10 @@
-// Wklej tutaj konfigurację aplikacji Web z:
-// Firebase Console -> Project settings -> General -> Your apps -> Web app
 export const firebaseConfig = {
-  apiKey: "WKLEJ_API_KEY",
-  authDomain: "WKLEJ_PROJECT.firebaseapp.com",
-  projectId: "WKLEJ_PROJECT_ID",
-  storageBucket: "WKLEJ_PROJECT.firebasestorage.app",
-  messagingSenderId: "WKLEJ_SENDER_ID",
-  appId: "WKLEJ_APP_ID"
+apiKey: "AIzaSyAm5PrX7rfGU0stdq2mZ2phSjinL5VP8OA",
+authDomain: "serwis-pro-ecd90.firebaseapp.com",
+projectId: "serwis-pro-ecd90",
+storageBucket: "serwis-pro-ecd90.firebasestorage.app",
+messagingSenderId: "442263267918",
+appId: "1:442263267918:web:61127c949fa41c8f87f11f"
 };
 
-// Firebase Console -> Project settings -> Cloud Messaging -> Web Push certificates
 export const vapidKey = "WKLEJ_PUBLICZNY_KLUCZ_VAPID";
