@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#17365D">
+<link rel="manifest" href="manifest.json">
+<title>Serwisant PRO v5</title>
+<style>
+:root{--bg:#f3f6f9;--card:#fff;--nav:#17365D;--accent:#1F4E78;--muted:#6b7280;--danger:#b91c1c;--warn:#d97706;--ok:#15803d}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;background:var(--bg);color:#1f2937}
+header{position:sticky;top:0;z-index:20;background:var(--nav);color:#fff;padding:12px 14px;display:flex;align-items:center;gap:10px}
+header h1{margin:0;font-size:19px}.sub{font-size:11px;opacity:.8}.container{max-width:900px;margin:auto;padding:12px 12px 90px}
+.card{background:#fff;border-radius:14px;padding:14px;margin-bottom:10px;box-shadow:0 1px 4px #0001}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.stat{font-size:28px;font-weight:800}.label{font-size:12px;color:var(--muted)}.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+button{border:0;border-radius:10px;padding:10px 13px;background:var(--accent);color:#fff;font-weight:700}.secondary{background:#e7edf3;color:#263646}.danger{background:var(--danger)}
+input,select,textarea{width:100%;padding:11px;border:1px solid #cbd5e1;border-radius:9px;font-size:15px;background:#fff}label{display:block;font-size:12px;color:var(--muted);margin:8px 0 4px}
+.item{background:#fff;border-radius:12px;padding:12px;margin:8px 0;border-left:5px solid #94a3b8}.overdue{border-left-color:var(--danger)}.soon{border-left-color:var(--warn)}.okay{border-left-color:var(--ok)}
+.item h3{margin:0 0 4px;font-size:16px}.meta{font-size:13px;color:var(--muted);line-height:1.45}
+nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #ddd;display:grid;grid-template-columns:repeat(5,1fr)}
+nav button{background:transparent;color:#64748b;font-size:10px;padding:10px 2px}.page{display:none}.page.active{display:block}
+.hidden{display:none!important}.fab{position:fixed;right:18px;bottom:70px;width:54px;height:54px;border-radius:50%;font-size:26px;box-shadow:0 4px 14px #0003}
+.modal{position:fixed;inset:0;background:#0008;display:none;align-items:flex-end;z-index:50}.modal.show{display:flex}.sheet{background:#fff;width:100%;max-height:92vh;overflow:auto;border-radius:18px 18px 0 0;padding:15px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:9px}.badge{display:inline-block;padding:3px 8px;border-radius:999px;background:#eef2f5;font-size:11px}
+.okbox{background:#ecfdf5;border:1px solid #a7f3d0;border-radius:10px;padding:10px}.warnbox{background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;padding:10px}
+@media(min-width:700px){.grid{grid-template-columns:repeat(4,1fr)}.modal{align-items:center;justify-content:center}.sheet{max-width:650px;border-radius:18px}}
+</style>
+</head>
+<body>
+<header><div><h1>Serwisant PRO v5</h1><div class="sub">Firebase • synchronizacja • push</div></div><button id="logoutBtn" class="secondary hidden" style="margin-left:auto" onclick="logout()">Wyloguj</button></header>
+<div class="container">
+<section id="loginPage">
+  <div class="card">
+    <h2>Logowanie</h2>
+    <div id="configState" class="warnbox">Sprawdzam konfigurację Firebase…</div>
+    <label>E-mail</label><input id="email" type="email">
+    <label>Hasło</label><input id="password" type="password">
+    <div class="toolbar"><button onclick="login()">Zaloguj</button><button class="secondary" onclick="registerUser()">Utwórz konto</button></div>
+  </div>
+</section>
+
+<section id="app" class="hidden">
+  <section id="dashboard" class="page active">
+    <div class="grid">
+      <div class="card"><div class="label">Po terminie</div><div id="stOver" class="stat">0</div></div>
+      <div class="card"><div class="label">Do 30 dni</div><div id="stSoon" class="stat">0</div></div>
+      <div class="card"><div class="label">Klienci</div><div id="stClients" class="stat">0</div></div>
+      <div class="card"><div class="label">Urządzenia</div><div id="stDevices" class="stat">0</div></div>
+    </div>
+    <div class="card">
+      <h2>Powiadomienia push</h2>
+      <div id="pushState" class="meta">Nie skonfigurowano.</div>
+      <div class="toolbar"><button onclick="enablePush()">Włącz powiadomienia 30/14/7 dni</button></div>
+    </div>
+    <h2>Najbliższe przeglądy</h2><div id="upcoming"></div>
+  </section>
+
+  <section id="clients" class="page">
+    <input id="clientSearch" placeholder="Szukaj klienta..." oninput="renderClients()"><div id="clientList"></div>
+    <button class="fab" onclick="openClient()">+</button>
+  </section>
+
+  <section id="devices" class="page">
+    <input id="deviceSearch" placeholder="Szukaj urządzenia..." oninput="renderDevices()"><div id="deviceList"></div>
+    <button class="fab" onclick="openDevice()">+</button>
+  </section>
+
+  <section id="orders" class="page">
+    <input id="orderSearch" placeholder="Szukaj zlecenia..." oninput="renderOrders()"><div id="orderList"></div>
+    <button class="fab" onclick="openOrder()">+</button>
+  </section>
+
+  <section id="settings" class="page">
+    <div class="card"><h2>Chmura</h2><div class="okbox">Dane zapisują się w Firestore i synchronizują między zalogowanymi urządzeniami.</div></div>
+    <div class="card"><h2>ID użytkownika</h2><div id="uidBox" class="meta"></div></div>
+  </section>
+</section>
+</div>
+
+<nav id="nav" class="hidden">
+<button onclick="go('dashboard')">Pulpit</button><button onclick="go('clients')">Klienci</button><button onclick="go('devices')">Urządzenia</button><button onclick="go('orders')">Zlecenia</button><button onclick="go('settings')">Ustawienia</button>
+</nav>
+
+<div id="modal" class="modal" onclick="if(event.target===this)closeModal()"><div class="sheet">
+<div id="clientForm" class="hidden">
+<h2>Klient</h2><input id="cId" type="hidden"><label>Nazwa / imię</label><input id="cName"><label>Telefon</label><input id="cPhone"><label>Adres</label><input id="cAddress"><label>Miejscowość</label><input id="cCity"><label>Uwagi</label><textarea id="cNotes"></textarea>
+<div class="toolbar"><button onclick="saveClient()">Zapisz</button><button class="secondary" onclick="closeModal()">Anuluj</button></div>
+</div>
+<div id="deviceForm" class="hidden">
+<h2>Urządzenie</h2><input id="dId" type="hidden"><label>Klient</label><select id="dClient"></select><label>Kategoria</label><select id="dCategory"><option>Pompa ciepła</option><option>Klimatyzacja</option><option>Kocioł gazowy</option><option>Kocioł pelletowy</option><option>Rekuperacja</option><option>Instalacja gazowa</option><option>Instalacja elektryczna</option><option>Fotowoltaika</option><option>Alarm / SATEL</option><option>Automatyka</option><option>Uzdatnianie wody</option><option>Inne</option></select>
+<div class="row"><div><label>Producent</label><input id="dBrand"></div><div><label>Model</label><input id="dModel"></div></div><label>Nr seryjny</label><input id="dSerial">
+<div class="row"><div><label>Ostatni przegląd</label><input id="dLast" type="date"></div><div><label>Interwał mies.</label><input id="dInterval" type="number" value="12"></div></div>
+<label>Uwagi</label><textarea id="dNotes"></textarea><div class="toolbar"><button onclick="saveDevice()">Zapisz</button><button class="secondary" onclick="closeModal()">Anuluj</button></div>
+</div>
+<div id="orderForm" class="hidden">
+<h2>Zlecenie</h2><input id="oId" type="hidden"><label>Klient</label><select id="oClient"></select><label>Temat</label><input id="oTitle"><label>Opis</label><textarea id="oDesc"></textarea>
+<div class="row"><div><label>Status</label><select id="oStatus"><option>Do kontaktu</option><option>Umówione</option><option>W trakcie</option><option>Oczekiwanie na część</option><option>Wykonane</option><option>Do faktury</option><option>Zamknięte</option></select></div><div><label>Priorytet</label><select id="oPriority"><option>Normalny</option><option>Pilny</option><option>Awaria</option></select></div></div>
+<div class="row"><div><label>Data</label><input id="oDate" type="date"></div><div><label>Godzina</label><input id="oTime" type="time"></div></div>
+<div class="toolbar"><button onclick="saveOrder()">Zapisz</button><button class="secondary" onclick="closeModal()">Anuluj</button></div>
+</div>
+</div></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+import { getFirestore, collection, doc, addDoc, setDoc, getDocs, query, where, deleteDoc } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+import { getMessaging, getToken } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-messaging.js";
+import { firebaseConfig, vapidKey } from "./firebase-config.js";
+
+const q=id=>document.getElementById(id); let auth,db,messaging,user=null;
+let clients=[],devices=[],orders=[];
+function readyConfig(){return firebaseConfig && firebaseConfig.apiKey && !firebaseConfig.apiKey.includes("WKLEJ")}
+try{
+ const app=initializeApp(firebaseConfig); auth=getAuth(app); db=getFirestore(app); messaging=getMessaging(app);
+ q("configState").className="okbox"; q("configState").textContent="Firebase jest skonfigurowany.";
+ onAuthStateChanged(auth,async u=>{user=u;if(u){q("loginPage").classList.add("hidden");q("app").classList.remove("hidden");q("nav").classList.remove("hidden");q("logoutBtn").classList.remove("hidden");q("uidBox").textContent=u.uid;await loadAll()}else{q("loginPage").classList.remove("hidden");q("app").classList.add("hidden");q("nav").classList.add("hidden");q("logoutBtn").classList.add("hidden")}});
+}catch(e){q("configState").textContent="Najpierw uzupełnij plik firebase-config.js danymi z Firebase.";console.error(e)}
+
+window.login=async()=>{try{await signInWithEmailAndPassword(auth,q("email").value,q("password").value)}catch(e){alert(e.message)}}
+window.registerUser=async()=>{try{await createUserWithEmailAndPassword(auth,q("email").value,q("password").value)}catch(e){alert(e.message)}}
+window.logout=async()=>signOut(auth);
+window.go=(id)=>{document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));q(id).classList.add("active")}
+window.closeModal=()=>q("modal").classList.remove("show");
+function openForm(id){["clientForm","deviceForm","orderForm"].forEach(x=>q(x).classList.add("hidden"));q(id).classList.remove("hidden");q("modal").classList.add("show")}
+function addMonths(s,m){if(!s)return"";let d=new Date(s+"T12:00:00");d.setMonth(d.getMonth()+Number(m||12));return d.toISOString().slice(0,10)}
+function daysTo(s){if(!s)return 99999;let a=new Date();a.setHours(0,0,0,0);return Math.ceil((new Date(s+"T00:00:00")-a)/86400000)}
+function fmt(s){return s?new Date(s+"T12:00:00").toLocaleDateString("pl-PL"):"—"}
+function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
+async function loadCol(name){let snap=await getDocs(query(collection(db,name),where("ownerUid","==",user.uid)));return snap.docs.map(d=>({id:d.id,...d.data()}))}
+async function loadAll(){[clients,devices,orders]=await Promise.all([loadCol("clients"),loadCol("devices"),loadCol("orders")]);renderAll()}
+function renderAll(){renderDashboard();renderClients();renderDevices();renderOrders()}
+function renderDashboard(){let ns=devices.map(d=>daysTo(addMonths(d.last,d.interval)));q("stOver").textContent=ns.filter(n=>n<0).length;q("stSoon").textContent=ns.filter(n=>n>=0&&n<=30).length;q("stClients").textContent=clients.length;q("stDevices").textContent=devices.length;
+let arr=devices.map(d=>({d,next:addMonths(d.last,d.interval),n:daysTo(addMonths(d.last,d.interval))})).filter(x=>x.next).sort((a,b)=>a.n-b.n).slice(0,10);
+q("upcoming").innerHTML=arr.length?arr.map(x=>{let c=clients.find(z=>z.id===x.d.clientId);return `<div class="item ${x.n<0?'overdue':x.n<=30?'soon':'okay'}"><h3>${esc(c?.name||"Bez klienta")}</h3><div class="meta">${esc(x.d.category)} ${esc(x.d.brand)} ${esc(x.d.model)}<br>${fmt(x.next)} • ${x.n<0?Math.abs(x.n)+" dni po terminie":x.n+" dni"}</div></div>`}).join(""):'<div class="card">Brak terminów.</div>'}
+window.renderClients=()=>{let z=(q("clientSearch").value||"").toLowerCase();let a=clients.filter(c=>[c.name,c.phone,c.city].join(" ").toLowerCase().includes(z));q("clientList").innerHTML=a.map(c=>`<div class="item" onclick="openClient('${c.id}')"><h3>${esc(c.name)}</h3><div class="meta">${esc(c.phone||"")} • ${esc(c.city||"")}</div></div>`).join("")}
+window.renderDevices=()=>{let z=(q("deviceSearch").value||"").toLowerCase();let a=devices.filter(d=>[d.category,d.brand,d.model,d.serial].join(" ").toLowerCase().includes(z));q("deviceList").innerHTML=a.map(d=>{let c=clients.find(x=>x.id===d.clientId),next=addMonths(d.last,d.interval),n=daysTo(next);return `<div class="item ${n<0?'overdue':n<=30?'soon':'okay'}" onclick="openDevice('${d.id}')"><h3>${esc(d.category)} ${esc(d.brand)} ${esc(d.model)}</h3><div class="meta">${esc(c?.name||"")}<br>Następny: ${fmt(next)}</div></div>`}).join("")}
+window.renderOrders=()=>{let z=(q("orderSearch").value||"").toLowerCase();let a=orders.filter(o=>[o.title,o.desc,o.status].join(" ").toLowerCase().includes(z));q("orderList").innerHTML=a.map(o=>{let c=clients.find(x=>x.id===o.clientId);return `<div class="item" onclick="openOrder('${o.id}')"><h3>${esc(o.title)}</h3><div class="meta">${esc(c?.name||"")} • ${esc(o.status)} • ${fmt(o.date)} ${esc(o.time||"")}</div></div>`}).join("")}
+function fillClients(sel,val=""){sel.innerHTML='<option value="">— wybierz —</option>'+clients.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join("");sel.value=val}
+window.openClient=id=>{let c=clients.find(x=>x.id===id)||{};q("cId").value=c.id||"";q("cName").value=c.name||"";q("cPhone").value=c.phone||"";q("cAddress").value=c.address||"";q("cCity").value=c.city||"";q("cNotes").value=c.notes||"";openForm("clientForm")}
+window.saveClient=async()=>{let id=q("cId").value,data={ownerUid:user.uid,name:q("cName").value.trim(),phone:q("cPhone").value.trim(),address:q("cAddress").value.trim(),city:q("cCity").value.trim(),notes:q("cNotes").value.trim()};if(!data.name)return alert("Podaj nazwę klienta.");id?await setDoc(doc(db,"clients",id),data,{merge:true}):await addDoc(collection(db,"clients"),data);closeModal();await loadAll()}
+window.openDevice=id=>{let d=devices.find(x=>x.id===id)||{};q("dId").value=d.id||"";fillClients(q("dClient"),d.clientId||"");q("dCategory").value=d.category||"Pompa ciepła";q("dBrand").value=d.brand||"";q("dModel").value=d.model||"";q("dSerial").value=d.serial||"";q("dLast").value=d.last||"";q("dInterval").value=d.interval||12;q("dNotes").value=d.notes||"";openForm("deviceForm")}
+window.saveDevice=async()=>{let id=q("dId").value,data={ownerUid:user.uid,clientId:q("dClient").value,category:q("dCategory").value,brand:q("dBrand").value.trim(),model:q("dModel").value.trim(),serial:q("dSerial").value.trim(),last:q("dLast").value,interval:Number(q("dInterval").value||12),notes:q("dNotes").value.trim()};if(!data.clientId)return alert("Wybierz klienta.");id?await setDoc(doc(db,"devices",id),data,{merge:true}):await addDoc(collection(db,"devices"),data);closeModal();await loadAll()}
+window.openOrder=id=>{let o=orders.find(x=>x.id===id)||{};q("oId").value=o.id||"";fillClients(q("oClient"),o.clientId||"");q("oTitle").value=o.title||"";q("oDesc").value=o.desc||"";q("oStatus").value=o.status||"Do kontaktu";q("oPriority").value=o.priority||"Normalny";q("oDate").value=o.date||"";q("oTime").value=o.time||"";openForm("orderForm")}
+window.saveOrder=async()=>{let id=q("oId").value,data={ownerUid:user.uid,clientId:q("oClient").value,title:q("oTitle").value.trim(),desc:q("oDesc").value.trim(),status:q("oStatus").value,priority:q("oPriority").value,date:q("oDate").value,time:q("oTime").value};if(!data.clientId||!data.title)return alert("Wybierz klienta i wpisz temat.");id?await setDoc(doc(db,"orders",id),data,{merge:true}):await addDoc(collection(db,"orders"),data);closeModal();await loadAll()}
+window.enablePush=async()=>{try{const p=await Notification.requestPermission();if(p!=="granted")return alert("Brak zgody na powiadomienia.");const reg=await navigator.serviceWorker.register("./firebase-messaging-sw.js");const token=await getToken(messaging,{vapidKey,serviceWorkerRegistration:reg});await setDoc(doc(db,"pushTokens",user.uid),{ownerUid:user.uid,token,updatedAt:new Date().toISOString()},{merge:true});q("pushState").textContent="Powiadomienia push są aktywne na tym urządzeniu.";alert("Powiadomienia włączone.")}catch(e){console.error(e);alert("Nie udało się włączyć push. Sprawdź firebase-config.js i VAPID.")}}
+</script>
+</body>
+</html>

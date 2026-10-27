@@ -1,0 +1,10 @@
+{
+  "name": "Serwisant PRO v5",
+  "short_name": "Serwisant",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f3f6f9",
+  "theme_color": "#17365D",
+  "icons": [],
+  "scope": "./"
+}
