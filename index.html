@@ -81,7 +81,7 @@ nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
 import { getAuth,onAuthStateChanged,signInWithEmailAndPassword,createUserWithEmailAndPassword,signOut } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
-import { getFirestore,collection,doc,addDoc,setDoc,getDocs,query,where,getDoc } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+import { getFirestore,collection,doc,addDoc,setDoc,getDocs,query,where } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 import { getMessaging,getToken } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-messaging.js";
 import { firebaseConfig,vapidKey } from "./firebase-config.js";
 
@@ -101,8 +101,14 @@ window.registerUser=async()=>{try{await createUserWithEmailAndPassword(auth,q('e
 window.logout=()=>signOut(auth);
 async function loadCol(name){let s=await getDocs(query(collection(db,name),where('ownerUid','==',user.uid)));return s.docs.map(d=>({id:d.id,...d.data()}))}
 async function ensureDefaults(){
-  for(const [id,name] of DEFAULT_EMP){let ref=doc(db,'employees',`${user.uid}_${id}`),snap=await getDoc(ref);if(!snap.exists())await setDoc(ref,{ownerUid:user.uid,name,active:true,sort:id})}
-  for(const [id,name] of DEFAULT_VEH){let ref=doc(db,'vehicles',`${user.uid}_${id}`),snap=await getDoc(ref);if(!snap.exists())await setDoc(ref,{ownerUid:user.uid,name,active:true,sort:id})}
+  for(const [id,name] of DEFAULT_EMP){
+    const ref=doc(db,'employees',`${user.uid}_${id}`);
+    await setDoc(ref,{ownerUid:user.uid,name,active:true,sort:id},{merge:true});
+  }
+  for(const [id,name] of DEFAULT_VEH){
+    const ref=doc(db,'vehicles',`${user.uid}_${id}`);
+    await setDoc(ref,{ownerUid:user.uid,name,active:true,sort:id},{merge:true});
+  }
 }
 async function loadAll(){await ensureDefaults();[clients,devices,orders,employees,vehicles,worklogs,trips,fuel]=await Promise.all(['clients','devices','orders','employees','vehicles','worklogs','trips','fuel'].map(loadCol));renderAll()}
 onAuthStateChanged(auth,async u=>{user=u;if(u){q('loginPage').classList.add('hidden');q('app').classList.remove('hidden');q('nav').classList.remove('hidden');q('logoutBtn').classList.remove('hidden');q('uidBox').textContent=u.uid;q('configState').textContent='Firebase połączony.';await loadAll()}else{q('loginPage').classList.remove('hidden');q('app').classList.add('hidden');q('nav').classList.add('hidden');q('logoutBtn').classList.add('hidden')}})
