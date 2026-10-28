@@ -63,20 +63,24 @@ nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid 
 
 <section id="inspections" class="page">
 <div class="grid">
-  <div class="card"><div class="label">Do zrobienia</div><div id="iTodo" class="stat">0</div></div>
-  <div class="card"><div class="label">Umówione</div><div id="iScheduled" class="stat">0</div></div>
+  <div class="card"><div class="label">Zaplanowane</div><div id="iPlanned" class="stat">0</div></div>
+  <div class="card"><div class="label">W trakcie</div><div id="iInProgress" class="stat">0</div></div>
   <div class="card"><div class="label">Zrobione w miesiącu</div><div id="iDoneMonth" class="stat">0</div></div>
-  <div class="card"><div class="label">Przyszłe</div><div id="iFuture" class="stat">0</div></div>
 </div>
-<div class="toolbar">
-  <select id="inspectionFilter" onchange="renderInspections()" style="max-width:260px">
-    <option value="">Wszystkie</option>
-    <option value="Do zrobienia">Do zrobienia</option>
-    <option value="Umówione">Umówione</option>
-    <option value="Zrobione">Zrobione</option>
-    <option value="Przyszłe">Przyszłe</option>
-  </select>
+
+<div class="card">
+  <label>Wyszukaj przegląd</label>
+  <input id="inspectionSearch" placeholder="Klient / urządzenie / numer seryjny" oninput="renderInspections()">
+  <div class="toolbar" style="margin-top:10px">
+    <select id="inspectionFilter" onchange="renderInspections()" style="max-width:260px">
+      <option value="">Wszystkie statusy</option>
+      <option value="Zaplanowany">Zaplanowany</option>
+      <option value="W trakcie">W trakcie</option>
+      <option value="Zrobiony">Zrobiony</option>
+    </select>
+  </div>
 </div>
+
 <div id="inspectionList"></div>
 <button class="fab" onclick="openInspection()">+</button>
 </section>
@@ -100,15 +104,62 @@ nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid 
 <div id="orderForm" class="form hidden"><h2>Zlecenie</h2><input id="oId" type="hidden"><label>Klient</label><select id="oClient"></select><label>Temat</label><input id="oTitle"><label>Opis</label><textarea id="oDesc"></textarea><div class="row"><div><label>Status</label><select id="oStatus"><option>Do kontaktu</option><option>Umówione</option><option>W trakcie</option><option>Oczekiwanie na część</option><option>Wykonane</option><option>Do faktury</option><option>Zamknięte</option></select></div><div><label>Priorytet</label><select id="oPriority"><option>Normalny</option><option>Pilny</option><option>Awaria</option></select></div></div><div class="row"><div><label>Data</label><input id="oDate" type="date"></div><div><label>Godzina</label><input id="oTime" type="time"></div></div><label>Przypisani pracownicy</label><div id="oEmployees"></div><div class="toolbar"><button onclick="saveOrder()">Zapisz</button><button class="secondary" onclick="closeModal()">Anuluj</button></div></div>
 
 <div id="inspectionForm" class="form hidden">
-<h2>Przegląd</h2><input id="iId" type="hidden">
-<label>Klient</label><select id="iClient" onchange="refreshInspectionDevices()"></select>
-<label>Urządzenie</label><select id="iDevice"></select>
-<label>Rodzaj przeglądu</label><input id="iType" placeholder="np. przegląd roczny pompy ciepła">
-<div class="row">
-  <div><label>Planowana data</label><input id="iDate" type="date"></div>
-  <div><label>Status</label><select id="iStatus"><option>Do zrobienia</option><option>Umówione</option><option>Zrobione</option></select></div>
+<h2>Przegląd</h2>
+<input id="iId" type="hidden">
+
+<label>Klient</label>
+<select id="iClient" onchange="inspectionClientChanged()"></select>
+<label style="display:flex;gap:8px;align-items:center">
+  <input id="iManualClientEnabled" type="checkbox" style="width:auto" onchange="toggleManualClient()"> Wpisz klienta ręcznie
+</label>
+<div id="iManualClientWrap" class="hidden">
+  <input id="iClientManual" placeholder="Imię i nazwisko / firma">
 </div>
-<label>Pracownik</label><select id="iEmployee"></select>
+
+<label>Urządzenie</label>
+<select id="iDevice" onchange="inspectionDeviceChanged()"></select>
+<label style="display:flex;gap:8px;align-items:center">
+  <input id="iManualDeviceEnabled" type="checkbox" style="width:auto" onchange="toggleManualDevice()"> Wpisz urządzenie ręcznie
+</label>
+<div id="iManualDeviceWrap" class="hidden">
+  <input id="iDeviceManual" placeholder="np. Gree Versati 12 kW">
+</div>
+
+<label>Numer seryjny urządzenia</label>
+<input id="iSerial" placeholder="np. GR12-458721">
+
+<label>Rodzaj przeglądu</label>
+<input id="iType" placeholder="np. przegląd roczny pompy ciepła">
+
+<div class="row">
+  <div>
+    <label>Planowana data</label>
+    <input id="iDate" type="date">
+  </div>
+  <div>
+    <label>Status</label>
+    <select id="iStatus" onchange="inspectionStatusChanged()">
+      <option value="Zaplanowany">Zaplanowany</option>
+      <option value="W trakcie">W trakcie</option>
+      <option value="Zrobiony">Zrobiony</option>
+    </select>
+  </div>
+</div>
+
+<div class="row">
+  <div>
+    <label>Data rozpoczęcia</label>
+    <input id="iStartedDate" type="date">
+  </div>
+  <div>
+    <label>Data wykonania</label>
+    <input id="iCompletedDate" type="date">
+  </div>
+</div>
+
+<label>Pracownik</label>
+<select id="iEmployee"></select>
+
 <label>Interwał następnego przeglądu</label>
 <select id="iIntervalPreset" onchange="toggleCustomInterval()">
   <option value="1">1 miesiąc</option>
@@ -118,18 +169,28 @@ nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid 
   <option value="24">24 miesiące</option>
   <option value="custom">Własny interwał</option>
 </select>
+
 <div id="customIntervalWrap" class="hidden">
-  <label>Własny interwał (miesiące)</label><input id="iCustomInterval" type="number" min="1" value="12">
+  <label>Własny interwał (miesiące)</label>
+  <input id="iCustomInterval" type="number" min="1" value="12">
 </div>
-<label style="display:flex;gap:8px;align-items:center"><input id="iAutoNext" type="checkbox" style="width:auto" checked> Automatycznie utwórz następny przegląd po oznaczeniu jako zrobiony</label>
-<label>Uwagi</label><textarea id="iNotes" rows="3"></textarea>
+
+<label style="display:flex;gap:8px;align-items:center">
+  <input id="iAutoNext" type="checkbox" style="width:auto" checked>
+  Automatycznie utwórz następny przegląd po oznaczeniu jako zrobiony
+</label>
+
+<label>Uwagi</label>
+<textarea id="iNotes" rows="3"></textarea>
+
 <div class="toolbar">
   <button onclick="saveInspection()">Zapisz</button>
-  <button id="markDoneBtn" class="ok hidden" onclick="markInspectionDone()">Oznacz jako zrobione</button>
+  <button id="markDoneBtn" class="ok hidden" onclick="markInspectionDone()">Oznacz jako zrobiony</button>
   <button class="secondary" onclick="closeModal()">Anuluj</button>
   <button id="deleteInspectionBtn" class="danger hidden" onclick="deleteInspection()">Usuń</button>
 </div>
 </div>
+
 <div id="employeeForm" class="form hidden">
 <h2>Pracownik</h2><input id="eId" type="hidden">
 <label>Imię / nazwa</label><input id="eName">
@@ -188,6 +249,7 @@ window.openOrder=id=>{let o=orders.find(x=>x.id===id)||{employees:[]};q('oId').v
 window.saveOrder=async()=>{let id=q('oId').value,data={ownerUid:user.uid,clientId:q('oClient').value,title:q('oTitle').value.trim(),desc:q('oDesc').value.trim(),status:q('oStatus').value,priority:q('oPriority').value,date:q('oDate').value,time:q('oTime').value,employees:[...document.querySelectorAll('[data-oe]:checked')].map(x=>x.dataset.oe)};if(!data.clientId||!data.title)return alert('Wybierz klienta i temat.');id?await setDoc(doc(db,'orders',id),data,{merge:true}):await addDoc(collection(db,'orders'),data);closeModal();await loadAll()}
 
 
+
 function addMonthsDate(s,m){
   if(!s)return '';
   let d=new Date(s+'T12:00:00');
@@ -202,112 +264,227 @@ function inspectionInterval(){
 window.toggleCustomInterval=()=>{
   q('customIntervalWrap').classList.toggle('hidden',q('iIntervalPreset').value!=='custom');
 }
+window.toggleManualClient=()=>{
+  let on=q('iManualClientEnabled').checked;
+  q('iManualClientWrap').classList.toggle('hidden',!on);
+  q('iClient').disabled=on;
+}
+window.toggleManualDevice=()=>{
+  let on=q('iManualDeviceEnabled').checked;
+  q('iManualDeviceWrap').classList.toggle('hidden',!on);
+  q('iDevice').disabled=on;
+}
+window.inspectionClientChanged=()=>{
+  refreshInspectionDevices();
+}
+window.inspectionDeviceChanged=()=>{
+  let d=devices.find(x=>x.id===q('iDevice').value);
+  if(d){
+    q('iSerial').value=d.serial||d.serialNumber||q('iSerial').value||'';
+  }
+}
+window.inspectionStatusChanged=()=>{
+  let st=q('iStatus').value;
+  if(st==='W trakcie' && !q('iStartedDate').value) q('iStartedDate').value=today();
+  if(st==='Zrobiony' && !q('iCompletedDate').value) q('iCompletedDate').value=today();
+}
 window.refreshInspectionDevices=()=>{
   let cid=q('iClient').value;
   let arr=devices.filter(d=>d.clientId===cid);
-  fill(q('iDevice'),arr.map(d=>({...d,name:`${d.category||''} ${d.brand||''} ${d.model||''}`.trim()})),q('iDevice').value);
+  fill(q('iDevice'),arr.map(d=>({...d,name:`${d.category||''} ${d.brand||''} ${d.model||''}`.trim()||'Urządzenie'})),q('iDevice').value);
+  inspectionDeviceChanged();
 }
 window.openInspection=id=>{
   let i=inspections.find(x=>x.id===id)||{};
+
   q('iId').value=i.id||'';
   fill(q('iClient'),clients,i.clientId||'');
-  let devs=devices.filter(d=>!i.clientId||d.clientId===i.clientId).map(d=>({...d,name:`${d.category||''} ${d.brand||''} ${d.model||''}`.trim()}));
+
+  q('iManualClientEnabled').checked=!!i.clientManual;
+  q('iClientManual').value=i.clientManual||'';
+  toggleManualClient();
+
+  let devs=devices
+    .filter(d=>!i.clientId||d.clientId===i.clientId)
+    .map(d=>({...d,name:`${d.category||''} ${d.brand||''} ${d.model||''}`.trim()||'Urządzenie'}));
   fill(q('iDevice'),devs,i.deviceId||'');
+
+  q('iManualDeviceEnabled').checked=!!i.deviceManual;
+  q('iDeviceManual').value=i.deviceManual||'';
+  toggleManualDevice();
+
+  q('iSerial').value=i.serial||'';
   q('iType').value=i.type||'Przegląd';
   q('iDate').value=i.date||today();
-  q('iStatus').value=i.status||'Do zrobienia';
+  q('iStatus').value=i.status||'Zaplanowany';
+  q('iStartedDate').value=i.startedDate||'';
+  q('iCompletedDate').value=i.completedDate||'';
   fill(q('iEmployee'),employees,i.employeeId||'');
+
   let inter=Number(i.intervalMonths||12);
-  if([1,3,6,12,24].includes(inter)){q('iIntervalPreset').value=String(inter);q('iCustomInterval').value=inter;}
-  else{q('iIntervalPreset').value='custom';q('iCustomInterval').value=inter||12;}
+  if([1,3,6,12,24].includes(inter)){
+    q('iIntervalPreset').value=String(inter);
+    q('iCustomInterval').value=inter;
+  }else{
+    q('iIntervalPreset').value='custom';
+    q('iCustomInterval').value=inter||12;
+  }
+
   q('iAutoNext').checked=i.autoNext!==false;
   q('iNotes').value=i.notes||'';
   toggleCustomInterval();
-  q('markDoneBtn').classList.toggle('hidden',!i.id||i.status==='Zrobione');
+
+  q('markDoneBtn').classList.toggle('hidden',!i.id||i.status==='Zrobiony');
   q('deleteInspectionBtn').classList.toggle('hidden',!i.id);
   openForm('inspectionForm');
 }
 window.saveInspection=async()=>{
   let id=q('iId').value;
+  let manualClient=q('iManualClientEnabled').checked;
+  let manualDevice=q('iManualDeviceEnabled').checked;
+
   let data={
     ownerUid:user.uid,
-    clientId:q('iClient').value,
-    deviceId:q('iDevice').value,
+    clientId:manualClient?'':q('iClient').value,
+    clientManual:manualClient?q('iClientManual').value.trim():'',
+    deviceId:manualDevice?'':q('iDevice').value,
+    deviceManual:manualDevice?q('iDeviceManual').value.trim():'',
+    serial:q('iSerial').value.trim(),
     type:q('iType').value.trim()||'Przegląd',
     date:q('iDate').value,
     status:q('iStatus').value,
+    startedDate:q('iStartedDate').value,
+    completedDate:q('iCompletedDate').value,
     employeeId:q('iEmployee').value,
     intervalMonths:inspectionInterval(),
     autoNext:q('iAutoNext').checked,
-    notes:q('iNotes').value.trim(),
-    completedDate:q('iStatus').value==='Zrobione' ? (inspections.find(x=>x.id===id)?.completedDate||today()) : ''
+    notes:q('iNotes').value.trim()
   };
-  if(!data.clientId)return alert('Wybierz klienta.');
-  if(!data.date)return alert('Podaj datę przeglądu.');
+
+  if(!data.clientId && !data.clientManual)return alert('Wybierz klienta albo wpisz klienta ręcznie.');
+  if(!data.deviceId && !data.deviceManual)return alert('Wybierz urządzenie albo wpisz urządzenie ręcznie.');
+  if(!data.date)return alert('Podaj planowaną datę przeglądu.');
+
+  if(data.status==='W trakcie' && !data.startedDate) data.startedDate=today();
+  if(data.status==='Zrobiony' && !data.completedDate) data.completedDate=today();
+
   if(id) await setDoc(doc(db,'inspections',id),data,{merge:true});
   else await addDoc(collection(db,'inspections'),data);
-  closeModal(); await loadAll();
+
+  closeModal();
+  await loadAll();
 }
 window.markInspectionDone=async()=>{
   let id=q('iId').value;
   let current=inspections.find(x=>x.id===id);
   if(!current)return;
+
   let inter=inspectionInterval();
   let autoNext=q('iAutoNext').checked;
+  let completed=today();
+
   await setDoc(doc(db,'inspections',id),{
     ownerUid:user.uid,
-    status:'Zrobione',
-    completedDate:today(),
+    status:'Zrobiony',
+    completedDate:completed,
     intervalMonths:inter,
     autoNext:autoNext
   },{merge:true});
+
   if(autoNext){
     let nextDate=addMonthsDate(q('iDate').value||current.date,inter);
     await addDoc(collection(db,'inspections'),{
       ownerUid:user.uid,
-      clientId:q('iClient').value||current.clientId,
-      deviceId:q('iDevice').value||current.deviceId||'',
+      clientId:q('iManualClientEnabled').checked?'':(q('iClient').value||current.clientId||''),
+      clientManual:q('iManualClientEnabled').checked?q('iClientManual').value.trim():(current.clientManual||''),
+      deviceId:q('iManualDeviceEnabled').checked?'':(q('iDevice').value||current.deviceId||''),
+      deviceManual:q('iManualDeviceEnabled').checked?q('iDeviceManual').value.trim():(current.deviceManual||''),
+      serial:q('iSerial').value.trim()||current.serial||'',
       type:q('iType').value.trim()||current.type||'Przegląd',
       date:nextDate,
-      status:'Przyszłe',
+      status:'Zaplanowany',
+      startedDate:'',
+      completedDate:'',
       employeeId:q('iEmployee').value||current.employeeId||'',
       intervalMonths:inter,
       autoNext:autoNext,
-      notes:'Automatycznie utworzony po wykonaniu poprzedniego przeglądu.',
-      completedDate:''
+      notes:'Automatycznie utworzony po wykonaniu poprzedniego przeglądu.'
     });
   }
-  closeModal(); await loadAll();
+
+  closeModal();
+  await loadAll();
 }
 window.deleteInspection=async()=>{
   let id=q('iId').value;
   if(!id)return;
   if(!confirm('Na pewno usunąć ten przegląd?'))return;
   await deleteDoc(doc(db,'inspections',id));
-  closeModal(); await loadAll();
+  closeModal();
+  await loadAll();
+}
+function inspectionClientName(i){
+  return i.clientManual || clients.find(x=>x.id===i.clientId)?.name || 'Brak klienta';
+}
+function inspectionDeviceName(i){
+  if(i.deviceManual)return i.deviceManual;
+  let d=devices.find(x=>x.id===i.deviceId);
+  return d?`${d.category||''} ${d.brand||''} ${d.model||''}`.trim():'Brak urządzenia';
+}
+function inspectionSerial(i){
+  if(i.serial)return i.serial;
+  let d=devices.find(x=>x.id===i.deviceId);
+  return d?.serial||d?.serialNumber||'';
 }
 function renderInspections(){
   let filter=q('inspectionFilter')?.value||'';
-  let now=today();
+  let search=(q('inspectionSearch')?.value||'').trim().toLowerCase();
   let thisM=month();
-  q('iTodo').textContent=inspections.filter(i=>i.status==='Do zrobienia'||(i.status!=='Zrobione'&&i.date<now)).length;
-  q('iScheduled').textContent=inspections.filter(i=>i.status==='Umówione').length;
-  q('iDoneMonth').textContent=inspections.filter(i=>i.status==='Zrobione'&&(i.completedDate||'').startsWith(thisM)).length;
-  q('iFuture').textContent=inspections.filter(i=>i.status==='Przyszłe'||(i.status!=='Zrobione'&&i.date>now)).length;
+
+  q('iPlanned').textContent=inspections.filter(i=>i.status==='Zaplanowany').length;
+  q('iInProgress').textContent=inspections.filter(i=>i.status==='W trakcie').length;
+  q('iDoneMonth').textContent=inspections.filter(i=>i.status==='Zrobiony'&&(i.completedDate||'').startsWith(thisM)).length;
+
   let arr=[...inspections].sort((a,b)=>(a.date||'9999').localeCompare(b.date||'9999'));
-  if(filter) arr=arr.filter(i=>i.status===filter || (filter==='Przyszłe'&&i.status!=='Zrobione'&&i.date>now));
+
+  if(filter) arr=arr.filter(i=>i.status===filter);
+
+  if(search){
+    arr=arr.filter(i=>{
+      let hay=[
+        inspectionClientName(i),
+        inspectionDeviceName(i),
+        inspectionSerial(i),
+        i.type||'',
+        i.notes||''
+      ].join(' ').toLowerCase();
+      return hay.includes(search);
+    });
+  }
+
   q('inspectionList').innerHTML=arr.length?arr.map(i=>{
-    let c=clients.find(x=>x.id===i.clientId),d=devices.find(x=>x.id===i.deviceId),e=employees.find(x=>x.id===i.employeeId);
-    let overdue=i.status!=='Zrobione'&&i.date<now;
-    let klass=i.status==='Zrobione'?'purple':overdue?'danger':i.status==='Umówione'?'info':'warn';
+    let c=inspectionClientName(i);
+    let d=inspectionDeviceName(i);
+    let s=inspectionSerial(i);
+    let e=employees.find(x=>x.id===i.employeeId);
+
+    let klass=i.status==='Zrobiony'?'purple':i.status==='W trakcie'?'warn':'info';
+
     return `<div class="item ${klass}" onclick="openInspection('${i.id}')">
-      <h3>${esc(i.type||'Przegląd')} — ${esc(c?.name||'')}</h3>
-      <div class="meta">${fmt(i.date)} • ${esc(i.status)}${overdue?' • PO TERMINIE':''}<br>
-      ${d?`${esc(d.category||'')} ${esc(d.brand||'')} ${esc(d.model||'')}`:'Brak urządzenia'}${e?`<br>Pracownik: ${esc(e.name)}`:''}<br>
-      Interwał: ${Number(i.intervalMonths||12)} mies.</div>
+      <h3>${esc(c)}</h3>
+      <div class="meta">
+        <b>${esc(d)}</b>${s?`<br>Nr seryjny: <b>${esc(s)}</b>`:''}
+        <br>Status: <b>${esc(i.status||'Zaplanowany')}</b>
+        <br>Termin: ${fmt(i.date)}
+        ${i.startedDate?`<br>Rozpoczęto: ${fmt(i.startedDate)}`:''}
+        ${i.completedDate?`<br>Wykonano: ${fmt(i.completedDate)}`:''}
+        ${e?`<br>Pracownik: ${esc(e.name)}`:''}
+        <br>Interwał: ${Number(i.intervalMonths||12)} mies.
+      </div>
     </div>`;
   }).join(''):'<div class="empty">Brak przeglądów.</div>';
 }
+
 
 window.openEmployee=id=>{
   let e=employees.find(x=>x.id===id)||{};
