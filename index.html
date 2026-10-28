@@ -50,7 +50,18 @@ nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid 
 
 <section id="orders" class="page"><input id="orderSearch" class="search" placeholder="Szukaj zlecenia..." oninput="renderOrders()"><div id="orderList"></div><button class="fab" onclick="openOrder()">+</button></section>
 
-<section id="employees" class="page"><div class="card"><h2>Pracownicy</h2><div id="employeeCards"></div></div><h2>Ewidencja czasu pracy</h2><div id="workList"></div><button class="fab" onclick="openWork()">+</button></section>
+<section id="employees" class="page">
+<div class="card">
+  <div class="toolbar" style="justify-content:space-between;align-items:center">
+    <h2 style="margin:0">Pracownicy</h2>
+    <button onclick="openEmployee()">+ Dodaj pracownika</button>
+  </div>
+  <div id="employeeCards"></div>
+</div>
+<h2>Ewidencja czasu pracy</h2>
+<div id="workList"></div>
+<button class="fab" onclick="openWork()">+</button>
+</section>
 
 <section id="vehicles" class="page"><div class="grid"><div class="card"><h3>Ducato</h3><div id="ducatoStats" class="meta"></div></div><div class="card"><h3>Doblo</h3><div id="dobloStats" class="meta"></div></div></div><h2>Przejazdy</h2><div id="tripList"></div><h2>Tankowania</h2><div id="fuelList"></div><div class="toolbar"><button onclick="openTrip()">+ Przejazd</button><button class="purpleBtn" onclick="openFuel()">+ Tankowanie</button></div></section>
 
@@ -70,6 +81,15 @@ nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid 
 
 <div id="orderForm" class="form hidden"><h2>Zlecenie</h2><input id="oId" type="hidden"><label>Klient</label><select id="oClient"></select><label>Temat</label><input id="oTitle"><label>Opis</label><textarea id="oDesc"></textarea><div class="row"><div><label>Status</label><select id="oStatus"><option>Do kontaktu</option><option>Umówione</option><option>W trakcie</option><option>Oczekiwanie na część</option><option>Wykonane</option><option>Do faktury</option><option>Zamknięte</option></select></div><div><label>Priorytet</label><select id="oPriority"><option>Normalny</option><option>Pilny</option><option>Awaria</option></select></div></div><div class="row"><div><label>Data</label><input id="oDate" type="date"></div><div><label>Godzina</label><input id="oTime" type="time"></div></div><label>Przypisani pracownicy</label><div id="oEmployees"></div><div class="toolbar"><button onclick="saveOrder()">Zapisz</button><button class="secondary" onclick="closeModal()">Anuluj</button></div></div>
 
+<div id="employeeForm" class="form hidden">
+<h2>Pracownik</h2><input id="eId" type="hidden">
+<label>Imię / nazwa</label><input id="eName">
+<div class="toolbar">
+  <button onclick="saveEmployee()">Zapisz</button>
+  <button class="secondary" onclick="closeModal()">Anuluj</button>
+  <button id="deleteEmployeeBtn" class="danger hidden" onclick="deleteEmployee()">Usuń pracownika</button>
+</div>
+</div>
 <div id="workForm" class="form hidden"><h2>Czas pracy</h2><input id="wId" type="hidden"><label>Pracownik</label><select id="wEmployee"></select><div class="row"><div><label>Data</label><input id="wDate" type="date"></div><div><label>Przerwa min</label><input id="wBreak" type="number" value="0"></div></div><div class="row"><div><label>Start</label><input id="wStart" type="time"></div><div><label>Koniec</label><input id="wEnd" type="time"></div></div><label>Klient / miejsce pracy</label><input id="wPlace"><label>Zlecenie</label><select id="wOrder"></select><label>Co robiliśmy</label><textarea id="wTask"></textarea><div class="toolbar"><button onclick="saveWork()">Zapisz</button><button class="secondary" onclick="closeModal()">Anuluj</button></div></div>
 
 <div id="tripForm" class="form hidden"><h2>Przejazd</h2><input id="tId" type="hidden"><label>Samochód</label><select id="tVehicle"></select><label>Kierowca</label><select id="tDriver"></select><div class="row"><div><label>Data</label><input id="tDate" type="date"></div><div><label>Cel / klient</label><input id="tPurpose"></div></div><label>Trasa</label><input id="tRoute"><div class="row"><div><label>Licznik początkowy</label><input id="tStartKm" type="number"></div><div><label>Licznik końcowy</label><input id="tEndKm" type="number"></div></div><div class="toolbar"><button onclick="saveTrip()">Zapisz</button><button class="secondary" onclick="closeModal()">Anuluj</button></div></div>
@@ -81,7 +101,7 @@ nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
 import { getAuth,onAuthStateChanged,signInWithEmailAndPassword,createUserWithEmailAndPassword,signOut } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
-import { getFirestore,collection,doc,addDoc,setDoc,getDocs,query,where } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+import { getFirestore,collection,doc,addDoc,setDoc,getDocs,query,where,deleteDoc } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 import { getMessaging,getToken } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-messaging.js";
 import { firebaseConfig,vapidKey } from "./firebase-config.js";
 
@@ -117,6 +137,39 @@ window.openClient=id=>{let c=clients.find(x=>x.id===id)||{};q('cId').value=c.id|
 window.saveClient=async()=>{let id=q('cId').value,data={ownerUid:user.uid,name:q('cName').value.trim(),phone:q('cPhone').value.trim(),address:q('cAddress').value.trim(),city:q('cCity').value.trim(),notes:q('cNotes').value.trim()};if(!data.name)return alert('Podaj klienta.');id?await setDoc(doc(db,'clients',id),data,{merge:true}):await addDoc(collection(db,'clients'),data);closeModal();await loadAll()}
 window.openOrder=id=>{let o=orders.find(x=>x.id===id)||{employees:[]};q('oId').value=o.id||'';fill(q('oClient'),clients,o.clientId||'');q('oTitle').value=o.title||'';q('oDesc').value=o.desc||'';q('oStatus').value=o.status||'Do kontaktu';q('oPriority').value=o.priority||'Normalny';q('oDate').value=o.date||today();q('oTime').value=o.time||'';q('oEmployees').innerHTML=employees.map(e=>`<label style="display:flex;gap:8px;align-items:center"><input style="width:auto" type="checkbox" data-oe="${e.id}" ${o.employees?.includes(e.id)?'checked':''}> ${esc(e.name)}</label>`).join('');openForm('orderForm')}
 window.saveOrder=async()=>{let id=q('oId').value,data={ownerUid:user.uid,clientId:q('oClient').value,title:q('oTitle').value.trim(),desc:q('oDesc').value.trim(),status:q('oStatus').value,priority:q('oPriority').value,date:q('oDate').value,time:q('oTime').value,employees:[...document.querySelectorAll('[data-oe]:checked')].map(x=>x.dataset.oe)};if(!data.clientId||!data.title)return alert('Wybierz klienta i temat.');id?await setDoc(doc(db,'orders',id),data,{merge:true}):await addDoc(collection(db,'orders'),data);closeModal();await loadAll()}
+
+window.openEmployee=id=>{
+  let e=employees.find(x=>x.id===id)||{};
+  q('eId').value=e.id||'';
+  q('eName').value=e.name||'';
+  q('deleteEmployeeBtn').classList.toggle('hidden',!e.id);
+  openForm('employeeForm');
+}
+window.saveEmployee=async()=>{
+  let id=q('eId').value;
+  let name=q('eName').value.trim();
+  if(!name)return alert('Podaj imię pracownika.');
+  let data={ownerUid:user.uid,name,active:true,sort:name.toLowerCase()};
+  if(id) await setDoc(doc(db,'employees',id),data,{merge:true});
+  else await addDoc(collection(db,'employees'),data);
+  closeModal();
+  await loadAll();
+}
+window.deleteEmployee=async()=>{
+  let id=q('eId').value;
+  if(!id)return;
+  let linkedWork=worklogs.some(w=>w.employeeId===id);
+  let linkedTrips=trips.some(t=>t.driverId===id);
+  let linkedFuel=fuel.some(f=>f.employeeId===id);
+  if(linkedWork||linkedTrips||linkedFuel){
+    return alert('Nie można usunąć pracownika, ponieważ ma już wpisy czasu pracy, przejazdy lub tankowania.');
+  }
+  if(!confirm('Na pewno usunąć tego pracownika?'))return;
+  await deleteDoc(doc(db,'employees',id));
+  closeModal();
+  await loadAll();
+}
+
 window.openWork=id=>{let w=worklogs.find(x=>x.id===id)||{};q('wId').value=w.id||'';fill(q('wEmployee'),employees,w.employeeId||'');q('wDate').value=w.date||today();q('wBreak').value=w.breakMin||0;q('wStart').value=w.start||'07:00';q('wEnd').value=w.end||'15:00';q('wPlace').value=w.place||'';fill(q('wOrder'),orders,w.orderId||'');q('wTask').value=w.task||'';openForm('workForm')}
 window.saveWork=async()=>{let id=q('wId').value,data={ownerUid:user.uid,employeeId:q('wEmployee').value,date:q('wDate').value,breakMin:Number(q('wBreak').value||0),start:q('wStart').value,end:q('wEnd').value,place:q('wPlace').value.trim(),orderId:q('wOrder').value,task:q('wTask').value.trim()};if(!data.employeeId)return alert('Wybierz pracownika.');id?await setDoc(doc(db,'worklogs',id),data,{merge:true}):await addDoc(collection(db,'worklogs'),data);closeModal();await loadAll()}
 window.openTrip=id=>{let t=trips.find(x=>x.id===id)||{};q('tId').value=t.id||'';fill(q('tVehicle'),vehicles,t.vehicleId||'');fill(q('tDriver'),employees,t.driverId||'');q('tDate').value=t.date||today();q('tPurpose').value=t.purpose||'';q('tRoute').value=t.route||'';q('tStartKm').value=t.startKm||'';q('tEndKm').value=t.endKm||'';openForm('tripForm')}
@@ -126,7 +179,7 @@ window.saveFuel=async()=>{let id=q('fId').value,data={ownerUid:user.uid,vehicleI
 window.enablePush=async()=>{try{let p=await Notification.requestPermission();if(p!=='granted')return alert('Brak zgody.');let reg=await navigator.serviceWorker.register('./firebase-messaging-sw.js');let token=await getToken(messaging,{vapidKey,serviceWorkerRegistration:reg});await setDoc(doc(db,'pushTokens',user.uid),{ownerUid:user.uid,token,updatedAt:new Date().toISOString()},{merge:true});q('pushState').textContent='Powiadomienia aktywne.'}catch(e){alert('Nie udało się włączyć push. Sprawdź VAPID.');console.error(e)}}
 function renderClients(){let z=(q('clientSearch')?.value||'').toLowerCase();let a=clients.filter(c=>[c.name,c.phone,c.city].join(' ').toLowerCase().includes(z));q('clientList').innerHTML=a.length?a.map(c=>`<div class="item" onclick="openClient('${c.id}')"><h3>${esc(c.name)}</h3><div class="meta">${esc(c.phone||'')} • ${esc(c.city||'')}</div></div>`).join(''):'<div class="empty">Brak klientów.</div>'}
 function renderOrders(){let z=(q('orderSearch')?.value||'').toLowerCase();let a=orders.filter(o=>[o.title,o.desc,o.status].join(' ').toLowerCase().includes(z));q('orderList').innerHTML=a.length?a.map(o=>{let c=clients.find(x=>x.id===o.clientId),ens=(o.employees||[]).map(id=>employees.find(e=>e.id===id)?.name).filter(Boolean).join(', ');return `<div class="item info" onclick="openOrder('${o.id}')"><h3>${esc(o.title)}</h3><div class="meta">${esc(c?.name||'')} • ${esc(o.status)} • ${fmt(o.date)} ${esc(o.time||'')}<br>${ens?`Ekipa: ${esc(ens)}`:''}</div></div>`}).join(''):'<div class="empty">Brak zleceń.</div>'}
-function renderEmployees(){q('employeeCards').innerHTML=employees.map(e=>{let arr=worklogs.filter(w=>w.employeeId===e.id&&w.date.startsWith(month())),h=arr.reduce((s,w)=>s+hours(w.start,w.end,w.breakMin),0);return `<div class="item purple"><h3>${esc(e.name)}</h3><div class="meta">Godziny w miesiącu: <b>${h.toFixed(1)}</b></div></div>`}).join('');q('workList').innerHTML=worklogs.length?[...worklogs].sort((a,b)=>(b.date+b.start).localeCompare(a.date+a.start)).map(w=>{let e=employees.find(x=>x.id===w.employeeId),o=orders.find(x=>x.id===w.orderId);return `<div class="item" onclick="openWork('${w.id}')"><h3>${esc(e?.name||'')} — ${fmt(w.date)}</h3><div class="meta">${esc(w.start)}–${esc(w.end)} • ${hours(w.start,w.end,w.breakMin).toFixed(1)} h<br>${esc(w.place||'')}${o?` • ${esc(o.title)}`:''}<br>${esc(w.task||'')}</div></div>`}).join(''):'<div class="empty">Brak czasu pracy.</div>'}
+function renderEmployees(){q('employeeCards').innerHTML=employees.map(e=>{let arr=worklogs.filter(w=>w.employeeId===e.id&&w.date.startsWith(month())),h=arr.reduce((s,w)=>s+hours(w.start,w.end,w.breakMin),0);return `<div class="item purple" onclick="openEmployee('${e.id}')"><h3>${esc(e.name)}</h3><div class="meta">Godziny w miesiącu: <b>${h.toFixed(1)}</b><br><span class="badge">Kliknij, aby edytować lub usunąć</span></div></div>`}).join('');q('workList').innerHTML=worklogs.length?[...worklogs].sort((a,b)=>(b.date+b.start).localeCompare(a.date+a.start)).map(w=>{let e=employees.find(x=>x.id===w.employeeId),o=orders.find(x=>x.id===w.orderId);return `<div class="item" onclick="openWork('${w.id}')"><h3>${esc(e?.name||'')} — ${fmt(w.date)}</h3><div class="meta">${esc(w.start)}–${esc(w.end)} • ${hours(w.start,w.end,w.breakMin).toFixed(1)} h<br>${esc(w.place||'')}${o?` • ${esc(o.title)}`:''}<br>${esc(w.task||'')}</div></div>`}).join(''):'<div class="empty">Brak czasu pracy.</div>'}
 function vstats(id){let ts=trips.filter(t=>t.vehicleId===id),km=ts.reduce((s,t)=>s+Math.max(0,t.endKm-t.startKm),0),fs=fuel.filter(f=>f.vehicleId===id),lit=fs.reduce((s,f)=>s+f.liters,0),cost=fs.reduce((s,f)=>s+f.amount,0);return{km,lit,cost,avg:km?lit/km*100:0,costKm:km?cost/km:0}}
 function renderVehicles(){for(const [name,el] of [['Ducato','ducatoStats'],['Doblo','dobloStats']]){let v=vehicles.find(x=>x.name===name),s=v?vstats(v.id):{km:0,lit:0,cost:0,avg:0,costKm:0};q(el).innerHTML=`Kilometry: <b>${s.km.toFixed(0)} km</b><br>Paliwo: <b>${s.lit.toFixed(1)} l</b><br>Koszt: <b>${s.cost.toFixed(2)} zł</b><br>Spalanie: <b>${s.avg.toFixed(1)} l/100 km</b><br>Koszt/km: <b>${s.costKm.toFixed(2)} zł</b>`}
 q('tripList').innerHTML=trips.length?[...trips].sort((a,b)=>b.date.localeCompare(a.date)).map(t=>{let v=vehicles.find(x=>x.id===t.vehicleId),e=employees.find(x=>x.id===t.driverId);return `<div class="item info" onclick="openTrip('${t.id}')"><h3>${esc(v?.name||'')} — ${Math.max(0,t.endKm-t.startKm)} km</h3><div class="meta">${fmt(t.date)} • ${esc(e?.name||'')}<br>${esc(t.route||'')}<br>${esc(t.purpose||'')}</div></div>`}).join(''):'<div class="empty">Brak przejazdów.</div>';
