@@ -5,575 +5,86 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#17365D">
 <link rel="manifest" href="./manifest.json">
-<title>Serwisant PRO v6.5</title>
+<title>Serwisant PRO v7</title>
 <style>
-:root{--bg:#eef3f7;--card:#fff;--nav:#17365D;--accent:#1F4E78;--text:#1f2937;--muted:#6b7280;--danger:#b91c1c;--warn:#d97706;--ok:#15803d;--info:#0369a1;--purple:#6d28d9}
+:root{--bg:#eef3f7;--card:#fff;--nav:#17365D;--accent:#1F4E78;--text:#1f2937;--muted:#6b7280;--danger:#b91c1c;--warn:#d97706;--ok:#15803d;--info:#0369a1;--purple:#6d28d9;--line:#dbe4ee}
 *{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--text)}
-header{position:sticky;top:0;z-index:30;background:var(--nav);color:#fff;padding:10px 12px;display:flex;align-items:center;gap:10px;box-shadow:0 2px 8px #0002}
-.logo{width:44px;height:44px;border-radius:11px;background:#fff;color:var(--nav);display:grid;place-items:center;font-weight:900}.brand{flex:1}.brand h1{font-size:18px;margin:0}.brand small{opacity:.8}
-.container{max-width:1100px;margin:auto;padding:12px 12px 98px}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.card{background:#fff;border-radius:14px;padding:13px;box-shadow:0 1px 4px #0001}.stat{font-size:27px;font-weight:800}.label{font-size:12px;color:var(--muted)}
-.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}button,.btn{border:0;border-radius:10px;padding:10px 13px;background:var(--accent);color:#fff;font-weight:700;cursor:pointer}.secondary{background:#e7edf3!important;color:#263646!important}.danger{background:var(--danger)!important}.infoBtn{background:var(--info)!important}.purpleBtn{background:var(--purple)!important}
-input,select,textarea{width:100%;padding:11px;border:1px solid #cbd5e1;border-radius:9px;background:#fff;font-size:15px}label{display:block;font-size:12px;color:var(--muted);margin:8px 0 4px}.row{display:grid;grid-template-columns:1fr 1fr;gap:9px}
-.item{background:#fff;border-radius:12px;padding:12px;margin:8px 0;border-left:5px solid #94a3b8;box-shadow:0 1px 4px #0001}.item.info{border-left-color:var(--info)}.item.purple{border-left-color:var(--purple)}.item.warn{border-left-color:var(--warn)}.item.danger{border-left-color:var(--danger);background:#fff;color:inherit}
-.item h3{margin:0 0 4px;font-size:16px}.meta{font-size:13px;color:var(--muted);line-height:1.5}.badge{display:inline-block;padding:3px 8px;border-radius:999px;background:#eef2f5;font-size:11px;margin-right:4px}
-.hidden{display:none!important}.empty{text-align:center;color:var(--muted);padding:28px 8px}.search{margin:8px 0 12px}
-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #dbe2ea;display:grid;grid-template-columns:repeat(8,1fr);z-index:40}nav button{background:transparent;color:#64748b;border-radius:0;padding:8px 1px;font-size:8px}nav button.active{color:var(--accent)}
-.page{display:none}.page.active{display:block}.fab{position:fixed;right:18px;bottom:75px;border-radius:50%;width:54px;height:54px;font-size:26px;box-shadow:0 5px 14px #0003}
-.modal{position:fixed;inset:0;background:#0008;display:none;z-index:60;align-items:flex-end}.modal.show{display:flex}.sheet{background:#fff;width:100%;max-height:94vh;overflow:auto;border-radius:18px 18px 0 0;padding:15px}
-.device-mini{margin-top:9px;padding:10px;border:1px solid #dbe4ee;border-radius:11px;background:#f8fafc;cursor:pointer}.device-mini:hover{background:#eef6ff}.device-title{font-weight:800}.timeline{position:relative;margin:10px 0 0 8px;padding-left:20px;border-left:3px solid #dbe4ee}.event{position:relative;margin:0 0 15px;padding:11px;background:#f8fafc;border-radius:11px}.event:before{content:"";position:absolute;left:-28px;top:16px;width:12px;height:12px;border-radius:50%;background:var(--accent);border:3px solid #fff;box-shadow:0 0 0 2px #cbd5e1}.event h4{margin:0 0 4px}.device-head{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}.status-ok{color:var(--ok);font-weight:800}.status-warn{color:var(--warn);font-weight:800}.serial{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:#e8eef5;padding:2px 6px;border-radius:6px}.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.detail-box{background:#f8fafc;border-radius:10px;padding:9px}.smallbtn{padding:6px 9px;font-size:12px}
-@media(min-width:700px){.grid{grid-template-columns:repeat(4,1fr)}.modal{align-items:center;justify-content:center}.sheet{max-width:740px;border-radius:18px;max-height:90vh}}
+header{position:sticky;top:0;z-index:30;background:var(--nav);color:#fff;padding:10px 12px;display:flex;align-items:center;gap:10px;box-shadow:0 2px 8px #0002}.logo{width:44px;height:44px;border-radius:11px;background:#fff;color:var(--nav);display:grid;place-items:center;font-weight:900}.brand{flex:1}.brand h1{font-size:18px;margin:0}.brand small{opacity:.82}.container{max-width:1180px;margin:auto;padding:12px 12px 110px}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.card{background:#fff;border-radius:14px;padding:13px;box-shadow:0 1px 4px #0001}.stat{font-size:27px;font-weight:800}.label{font-size:12px;color:var(--muted)}.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0;align-items:center}button,.btn{border:0;border-radius:10px;padding:10px 13px;background:var(--accent);color:#fff;font-weight:700;cursor:pointer}.secondary{background:#e7edf3!important;color:#263646!important}.danger{background:var(--danger)!important}.warnBtn{background:var(--warn)!important}.okBtn{background:var(--ok)!important}.infoBtn{background:var(--info)!important}.purpleBtn{background:var(--purple)!important}.smallBtn{padding:7px 9px;font-size:12px}input,select,textarea{width:100%;padding:11px;border:1px solid #cbd5e1;border-radius:9px;background:#fff;font-size:15px}textarea{min-height:76px}label{display:block;font-size:12px;color:var(--muted);margin:8px 0 4px}.row{display:grid;grid-template-columns:1fr 1fr;gap:9px}.item{background:#fff;border-radius:12px;padding:12px;margin:8px 0;border-left:5px solid #94a3b8;box-shadow:0 1px 4px #0001}.item.info{border-left-color:var(--info)}.item.purple{border-left-color:var(--purple)}.item.warn{border-left-color:var(--warn)}.item.ok{border-left-color:var(--ok)}.item.dangerItem{border-left-color:var(--danger)}.item h3{margin:0 0 4px;font-size:16px}.meta{font-size:13px;color:var(--muted);line-height:1.5}.badge{display:inline-block;padding:3px 8px;border-radius:999px;background:#eef2f5;font-size:11px;margin:2px 4px 2px 0}.badge.red{background:#fee2e2;color:#991b1b}.badge.orange{background:#ffedd5;color:#9a3412}.badge.green{background:#dcfce7;color:#166534}.badge.blue{background:#dbeafe;color:#1e40af}.hidden{display:none!important}.empty{text-align:center;color:var(--muted);padding:28px 8px}.search{margin:8px 0 12px}.page{display:none}.page.active{display:block}.fab{position:fixed;right:18px;bottom:84px;border-radius:50%;width:54px;height:54px;font-size:26px;box-shadow:0 5px 14px #0003}.modal{position:fixed;inset:0;background:#0008;display:none;z-index:60;align-items:flex-end}.modal.show{display:flex}.sheet{background:#fff;width:100%;max-height:94vh;overflow:auto;border-radius:18px 18px 0 0;padding:15px}.sectionTitle{margin:18px 0 7px;border-bottom:1px solid var(--line);padding-bottom:7px}.deviceHead{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}.thumbs{display:flex;gap:8px;overflow:auto;padding:5px 0}.thumbs img{width:92px;height:72px;object-fit:cover;border-radius:9px;border:1px solid var(--line)}.costBox{background:#f8fafc;border:1px solid var(--line);padding:10px;border-radius:10px}.materialRow{display:grid;grid-template-columns:2fr .7fr .7fr 1fr auto;gap:6px;margin:6px 0;align-items:end}.calendarDay{border-left:4px solid var(--info);padding:8px;margin:6px 0;background:#fff;border-radius:8px}.calendarDay strong{display:block}.sig{width:100%;height:170px;border:1px solid #94a3b8;border-radius:10px;touch-action:none;background:#fff}.checkgrid{display:grid;grid-template-columns:1fr;gap:4px}.checkrow{display:flex;align-items:flex-start;gap:8px;padding:7px;border:1px solid #e5e7eb;border-radius:8px}.checkrow input{width:auto;margin-top:2px}nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #dbe2ea;display:flex;overflow-x:auto;z-index:40;padding-bottom:max(0px,env(safe-area-inset-bottom))}nav button{background:transparent;color:#64748b;border-radius:0;padding:8px 7px;font-size:9px;min-width:76px;flex:1}nav button.active{color:var(--accent);background:#eef5fb}.hint{padding:9px;background:#eff6ff;border-radius:9px;color:#1e3a5f;font-size:12px}.sep{height:1px;background:var(--line);margin:12px 0}.nowrap{white-space:nowrap}.money{font-variant-numeric:tabular-nums}
+@media(min-width:760px){.grid{grid-template-columns:repeat(4,1fr)}.grid3{grid-template-columns:repeat(3,1fr)}.modal{align-items:center;justify-content:center}.sheet{max-width:850px;border-radius:18px;max-height:92vh}.checkgrid{grid-template-columns:1fr 1fr}.fab{bottom:82px}}
+@media(max-width:620px){.row,.grid3{grid-template-columns:1fr}.materialRow{grid-template-columns:1.6fr .6fr .7fr 1fr auto}.materialRow input{padding:8px;font-size:12px}}
 </style>
 </head>
 <body>
-<header><div class="logo">S</div><div class="brand"><h1>Serwisant PRO v6.5</h1><small>Klienci • Urządzenia • Historia • Przeglądy • Serwis</small></div><button id="logoutBtn" class="secondary hidden" onclick="logout()">Wyloguj</button></header>
-
+<header><div class="logo">S</div><div class="brand"><h1>Serwisant PRO v7</h1><small>Klienci • urządzenia • serwis • przeglądy • protokoły • koszty</small></div><button id="logoutBtn" class="secondary hidden" onclick="logout()">Wyloguj</button></header>
 <div class="container">
-<section id="loginPage">
-<div class="card"><h2>Logowanie</h2><div id="configState" class="meta">Łączenie z Firebase…</div><label>E-mail</label><input id="email" type="email"><label>Hasło</label><input id="password" type="password"><div class="toolbar"><button onclick="login()">Zaloguj</button><button class="secondary" onclick="registerUser()">Utwórz konto</button></div></div>
-</section>
-
+<section id="loginPage"><div class="card"><h2>Logowanie</h2><div id="configState" class="meta">Łączenie z Firebase…</div><label>E-mail</label><input id="email" type="email"><label>Hasło</label><input id="password" type="password"><div class="toolbar"><button onclick="login()">Zaloguj</button><button class="secondary" onclick="registerUser()">Utwórz konto</button></div></div></section>
 <section id="app" class="hidden">
-<section id="dashboard" class="page active">
-<div class="grid">
-<div class="card"><div class="label">Klienci</div><div id="kClients" class="stat">0</div></div>
-<div class="card"><div class="label">Urządzenia</div><div id="kDevices" class="stat">0</div></div>
-<div class="card"><div class="label">Zlecenia otwarte</div><div id="kOrders" class="stat">0</div></div>
-<div class="card"><div class="label">Pracownicy dziś</div><div id="kWorkersToday" class="stat">0</div></div>
-<div class="card"><div class="label">Godziny dziś</div><div id="kHoursToday" class="stat">0</div></div>
-<div class="card"><div class="label">Kilometry dziś</div><div id="kKmToday" class="stat">0</div></div>
-<div class="card"><div class="label">Paliwo miesiąc</div><div id="kFuelMonth" class="stat">0 zł</div></div>
-<div class="card"><div class="label">Koszt paliwa/km</div><div id="kCostKm" class="stat">0 zł</div></div>
-</div>
-<h2>Dzisiaj</h2><div id="todaySummary"></div>
-</section>
-
-<section id="clients" class="page"><input id="clientSearch" class="search" placeholder="Szukaj klienta..." oninput="renderClients()"><div id="clientList"></div><button class="fab" onclick="openClient()">+</button></section>
-
-<section id="orders" class="page"><input id="orderSearch" class="search" placeholder="Szukaj zlecenia..." oninput="renderOrders()"><div id="orderList"></div><button class="fab" onclick="openOrder()">+</button></section>
-
-<section id="employees" class="page">
-<div class="card">
-  <div class="toolbar" style="justify-content:space-between;align-items:center">
-    <h2 style="margin:0">Pracownicy</h2>
-    <button onclick="openEmployee()">+ Dodaj pracownika</button>
-  </div>
-  <div id="employeeCards"></div>
-</div>
-<h2>Ewidencja czasu pracy</h2><div id="workList"></div><button class="fab" onclick="openWork()">+</button>
-</section>
-
-<section id="inspections" class="page">
-<div class="grid">
-  <div class="card"><div class="label">Zaplanowane</div><div id="iPlanned" class="stat">0</div></div>
-  <div class="card"><div class="label">W trakcie</div><div id="iInProgress" class="stat">0</div></div>
-  <div class="card"><div class="label">Zrobione w miesiącu</div><div id="iDoneMonth" class="stat">0</div></div>
-</div>
-
-<div class="card">
-  <label>Wyszukaj przegląd</label>
-  <input id="inspectionSearch" placeholder="Klient / urządzenie / numer seryjny" oninput="renderInspections()">
-  <div class="toolbar" style="margin-top:10px">
-    <select id="inspectionFilter" onchange="renderInspections()" style="max-width:260px">
-      <option value="">Wszystkie statusy</option>
-      <option value="Zaplanowany">Zaplanowany</option>
-      <option value="W trakcie">W trakcie</option>
-      <option value="Zrobiony">Zrobiony</option>
-    </select>
-  </div>
-</div>
-
-<div id="inspectionList"></div>
-<button class="fab" onclick="openInspection()">+</button>
-</section>
-
-<section id="vehicles" class="page"><div class="grid"><div class="card"><h3>Ducato</h3><div id="ducatoStats" class="meta"></div></div><div class="card"><h3>Doblo</h3><div id="dobloStats" class="meta"></div></div></div><h2>Przejazdy</h2><div id="tripList"></div><h2>Tankowania</h2><div id="fuelList"></div><div class="toolbar"><button onclick="openTrip()">+ Przejazd</button><button class="purpleBtn" onclick="openFuel()">+ Tankowanie</button></div></section>
-
-<section id="reports" class="page"><div class="card"><h2>Raport dzienny</h2><input id="reportDate" type="date" onchange="renderReports()"></div><div id="dailyReport"></div><div class="card"><h2>Raport miesięczny</h2><input id="reportMonth" type="month" onchange="renderReports()"><div id="monthlyReport"></div></div></section>
-
-<section id="settings" class="page"><div class="card"><h2>Chmura</h2><div class="meta">Dane zapisują się w Firestore. Klienci, urządzenia i zlecenia z v5 pozostają w tych samych kolekcjach.</div></div><div class="card"><h2>Powiadomienia</h2><div id="pushState" class="meta">Nie skonfigurowano.</div><div class="toolbar"><button onclick="enablePush()">Włącz push</button></div></div><div class="card"><h2>Użytkownik</h2><div id="uidBox" class="meta"></div></div></section>
-</section>
-</div>
-
-<nav id="nav" class="hidden">
-<button class="active" onclick="go('dashboard',this)">Pulpit</button><button onclick="go('clients',this)">Klienci</button><button onclick="go('orders',this)">Zlecenia</button><button onclick="go('employees',this)">Pracownicy</button><button onclick="go('inspections',this)">Przeglądy</button><button onclick="go('vehicles',this)">Auta</button><button onclick="go('reports',this)">Raporty</button><button onclick="go('settings',this)">Ustawienia</button>
-</nav>
-
+<section id="dashboard" class="page active"><div class="grid"><div class="card"><div class="label">Klienci</div><div id="kClients" class="stat">0</div></div><div class="card"><div class="label">Urządzenia</div><div id="kDevices" class="stat">0</div></div><div class="card"><div class="label">Zlecenia otwarte</div><div id="kOrders" class="stat">0</div></div><div class="card"><div class="label">Przeglądy po terminie</div><div id="kOverdue" class="stat">0</div></div><div class="card"><div class="label">Do 7 dni</div><div id="k7days" class="stat">0</div></div><div class="card"><div class="label">Przychód miesiąc</div><div id="kRevenue" class="stat money">0 zł</div></div><div class="card"><div class="label">Koszty miesiąc</div><div id="kCosts" class="stat money">0 zł</div></div><div class="card"><div class="label">Wynik miesiąc</div><div id="kProfit" class="stat money">0 zł</div></div></div><h2>Dzisiaj</h2><div id="todaySummary"></div></section>
+<section id="clients" class="page"><div class="card"><input id="clientSearch" class="search" placeholder="Szukaj klienta, telefonu, miejscowości…" oninput="renderClients()"></div><div id="clientList"></div><button class="fab" onclick="openClient()">+</button></section>
+<section id="devices" class="page"><div class="card"><input id="deviceSearch" class="search" placeholder="Szukaj urządzenia / modelu / numeru seryjnego…" oninput="renderDevices()"></div><div id="deviceList"></div><button class="fab" onclick="openDevice()">+</button></section>
+<section id="orders" class="page"><div class="card"><div class="row"><input id="orderSearch" placeholder="Szukaj zlecenia…" oninput="renderOrders()"><select id="orderFilter" onchange="renderOrders()"><option value="">Wszystkie statusy</option><option>Do kontaktu</option><option>Umówione</option><option>W trakcie</option><option>Oczekiwanie na część</option><option>Wykonane</option><option>Do faktury</option><option>Zamknięte</option></select></div></div><div id="orderList"></div><button class="fab" onclick="openOrder()">+</button></section>
+<section id="calendar" class="page"><div class="card"><div class="toolbar"><button class="secondary" onclick="shiftWeek(-7)">← tydzień</button><input id="calendarDate" type="date" onchange="renderCalendar()" style="max-width:220px"><button class="secondary" onclick="shiftWeek(7)">tydzień →</button></div><div class="meta">Kalendarz pokazuje zlecenia i przeglądy przypisane do pracowników.</div></div><div id="calendarList"></div></section>
+<section id="employees" class="page"><div class="card"><div class="toolbar" style="justify-content:space-between"><h2 style="margin:0">Pracownicy</h2><button onclick="openEmployee()">+ Dodaj</button></div><div id="employeeCards"></div></div><h2>Ewidencja czasu pracy</h2><div id="workList"></div><button class="fab" onclick="openWork()">+</button></section>
+<section id="inspections" class="page"><div class="grid"><div class="card"><div class="label">Po terminie</div><div id="iOverdue" class="stat">0</div></div><div class="card"><div class="label">Do 7 dni</div><div id="i7" class="stat">0</div></div><div class="card"><div class="label">Do 30 dni</div><div id="i30" class="stat">0</div></div><div class="card"><div class="label">Zrobione w miesiącu</div><div id="iDoneMonth" class="stat">0</div></div></div><div class="card"><div class="row"><input id="inspectionSearch" placeholder="Klient / urządzenie / numer seryjny" oninput="renderInspections()"><select id="inspectionFilter" onchange="renderInspections()"><option value="">Wszystkie statusy</option><option>Zaplanowany</option><option>W trakcie</option><option>Zrobiony</option></select></div></div><div id="inspectionList"></div><button class="fab" onclick="openInspection()">+</button></section>
+<section id="reports" class="page"><div class="card"><div class="row"><div><label>Miesiąc</label><input id="reportMonth" type="month" onchange="renderReports()"></div><div style="display:flex;align-items:end"><button onclick="exportReportCsv()">Eksport CSV</button></div></div></div><div id="reportSummary"></div><div id="reportDetails"></div></section>
+<section id="settings" class="page"><div class="card"><h2>Bezpieczeństwo danych</h2><div class="hint"><b>v7 nie wykonuje automatycznego kasowania ani masowego nadpisywania danych.</b> Każdy zapis dotyczy tylko rekordu, który edytujesz. PITR w Firebase warto pozostawić włączony.</div></div><div class="card"><h2>Zdjęcia</h2><div class="meta">Zdjęcia są kompresowane w przeglądarce i zapisywane jako osobne rekordy Firestore. Dzięki temu nie nadpisują danych urządzenia ani zlecenia.</div></div><div class="card"><h2>Powiadomienia</h2><div id="pushState" class="meta">Nie skonfigurowano.</div><div class="toolbar"><button onclick="enablePush()">Włącz push</button></div></div><div class="card"><h2>Użytkownik</h2><div id="uidBox" class="meta"></div></div></section>
+</section></div>
+<nav id="nav" class="hidden"><button class="active" onclick="go('dashboard',this)">Pulpit</button><button onclick="go('clients',this)">Klienci</button><button onclick="go('devices',this)">Urządzenia</button><button onclick="go('orders',this)">Zlecenia</button><button onclick="go('calendar',this)">Kalendarz</button><button onclick="go('employees',this)">Pracownicy</button><button onclick="go('inspections',this)">Przeglądy</button><button onclick="go('reports',this)">Raporty</button><button onclick="go('settings',this)">Ustawienia</button></nav>
 <div id="modal" class="modal" onclick="if(event.target===this)closeModal()"><div class="sheet">
-
-<div id="clientForm" class="form hidden"><h2>Klient</h2><input id="cId" type="hidden"><label>Nazwa / imię</label><input id="cName"><label>Telefon</label><input id="cPhone"><label>Adres</label><input id="cAddress"><label>Miejscowość</label><input id="cCity"><label>Uwagi</label><textarea id="cNotes"></textarea><div class="toolbar"><button onclick="saveClient()">Zapisz</button><button class="secondary" onclick="closeModal()">Anuluj</button></div></div>
-
-<div id="deviceForm" class="form hidden">
-<h2>Urządzenie</h2><input id="dId" type="hidden">
-<label>Klient</label><select id="dClient"></select>
-<div class="row"><div><label>Kategoria</label><select id="dCategory"><option>Pompa ciepła</option><option>Klimatyzacja</option><option>Kocioł gazowy</option><option>Kocioł pelletowy</option><option>Rekuperator</option><option>Hydraulika</option><option>Elektryka</option><option>Automatyka</option><option>Inne</option></select></div><div><label>Status</label><select id="dStatus"><option>Sprawne</option><option>Do obserwacji</option><option>Awaria</option><option>Wyłączone</option></select></div></div>
-<div class="row"><div><label>Producent</label><input id="dBrand" placeholder="np. Gree"></div><div><label>Model</label><input id="dModel" placeholder="np. Versati III 12 kW"></div></div>
-<label>Numer seryjny</label><input id="dSerial" placeholder="np. GR12-458721">
-<div class="row"><div><label>Data montażu</label><input id="dInstallDate" type="date"></div><div><label>Gwarancja do</label><input id="dWarrantyUntil" type="date"></div></div>
-<label>Lokalizacja urządzenia / pomieszczenie</label><input id="dLocation" placeholder="np. kotłownia, poddasze">
-<label>Uwagi</label><textarea id="dNotes" rows="3"></textarea>
-<div class="toolbar"><button onclick="saveDevice()">Zapisz</button><button class="secondary" onclick="closeModal()">Anuluj</button><button id="deleteDeviceBtn" class="danger hidden" onclick="deleteDevice()">Usuń urządzenie</button></div>
-</div>
-
-<div id="deviceDetails" class="form hidden"><div id="deviceDetailsContent"></div></div>
-
-<div id="historyForm" class="form hidden">
-<h2>Wpis do historii</h2><input id="hId" type="hidden"><input id="hDeviceId" type="hidden">
-<div class="row"><div><label>Data</label><input id="hDate" type="date"></div><div><label>Rodzaj</label><select id="hType"><option>Serwis</option><option>Awaria</option><option>Naprawa</option><option>Montaż</option><option>Uruchomienie</option><option>Notatka</option></select></div></div>
-<label>Tytuł</label><input id="hTitle" placeholder="np. Wymiana czujnika temperatury">
-<label>Opis wykonanych prac</label><textarea id="hDescription" rows="4"></textarea>
-<div class="row"><div><label>Pracownik</label><select id="hEmployee"></select></div><div><label>Koszt (zł)</label><input id="hCost" type="number" step="0.01"></div></div>
-<div class="toolbar"><button onclick="saveHistory()">Zapisz wpis</button><button class="secondary" onclick="openDeviceDetails(q('hDeviceId').value)">Anuluj</button><button id="deleteHistoryBtn" class="danger hidden" onclick="deleteHistory()">Usuń wpis</button></div>
-</div>
-
-<div id="orderForm" class="form hidden"><h2>Zlecenie</h2><input id="oId" type="hidden"><label>Klient</label><select id="oClient" onchange="orderClientChanged()"></select><label>Urządzenie (opcjonalnie)</label><select id="oDevice"></select><label>Temat</label><input id="oTitle"><label>Opis</label><textarea id="oDesc"></textarea><div class="row"><div><label>Status</label><select id="oStatus"><option>Do kontaktu</option><option>Umówione</option><option>W trakcie</option><option>Oczekiwanie na część</option><option>Wykonane</option><option>Do faktury</option><option>Zamknięte</option></select></div><div><label>Priorytet</label><select id="oPriority"><option>Normalny</option><option>Pilny</option><option>Awaria</option></select></div></div><div class="row"><div><label>Data</label><input id="oDate" type="date"></div><div><label>Godzina</label><input id="oTime" type="time"></div></div><label>Przypisani pracownicy</label><div id="oEmployees"></div><div class="toolbar"><button onclick="saveOrder()">Zapisz</button><button class="secondary" onclick="closeModal()">Anuluj</button></div></div>
-
-<div id="inspectionForm" class="form hidden">
-<h2>Przegląd</h2>
-<input id="iId" type="hidden">
-
-<label>Klient</label>
-<select id="iClient" onchange="inspectionClientChanged()"></select>
-<label style="display:flex;gap:8px;align-items:center">
-  <input id="iManualClientEnabled" type="checkbox" style="width:auto" onchange="toggleManualClient()"> Wpisz klienta ręcznie
-</label>
-<div id="iManualClientWrap" class="hidden">
-  <input id="iClientManual" placeholder="Imię i nazwisko / firma">
-</div>
-
-<label>Urządzenie</label>
-<select id="iDevice" onchange="inspectionDeviceChanged()"></select>
-<label style="display:flex;gap:8px;align-items:center">
-  <input id="iManualDeviceEnabled" type="checkbox" style="width:auto" onchange="toggleManualDevice()"> Wpisz urządzenie ręcznie
-</label>
-<div id="iManualDeviceWrap" class="hidden">
-  <input id="iDeviceManual" placeholder="np. Gree Versati 12 kW">
-</div>
-
-<label>Numer seryjny urządzenia</label>
-<input id="iSerial" placeholder="np. GR12-458721">
-
-<label>Rodzaj przeglądu</label>
-<input id="iType" placeholder="np. przegląd roczny pompy ciepła">
-
-<div class="row">
-  <div>
-    <label>Planowana data</label>
-    <input id="iDate" type="date">
-  </div>
-  <div>
-    <label>Status</label>
-    <select id="iStatus" onchange="inspectionStatusChanged()">
-      <option value="Zaplanowany">Zaplanowany</option>
-      <option value="W trakcie">W trakcie</option>
-      <option value="Zrobiony">Zrobiony</option>
-    </select>
-  </div>
-</div>
-
-<div class="row">
-  <div>
-    <label>Data rozpoczęcia</label>
-    <input id="iStartedDate" type="date">
-  </div>
-  <div>
-    <label>Data wykonania</label>
-    <input id="iCompletedDate" type="date">
-  </div>
-</div>
-
-<label>Pracownik</label>
-<select id="iEmployee"></select>
-
-<label>Interwał następnego przeglądu</label>
-<select id="iIntervalPreset" onchange="toggleCustomInterval()">
-  <option value="1">1 miesiąc</option>
-  <option value="3">3 miesiące</option>
-  <option value="6">6 miesięcy</option>
-  <option value="12" selected>12 miesięcy</option>
-  <option value="24">24 miesiące</option>
-  <option value="custom">Własny interwał</option>
-</select>
-
-<div id="customIntervalWrap" class="hidden">
-  <label>Własny interwał (miesiące)</label>
-  <input id="iCustomInterval" type="number" min="1" value="12">
-</div>
-
-<label style="display:flex;gap:8px;align-items:center">
-  <input id="iAutoNext" type="checkbox" style="width:auto" checked>
-  Automatycznie utwórz następny przegląd po oznaczeniu jako zrobiony
-</label>
-
-<label>Uwagi</label>
-<textarea id="iNotes" rows="3"></textarea>
-
-<div class="toolbar">
-  <button onclick="saveInspection()">Zapisz</button>
-  <button id="markDoneBtn" class="ok hidden" onclick="markInspectionDone()">Oznacz jako zrobiony</button>
-  <button class="secondary" onclick="closeModal()">Anuluj</button>
-  <button id="deleteInspectionBtn" class="danger hidden" onclick="deleteInspection()">Usuń</button>
-</div>
-</div>
-
-<div id="employeeForm" class="form hidden">
-<h2>Pracownik</h2><input id="eId" type="hidden">
-<label>Imię / nazwa</label><input id="eName">
-<div class="toolbar">
-  <button onclick="saveEmployee()">Zapisz</button>
-  <button class="secondary" onclick="closeModal()">Anuluj</button>
-  <button id="deleteEmployeeBtn" class="danger hidden" onclick="deleteEmployee()">Usuń pracownika</button>
-</div>
-</div>
+<div id="clientForm" class="form hidden"><h2>Klient</h2><input id="cId" type="hidden"><label>Nazwa / imię</label><input id="cName"><label>Telefon</label><input id="cPhone"><div class="row"><div><label>Adres</label><input id="cAddress"></div><div><label>Miejscowość</label><input id="cCity"></div></div><label>E-mail</label><input id="cEmail" type="email"><label>Uwagi</label><textarea id="cNotes"></textarea><div class="toolbar"><button onclick="saveClient()">Zapisz</button><button class="secondary" onclick="closeModal()">Anuluj</button></div></div>
+<div id="clientCardForm" class="form hidden"><div id="clientCardContent"></div><div class="toolbar"><button class="secondary" onclick="closeModal()">Zamknij</button></div></div>
+<div id="deviceForm" class="form hidden"><h2>Urządzenie</h2><input id="dId" type="hidden"><label>Klient</label><select id="dClient"></select><div class="row"><div><label>Typ urządzenia</label><select id="dType"><option>Pompa ciepła</option><option>Klimatyzacja</option><option>Kocioł gazowy</option><option>Kocioł pelletowy</option><option>Rekuperator</option><option>Uzdatnianie wody</option><option>Automatyka / alarm</option><option>Inne</option></select></div><div><label>Producent</label><input id="dBrand"></div></div><div class="row"><div><label>Model</label><input id="dModel"></div><div><label>Numer seryjny</label><input id="dSerial"></div></div><div class="row"><div><label>Data montażu</label><input id="dInstallDate" type="date"></div><div><label>Gwarancja do</label><input id="dWarranty" type="date"></div></div><label>Lokalizacja urządzenia</label><input id="dLocation" placeholder="np. kotłownia, poddasze"><label>Uwagi</label><textarea id="dNotes"></textarea><div class="toolbar"><button onclick="saveDevice()">Zapisz</button><button class="secondary" onclick="closeModal()">Anuluj</button></div></div>
+<div id="historyForm" class="form hidden"><div id="historyContent"></div><div class="toolbar"><button class="secondary" onclick="closeModal()">Zamknij</button></div></div>
+<div id="orderForm" class="form hidden"><h2>Zlecenie serwisowe</h2><input id="oId" type="hidden"><label>Klient</label><select id="oClient" onchange="orderClientChanged()"></select><label>Urządzenie</label><select id="oDevice"></select><label>Temat</label><input id="oTitle"><label>Opis / zgłoszenie</label><textarea id="oDesc"></textarea><div class="row"><div><label>Status</label><select id="oStatus"><option>Do kontaktu</option><option>Umówione</option><option>W trakcie</option><option>Oczekiwanie na część</option><option>Wykonane</option><option>Do faktury</option><option>Zamknięte</option></select></div><div><label>Priorytet</label><select id="oPriority"><option>Normalny</option><option>Pilny</option><option>Awaria</option></select></div></div><div class="row"><div><label>Data</label><input id="oDate" type="date"></div><div><label>Godzina</label><input id="oTime" type="time"></div></div><label>Przypisani pracownicy</label><div id="oEmployees"></div><h3 class="sectionTitle">Materiały i części</h3><div id="materialRows"></div><button class="secondary smallBtn" onclick="addMaterialRow()">+ Dodaj materiał</button><h3 class="sectionTitle">Koszty i rozliczenie</h3><div class="grid3"><div><label>Robocizna koszt [zł]</label><input id="oLaborCost" type="number" step="0.01"></div><div><label>Inne koszty [zł]</label><input id="oOtherCost" type="number" step="0.01"></div><div><label>Kwota dla klienta [zł]</label><input id="oRevenue" type="number" step="0.01"></div></div><label>Notatka wewnętrzna</label><textarea id="oNotes"></textarea><div class="toolbar"><button onclick="saveOrder()">Zapisz</button><button id="oProtocolBtn" class="purpleBtn hidden" onclick="openProtocolForCurrentOrder()">Protokół</button><button id="oPhotoBtn" class="infoBtn hidden" onclick="openPhotoForCurrentOrder()">Zdjęcie naprawy</button><button class="secondary" onclick="closeModal()">Anuluj</button></div></div>
+<div id="inspectionForm" class="form hidden"><h2>Przegląd</h2><input id="iId" type="hidden"><label>Klient</label><select id="iClient" onchange="inspectionClientChanged()"></select><label>Urządzenie</label><select id="iDevice" onchange="inspectionDeviceChanged()"></select><label>Numer seryjny</label><input id="iSerial"><label>Rodzaj przeglądu</label><input id="iType"><div class="row"><div><label>Planowana data</label><input id="iDate" type="date"></div><div><label>Status</label><select id="iStatus"><option>Zaplanowany</option><option>W trakcie</option><option>Zrobiony</option></select></div></div><div class="row"><div><label>Data rozpoczęcia</label><input id="iStartedDate" type="date"></div><div><label>Data wykonania</label><input id="iCompletedDate" type="date"></div></div><label>Pracownik</label><select id="iEmployee"></select><div class="row"><div><label>Interwał [miesiące]</label><input id="iInterval" type="number" min="1" value="12"></div><div><label>&nbsp;</label><label style="display:flex;gap:8px;align-items:center"><input id="iAutoNext" type="checkbox" style="width:auto" checked> Automatyczny następny termin</label></div></div><label>Uwagi</label><textarea id="iNotes"></textarea><div class="toolbar"><button onclick="saveInspection()">Zapisz</button><button class="secondary" onclick="closeModal()">Anuluj</button></div></div>
+<div id="employeeForm" class="form hidden"><h2>Pracownik</h2><input id="eId" type="hidden"><label>Imię / nazwa</label><input id="eName"><label>Telefon</label><input id="ePhone"><label>Uprawnienia / specjalizacje</label><input id="eSkills" placeholder="np. F-gaz, SEP, G3"><div class="toolbar"><button onclick="saveEmployee()">Zapisz</button><button class="secondary" onclick="closeModal()">Anuluj</button></div></div>
 <div id="workForm" class="form hidden"><h2>Czas pracy</h2><input id="wId" type="hidden"><label>Pracownik</label><select id="wEmployee"></select><div class="row"><div><label>Data</label><input id="wDate" type="date"></div><div><label>Przerwa min</label><input id="wBreak" type="number" value="0"></div></div><div class="row"><div><label>Start</label><input id="wStart" type="time"></div><div><label>Koniec</label><input id="wEnd" type="time"></div></div><label>Klient / miejsce pracy</label><input id="wPlace"><label>Zlecenie</label><select id="wOrder"></select><label>Co robiliśmy</label><textarea id="wTask"></textarea><div class="toolbar"><button onclick="saveWork()">Zapisz</button><button class="secondary" onclick="closeModal()">Anuluj</button></div></div>
-
-<div id="tripForm" class="form hidden"><h2>Przejazd</h2><input id="tId" type="hidden"><label>Samochód</label><select id="tVehicle"></select><label>Kierowca</label><select id="tDriver"></select><div class="row"><div><label>Data</label><input id="tDate" type="date"></div><div><label>Cel / klient</label><input id="tPurpose"></div></div><label>Trasa</label><input id="tRoute"><div class="row"><div><label>Licznik początkowy</label><input id="tStartKm" type="number"></div><div><label>Licznik końcowy</label><input id="tEndKm" type="number"></div></div><div class="toolbar"><button onclick="saveTrip()">Zapisz</button><button class="secondary" onclick="closeModal()">Anuluj</button></div></div>
-
-<div id="fuelForm" class="form hidden"><h2>Tankowanie</h2><input id="fId" type="hidden"><label>Samochód</label><select id="fVehicle"></select><label>Tankował</label><select id="fEmployee"></select><div class="row"><div><label>Data</label><input id="fDate" type="date"></div><div><label>Przebieg</label><input id="fOdo" type="number"></div></div><div class="row"><div><label>Litry</label><input id="fLiters" type="number" step="0.01"></div><div><label>Kwota</label><input id="fAmount" type="number" step="0.01"></div></div><label>Stacja / uwagi</label><input id="fStation"><div class="toolbar"><button onclick="saveFuel()">Zapisz</button><button class="secondary" onclick="closeModal()">Anuluj</button></div></div>
-
+<div id="photoForm" class="form hidden"><h2>Dodaj zdjęcie</h2><input id="pId" type="hidden"><input id="pClient" type="hidden"><input id="pDevice" type="hidden"><input id="pOrder" type="hidden"><label>Rodzaj</label><select id="pCategory"><option value="urządzenie">Urządzenie</option><option value="naprawa">Naprawa</option><option value="tabliczka">Tabliczka znamionowa</option><option value="przegląd">Przegląd</option><option value="inne">Inne</option></select><label>Opis</label><input id="pCaption"><label>Zdjęcie</label><input id="pFile" type="file" accept="image/*" capture="environment"><div class="hint">Zdjęcie zostanie automatycznie zmniejszone przed zapisem.</div><div class="toolbar"><button onclick="savePhoto()">Zapisz zdjęcie</button><button class="secondary" onclick="closeModal()">Anuluj</button></div></div>
+<div id="protocolForm" class="form hidden"><h2>Protokół serwisowy</h2><input id="prId" type="hidden"><label>Zlecenie</label><select id="prOrder" onchange="protocolOrderChanged()"></select><div class="row"><div><label>Typ checklisty</label><select id="prTemplate" onchange="renderChecklist()"><option value="heatpump">Pompa ciepła</option><option value="ac">Klimatyzacja</option><option value="boiler">Kocioł</option><option value="reku">Rekuperacja</option><option value="generic">Ogólna</option></select></div><div><label>Data</label><input id="prDate" type="date"></div></div><h3 class="sectionTitle">Checklista</h3><div id="checklist" class="checkgrid"></div><label>Wykonane prace</label><textarea id="prWork"></textarea><label>Pomiary / parametry</label><textarea id="prMeasurements" placeholder="np. ciśnienia, temperatury, CO₂, pobór prądu"></textarea><label>Zalecenia dla klienta</label><textarea id="prRecommendations"></textarea><label>Imię klienta / osoby odbierającej</label><input id="prCustomer"><h3 class="sectionTitle">Podpis klienta</h3><canvas id="signature" class="sig"></canvas><div class="toolbar"><button class="secondary smallBtn" onclick="clearSignature()">Wyczyść podpis</button></div><div class="toolbar"><button onclick="saveProtocol()">Zapisz protokół</button><button id="printProtocolBtn" class="purpleBtn hidden" onclick="printCurrentProtocol()">PDF / drukuj</button><button class="secondary" onclick="closeModal()">Anuluj</button></div></div>
 </div></div>
-
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
 import { getAuth,onAuthStateChanged,signInWithEmailAndPassword,createUserWithEmailAndPassword,signOut } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
-import { getFirestore,collection,doc,addDoc,setDoc,getDocs,query,where,deleteDoc } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+import { getFirestore,collection,doc,addDoc,setDoc,getDocs,query,where } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 import { getMessaging,getToken } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-messaging.js";
 import { firebaseConfig,vapidKey } from "./firebase-config.js";
-
 const appFb=initializeApp(firebaseConfig),auth=getAuth(appFb),db=getFirestore(appFb),messaging=getMessaging(appFb),q=id=>document.getElementById(id);
-let user=null,clients=[],devices=[],orders=[],employees=[],vehicles=[],worklogs=[],trips=[],fuel=[],inspections=[],serviceHistory=[];
-const DEFAULT_EMP=[['e1','Ania'],['e2','Paolo'],['e3','Yurii'],['e4','Kuba']];
-const DEFAULT_VEH=[['v1','Ducato'],['v2','Doblo']];
-function today(){return new Date().toISOString().slice(0,10)} function month(){return today().slice(0,7)}
-function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
-function fmt(s){return s?new Date(s+'T12:00:00').toLocaleDateString('pl-PL'):'—'}
-function hours(a,b,br=0){if(!a||!b)return 0;let [ah,am]=a.split(':').map(Number),[bh,bm]=b.split(':').map(Number);return Math.max(0,((bh*60+bm)-(ah*60+am)-Number(br||0))/60)}
-function openForm(id){document.querySelectorAll('.form').forEach(x=>x.classList.add('hidden'));q(id).classList.remove('hidden');q('modal').classList.add('show')}
-window.closeModal=()=>q('modal').classList.remove('show');
-window.go=(id,btn)=>{document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));q(id).classList.add('active');document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));btn.classList.add('active');renderAll()}
-window.login=async()=>{try{await signInWithEmailAndPassword(auth,q('email').value,q('password').value)}catch(e){alert(e.message)}}
-window.registerUser=async()=>{try{await createUserWithEmailAndPassword(auth,q('email').value,q('password').value)}catch(e){alert(e.message)}}
-window.logout=()=>signOut(auth);
+let user=null,clients=[],devices=[],orders=[],employees=[],worklogs=[],inspections=[],photos=[],protocols=[],vehicles=[],trips=[],fuel=[];let currentMaterials=[];let currentProtocol=null;
+const CHECKS={
+heatpump:['Oględziny urządzenia i instalacji','Czyszczenie filtrów / sit','Kontrola ciśnienia instalacji CO','Kontrola przepływu i pomp obiegowych','Kontrola temperatur zasilania i powrotu','Kontrola błędów i historii alarmów','Kontrola szczelności układu chłodniczego','Kontrola połączeń elektrycznych','Kontrola odpływu kondensatu','Test pracy grzanie / CWU / defrost'],
+ac:['Czyszczenie filtrów jednostki wewnętrznej','Czyszczenie parownika','Czyszczenie skraplacza','Kontrola odpływu skroplin','Pomiar temperatur nawiewu i powrotu','Kontrola ciśnień / temperatur czynnika','Kontrola szczelności układu chłodniczego','Kontrola połączeń elektrycznych','Kontrola wentylatorów','Test pracy chłodzenie / grzanie'],
+boiler:['Czyszczenie palnika i wymiennika','Kontrola szczelności gazu','Kontrola przewodu spalinowego','Analiza spalin','Kontrola odpływu kondensatu','Kontrola ciśnienia instalacji','Kontrola naczynia przeponowego','Kontrola zabezpieczeń','Kontrola elektrod','Test pracy CO / CWU'],
+reku:['Kontrola / wymiana filtrów','Czyszczenie wymiennika','Kontrola wentylatorów','Kontrola odpływu kondensatu','Kontrola przepływów powietrza','Kontrola bypassu','Kontrola nagrzewnicy / chłodnicy','Kontrola czujników','Kontrola kanałów i czerpni/wyrzutni','Test wszystkich biegów'],
+generic:['Oględziny urządzenia','Czyszczenie','Kontrola połączeń','Kontrola zabezpieczeń','Kontrola parametrów pracy','Kontrola szczelności','Test funkcjonalny','Sprawdzenie błędów','Dokumentacja zdjęciowa','Przekazanie zaleceń klientowi']};
+function today(){return new Date().toISOString().slice(0,10)}function month(){return today().slice(0,7)}function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}function fmt(s){return s?new Date(s+'T12:00:00').toLocaleDateString('pl-PL'):'—'}function money(n){return Number(n||0).toFixed(2).replace('.',',')+' zł'}function hours(a,b,br=0){if(!a||!b)return 0;let [ah,am]=a.split(':').map(Number),[bh,bm]=b.split(':').map(Number);return Math.max(0,((bh*60+bm)-(ah*60+am)-Number(br||0))/60)}function addMonthsDate(s,m){if(!s)return'';let d=new Date(s+'T12:00:00');d.setMonth(d.getMonth()+Number(m||12));return d.toISOString().slice(0,10)}function daysBetween(a,b){return Math.ceil((new Date(b+'T12:00:00')-new Date(a+'T12:00:00'))/86400000)}function openForm(id){document.querySelectorAll('.form').forEach(x=>x.classList.add('hidden'));q(id).classList.remove('hidden');q('modal').classList.add('show')}window.closeModal=()=>q('modal').classList.remove('show');
+window.go=(id,btn)=>{document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));q(id).classList.add('active');document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));btn.classList.add('active');renderAll()};window.login=async()=>{try{await signInWithEmailAndPassword(auth,q('email').value,q('password').value)}catch(e){alert(e.message)}};window.registerUser=async()=>{try{await createUserWithEmailAndPassword(auth,q('email').value,q('password').value)}catch(e){alert(e.message)}};window.logout=()=>signOut(auth);
 async function loadCol(name){let s=await getDocs(query(collection(db,name),where('ownerUid','==',user.uid)));return s.docs.map(d=>({id:d.id,...d.data()}))}
-async function ensureDefaults(){
-  for(const [id,name] of DEFAULT_EMP){
-    const ref=doc(db,'employees',`${user.uid}_${id}`);
-    await setDoc(ref,{ownerUid:user.uid,name,active:true,sort:id},{merge:true});
-  }
-  for(const [id,name] of DEFAULT_VEH){
-    const ref=doc(db,'vehicles',`${user.uid}_${id}`);
-    await setDoc(ref,{ownerUid:user.uid,name,active:true,sort:id},{merge:true});
-  }
-}
-async function loadAll(){await ensureDefaults();[clients,devices,orders,employees,vehicles,worklogs,trips,fuel,inspections,serviceHistory]=await Promise.all(['clients','devices','orders','employees','vehicles','worklogs','trips','fuel','inspections','serviceHistory'].map(loadCol));renderAll()}
-onAuthStateChanged(auth,async u=>{user=u;if(u){q('loginPage').classList.add('hidden');q('app').classList.remove('hidden');q('nav').classList.remove('hidden');q('logoutBtn').classList.remove('hidden');q('uidBox').textContent=u.uid;q('configState').textContent='Firebase połączony.';await loadAll()}else{q('loginPage').classList.remove('hidden');q('app').classList.add('hidden');q('nav').classList.add('hidden');q('logoutBtn').classList.add('hidden')}})
-function fill(sel,arr,val=''){sel.innerHTML='<option value="">— wybierz —</option>'+arr.map(x=>`<option value="${x.id}">${esc(x.name||x.title)}</option>`).join('');sel.value=val}
-window.openClient=id=>{let c=clients.find(x=>x.id===id)||{};q('cId').value=c.id||'';q('cName').value=c.name||'';q('cPhone').value=c.phone||'';q('cAddress').value=c.address||'';q('cCity').value=c.city||'';q('cNotes').value=c.notes||'';openForm('clientForm')}
-window.saveClient=async()=>{let id=q('cId').value,data={ownerUid:user.uid,name:q('cName').value.trim(),phone:q('cPhone').value.trim(),address:q('cAddress').value.trim(),city:q('cCity').value.trim(),notes:q('cNotes').value.trim()};if(!data.name)return alert('Podaj klienta.');id?await setDoc(doc(db,'clients',id),data,{merge:true}):await addDoc(collection(db,'clients'),data);closeModal();await loadAll()}
-window.openOrder=id=>{let o=orders.find(x=>x.id===id)||{employees:[]};q('oId').value=o.id||'';fill(q('oClient'),clients,o.clientId||'');orderClientChanged(o.deviceId||'');q('oTitle').value=o.title||'';q('oDesc').value=o.desc||'';q('oStatus').value=o.status||'Do kontaktu';q('oPriority').value=o.priority||'Normalny';q('oDate').value=o.date||today();q('oTime').value=o.time||'';q('oEmployees').innerHTML=employees.map(e=>`<label style="display:flex;gap:8px;align-items:center"><input style="width:auto" type="checkbox" data-oe="${e.id}" ${o.employees?.includes(e.id)?'checked':''}> ${esc(e.name)}</label>`).join('');openForm('orderForm')}
-window.orderClientChanged=(selected='')=>{let cid=q('oClient').value;let arr=devices.filter(d=>d.clientId===cid).map(d=>({...d,name:`${d.category||''} ${d.brand||''} ${d.model||''}${d.serial?` • ${d.serial}`:''}`.trim()}));fill(q('oDevice'),arr,selected)};
-window.saveOrder=async()=>{let id=q('oId').value,data={ownerUid:user.uid,clientId:q('oClient').value,deviceId:q('oDevice').value,title:q('oTitle').value.trim(),desc:q('oDesc').value.trim(),status:q('oStatus').value,priority:q('oPriority').value,date:q('oDate').value,time:q('oTime').value,employees:[...document.querySelectorAll('[data-oe]:checked')].map(x=>x.dataset.oe)};if(!data.clientId||!data.title)return alert('Wybierz klienta i temat.');id?await setDoc(doc(db,'orders',id),data,{merge:true}):await addDoc(collection(db,'orders'),data);closeModal();await loadAll()}
-
-
-
-function deviceName(d){return `${d?.category||''} ${d?.brand||''} ${d?.model||''}`.replace(/\s+/g,' ').trim()||'Urządzenie'}
-function clientName(id){return clients.find(c=>c.id===id)?.name||'Brak klienta'}
-function lastDoneInspection(deviceId){return [...inspections].filter(i=>i.deviceId===deviceId&&i.status==='Zrobiony').sort((a,b)=>(b.completedDate||b.date||'').localeCompare(a.completedDate||a.date||''))[0]}
-function nextInspection(deviceId){return [...inspections].filter(i=>i.deviceId===deviceId&&i.status!=='Zrobiony').sort((a,b)=>(a.date||'9999').localeCompare(b.date||'9999'))[0]}
-window.openDevice=(id='',clientId='')=>{let d=devices.find(x=>x.id===id)||{};q('dId').value=d.id||'';fill(q('dClient'),clients,d.clientId||clientId||'');q('dCategory').value=d.category||'Pompa ciepła';q('dStatus').value=d.status||'Sprawne';q('dBrand').value=d.brand||'';q('dModel').value=d.model||'';q('dSerial').value=d.serial||d.serialNumber||'';q('dInstallDate').value=d.installDate||'';q('dWarrantyUntil').value=d.warrantyUntil||'';q('dLocation').value=d.location||'';q('dNotes').value=d.notes||'';q('deleteDeviceBtn').classList.toggle('hidden',!d.id);openForm('deviceForm')}
-window.saveDevice=async()=>{let id=q('dId').value,data={ownerUid:user.uid,clientId:q('dClient').value,category:q('dCategory').value,status:q('dStatus').value,brand:q('dBrand').value.trim(),model:q('dModel').value.trim(),serial:q('dSerial').value.trim(),installDate:q('dInstallDate').value,warrantyUntil:q('dWarrantyUntil').value,location:q('dLocation').value.trim(),notes:q('dNotes').value.trim()};if(!data.clientId)return alert('Wybierz klienta.');if(!data.brand&&!data.model&&!data.serial)return alert('Podaj producenta, model lub numer seryjny.');id?await setDoc(doc(db,'devices',id),data,{merge:true}):await addDoc(collection(db,'devices'),data);closeModal();await loadAll()}
-window.deleteDevice=async()=>{let id=q('dId').value;if(!id)return;let linked=inspections.filter(i=>i.deviceId===id).length+orders.filter(o=>o.deviceId===id).length+serviceHistory.filter(h=>h.deviceId===id).length;if(linked&&!confirm(`Urządzenie ma ${linked} powiązanych wpisów historii. Usunąć samo urządzenie? Wpisy pozostaną w bazie.`))return;if(!linked&&!confirm('Na pewno usunąć urządzenie?'))return;await deleteDoc(doc(db,'devices',id));closeModal();await loadAll()}
-function historyEvents(deviceId){let h=serviceHistory.filter(x=>x.deviceId===deviceId).map(x=>({...x,source:'history',eventDate:x.date||'',eventType:x.type||'Serwis',eventTitle:x.title||x.type||'Wpis serwisowy',eventDesc:x.description||'',cost:x.cost||0}));let ins=inspections.filter(x=>x.deviceId===deviceId).map(x=>({...x,source:'inspection',eventDate:x.completedDate||x.startedDate||x.date||'',eventType:'Przegląd',eventTitle:`${x.type||'Przegląd'} — ${x.status||''}`,eventDesc:x.notes||'',cost:0}));let os=orders.filter(x=>x.deviceId===deviceId).map(x=>({...x,source:'order',eventDate:x.date||'',eventType:'Zlecenie',eventTitle:x.title||'Zlecenie',eventDesc:`${x.status||''}${x.desc?` • ${x.desc}`:''}`,cost:0}));return [...h,...ins,...os].sort((a,b)=>(b.eventDate||'').localeCompare(a.eventDate||''))}
-window.openDeviceDetails=id=>{let d=devices.find(x=>x.id===id);if(!d)return;let c=clients.find(x=>x.id===d.clientId),last=lastDoneInspection(id),next=nextInspection(id),events=historyEvents(id);let statusClass=d.status==='Sprawne'?'status-ok':'status-warn';q('deviceDetailsContent').innerHTML=`<div class="device-head"><div><h2 style="margin:0">${esc(deviceName(d))}</h2><div class="meta">${esc(c?.name||'')} ${c?.city?`• ${esc(c.city)}`:''}</div></div><span class="${statusClass}">${esc(d.status||'Sprawne')}</span></div>${d.serial?`<p>Nr seryjny: <b class="serial">${esc(d.serial)}</b></p>`:''}<div class="detail-grid"><div class="detail-box"><div class="label">Ostatni przegląd</div><b>${last?fmt(last.completedDate||last.date):'Brak'}</b></div><div class="detail-box"><div class="label">Następny przegląd</div><b>${next?fmt(next.date):'Brak'}</b></div><div class="detail-box"><div class="label">Data montażu</div><b>${fmt(d.installDate)}</b></div><div class="detail-box"><div class="label">Gwarancja do</div><b>${fmt(d.warrantyUntil)}</b></div></div>${d.location?`<p class="meta"><b>Lokalizacja:</b> ${esc(d.location)}</p>`:''}${d.notes?`<p class="meta"><b>Uwagi:</b> ${esc(d.notes)}</p>`:''}<div class="toolbar"><button onclick="openHistory('', '${d.id}')">+ Wpis historii</button><button class="infoBtn" onclick="openInspection('', '${d.clientId}', '${d.id}')">+ Przegląd</button><button class="secondary" onclick="openDevice('${d.id}')">Edytuj urządzenie</button><button class="secondary" onclick="closeModal()">Zamknij</button></div><h3>Historia urządzenia (${events.length})</h3><div class="timeline">${events.length?events.map(e=>{let emp=employees.find(x=>x.id===e.employeeId);return `<div class="event" ${e.source==='history'?`onclick="openHistory('${e.id}','${d.id}')" style="cursor:pointer"`:''}><h4>${esc(e.eventType)} — ${esc(e.eventTitle)}</h4><div class="meta">${fmt(e.eventDate)}${emp?` • ${esc(emp.name)}`:''}${Number(e.cost||0)?` • ${Number(e.cost).toFixed(2)} zł`:''}<br>${esc(e.eventDesc||'')}</div></div>`}).join(''):'<div class="empty">Brak historii. Dodaj pierwszy wpis.</div>'}</div>`;openForm('deviceDetails')}
-window.openHistory=(id='',deviceId='')=>{let h=serviceHistory.find(x=>x.id===id)||{};q('hId').value=h.id||'';q('hDeviceId').value=h.deviceId||deviceId;q('hDate').value=h.date||today();q('hType').value=h.type||'Serwis';q('hTitle').value=h.title||'';q('hDescription').value=h.description||'';fill(q('hEmployee'),employees,h.employeeId||'');q('hCost').value=h.cost||'';q('deleteHistoryBtn').classList.toggle('hidden',!h.id);openForm('historyForm')}
-window.saveHistory=async()=>{let id=q('hId').value,data={ownerUid:user.uid,deviceId:q('hDeviceId').value,date:q('hDate').value,type:q('hType').value,title:q('hTitle').value.trim(),description:q('hDescription').value.trim(),employeeId:q('hEmployee').value,cost:Number(q('hCost').value||0)};if(!data.deviceId||!data.date||!data.title)return alert('Podaj datę i tytuł wpisu.');id?await setDoc(doc(db,'serviceHistory',id),data,{merge:true}):await addDoc(collection(db,'serviceHistory'),data);await loadAll();openDeviceDetails(data.deviceId)}
-window.deleteHistory=async()=>{let id=q('hId').value,did=q('hDeviceId').value;if(!id||!confirm('Usunąć ten wpis z historii?'))return;await deleteDoc(doc(db,'serviceHistory',id));await loadAll();openDeviceDetails(did)}
-
-
-function addMonthsDate(s,m){
-  if(!s)return '';
-  let d=new Date(s+'T12:00:00');
-  d.setMonth(d.getMonth()+Number(m||12));
-  return d.toISOString().slice(0,10);
-}
-function inspectionInterval(){
-  return q('iIntervalPreset').value==='custom'
-    ? Math.max(1,Number(q('iCustomInterval').value||1))
-    : Number(q('iIntervalPreset').value||12);
-}
-window.toggleCustomInterval=()=>{
-  q('customIntervalWrap').classList.toggle('hidden',q('iIntervalPreset').value!=='custom');
-}
-window.toggleManualClient=()=>{
-  let on=q('iManualClientEnabled').checked;
-  q('iManualClientWrap').classList.toggle('hidden',!on);
-  q('iClient').disabled=on;
-}
-window.toggleManualDevice=()=>{
-  let on=q('iManualDeviceEnabled').checked;
-  q('iManualDeviceWrap').classList.toggle('hidden',!on);
-  q('iDevice').disabled=on;
-}
-window.inspectionClientChanged=()=>{
-  refreshInspectionDevices();
-}
-window.inspectionDeviceChanged=()=>{
-  let d=devices.find(x=>x.id===q('iDevice').value);
-  if(d){
-    q('iSerial').value=d.serial||d.serialNumber||q('iSerial').value||'';
-  }
-}
-window.inspectionStatusChanged=()=>{
-  let st=q('iStatus').value;
-  if(st==='W trakcie' && !q('iStartedDate').value) q('iStartedDate').value=today();
-  if(st==='Zrobiony' && !q('iCompletedDate').value) q('iCompletedDate').value=today();
-}
-window.refreshInspectionDevices=()=>{
-  let cid=q('iClient').value;
-  let arr=devices.filter(d=>d.clientId===cid);
-  fill(q('iDevice'),arr.map(d=>({...d,name:`${d.category||''} ${d.brand||''} ${d.model||''}`.trim()||'Urządzenie'})),q('iDevice').value);
-  inspectionDeviceChanged();
-}
-window.openInspection=(id='',prefClient='',prefDevice='')=>{
-  let i=inspections.find(x=>x.id===id)||{};
-
-  q('iId').value=i.id||'';
-  fill(q('iClient'),clients,i.clientId||prefClient||'');
-
-  q('iManualClientEnabled').checked=!!i.clientManual;
-  q('iClientManual').value=i.clientManual||'';
-  toggleManualClient();
-
-  let devs=devices
-    .filter(d=>!i.clientId||d.clientId===i.clientId)
-    .map(d=>({...d,name:`${d.category||''} ${d.brand||''} ${d.model||''}`.trim()||'Urządzenie'}));
-  fill(q('iDevice'),devs,i.deviceId||prefDevice||'');
-
-  q('iManualDeviceEnabled').checked=!!i.deviceManual;
-  q('iDeviceManual').value=i.deviceManual||'';
-  toggleManualDevice();
-
-  q('iSerial').value=i.serial||'';
-  q('iType').value=i.type||'Przegląd';
-  q('iDate').value=i.date||today();
-  q('iStatus').value=i.status||'Zaplanowany';
-  q('iStartedDate').value=i.startedDate||'';
-  q('iCompletedDate').value=i.completedDate||'';
-  fill(q('iEmployee'),employees,i.employeeId||'');
-
-  let inter=Number(i.intervalMonths||12);
-  if([1,3,6,12,24].includes(inter)){
-    q('iIntervalPreset').value=String(inter);
-    q('iCustomInterval').value=inter;
-  }else{
-    q('iIntervalPreset').value='custom';
-    q('iCustomInterval').value=inter||12;
-  }
-
-  q('iAutoNext').checked=i.autoNext!==false;
-  q('iNotes').value=i.notes||'';
-  toggleCustomInterval();
-
-  q('markDoneBtn').classList.toggle('hidden',!i.id||i.status==='Zrobiony');
-  q('deleteInspectionBtn').classList.toggle('hidden',!i.id);
-  openForm('inspectionForm');
-}
-window.saveInspection=async()=>{
-  let id=q('iId').value;
-  let manualClient=q('iManualClientEnabled').checked;
-  let manualDevice=q('iManualDeviceEnabled').checked;
-
-  let data={
-    ownerUid:user.uid,
-    clientId:manualClient?'':q('iClient').value,
-    clientManual:manualClient?q('iClientManual').value.trim():'',
-    deviceId:manualDevice?'':q('iDevice').value,
-    deviceManual:manualDevice?q('iDeviceManual').value.trim():'',
-    serial:q('iSerial').value.trim(),
-    type:q('iType').value.trim()||'Przegląd',
-    date:q('iDate').value,
-    status:q('iStatus').value,
-    startedDate:q('iStartedDate').value,
-    completedDate:q('iCompletedDate').value,
-    employeeId:q('iEmployee').value,
-    intervalMonths:inspectionInterval(),
-    autoNext:q('iAutoNext').checked,
-    notes:q('iNotes').value.trim()
-  };
-
-  if(!data.clientId && !data.clientManual)return alert('Wybierz klienta albo wpisz klienta ręcznie.');
-  if(!data.deviceId && !data.deviceManual)return alert('Wybierz urządzenie albo wpisz urządzenie ręcznie.');
-  if(!data.date)return alert('Podaj planowaną datę przeglądu.');
-
-  if(data.status==='W trakcie' && !data.startedDate) data.startedDate=today();
-  if(data.status==='Zrobiony' && !data.completedDate) data.completedDate=today();
-
-  if(id) await setDoc(doc(db,'inspections',id),data,{merge:true});
-  else await addDoc(collection(db,'inspections'),data);
-
-  closeModal();
-  await loadAll();
-}
-window.markInspectionDone=async()=>{
-  let id=q('iId').value;
-  let current=inspections.find(x=>x.id===id);
-  if(!current)return;
-
-  let inter=inspectionInterval();
-  let autoNext=q('iAutoNext').checked;
-  let completed=today();
-
-  await setDoc(doc(db,'inspections',id),{
-    ownerUid:user.uid,
-    status:'Zrobiony',
-    completedDate:completed,
-    intervalMonths:inter,
-    autoNext:autoNext
-  },{merge:true});
-
-  if(autoNext){
-    let nextDate=addMonthsDate(q('iDate').value||current.date,inter);
-    await addDoc(collection(db,'inspections'),{
-      ownerUid:user.uid,
-      clientId:q('iManualClientEnabled').checked?'':(q('iClient').value||current.clientId||''),
-      clientManual:q('iManualClientEnabled').checked?q('iClientManual').value.trim():(current.clientManual||''),
-      deviceId:q('iManualDeviceEnabled').checked?'':(q('iDevice').value||current.deviceId||''),
-      deviceManual:q('iManualDeviceEnabled').checked?q('iDeviceManual').value.trim():(current.deviceManual||''),
-      serial:q('iSerial').value.trim()||current.serial||'',
-      type:q('iType').value.trim()||current.type||'Przegląd',
-      date:nextDate,
-      status:'Zaplanowany',
-      startedDate:'',
-      completedDate:'',
-      employeeId:q('iEmployee').value||current.employeeId||'',
-      intervalMonths:inter,
-      autoNext:autoNext,
-      notes:'Automatycznie utworzony po wykonaniu poprzedniego przeglądu.'
-    });
-  }
-
-  closeModal();
-  await loadAll();
-}
-window.deleteInspection=async()=>{
-  let id=q('iId').value;
-  if(!id)return;
-  if(!confirm('Na pewno usunąć ten przegląd?'))return;
-  await deleteDoc(doc(db,'inspections',id));
-  closeModal();
-  await loadAll();
-}
-function inspectionClientName(i){
-  return i.clientManual || clients.find(x=>x.id===i.clientId)?.name || 'Brak klienta';
-}
-function inspectionDeviceName(i){
-  if(i.deviceManual)return i.deviceManual;
-  let d=devices.find(x=>x.id===i.deviceId);
-  return d?`${d.category||''} ${d.brand||''} ${d.model||''}`.trim():'Brak urządzenia';
-}
-function inspectionSerial(i){
-  if(i.serial)return i.serial;
-  let d=devices.find(x=>x.id===i.deviceId);
-  return d?.serial||d?.serialNumber||'';
-}
-function renderInspections(){
-  let filter=q('inspectionFilter')?.value||'';
-  let search=(q('inspectionSearch')?.value||'').trim().toLowerCase();
-  let thisM=month();
-
-  q('iPlanned').textContent=inspections.filter(i=>i.status==='Zaplanowany').length;
-  q('iInProgress').textContent=inspections.filter(i=>i.status==='W trakcie').length;
-  q('iDoneMonth').textContent=inspections.filter(i=>i.status==='Zrobiony'&&(i.completedDate||'').startsWith(thisM)).length;
-
-  let arr=[...inspections].sort((a,b)=>(a.date||'9999').localeCompare(b.date||'9999'));
-
-  if(filter) arr=arr.filter(i=>i.status===filter);
-
-  if(search){
-    arr=arr.filter(i=>{
-      let hay=[
-        inspectionClientName(i),
-        inspectionDeviceName(i),
-        inspectionSerial(i),
-        i.type||'',
-        i.notes||''
-      ].join(' ').toLowerCase();
-      return hay.includes(search);
-    });
-  }
-
-  q('inspectionList').innerHTML=arr.length?arr.map(i=>{
-    let c=inspectionClientName(i);
-    let d=inspectionDeviceName(i);
-    let s=inspectionSerial(i);
-    let e=employees.find(x=>x.id===i.employeeId);
-
-    let klass=i.status==='Zrobiony'?'purple':i.status==='W trakcie'?'warn':'info';
-
-    return `<div class="item ${klass}" onclick="openInspection('${i.id}')">
-      <h3>${esc(c)}</h3>
-      <div class="meta">
-        <b>${esc(d)}</b>${s?`<br>Nr seryjny: <b>${esc(s)}</b>`:''}
-        <br>Status: <b>${esc(i.status||'Zaplanowany')}</b>
-        <br>Termin: ${fmt(i.date)}
-        ${i.startedDate?`<br>Rozpoczęto: ${fmt(i.startedDate)}`:''}
-        ${i.completedDate?`<br>Wykonano: ${fmt(i.completedDate)}`:''}
-        ${e?`<br>Pracownik: ${esc(e.name)}`:''}
-        <br>Interwał: ${Number(i.intervalMonths||12)} mies.
-      </div>
-    </div>`;
-  }).join(''):'<div class="empty">Brak przeglądów.</div>';
-}
-
-
-window.openEmployee=id=>{
-  let e=employees.find(x=>x.id===id)||{};
-  q('eId').value=e.id||'';
-  q('eName').value=e.name||'';
-  q('deleteEmployeeBtn').classList.toggle('hidden',!e.id);
-  openForm('employeeForm');
-}
-window.saveEmployee=async()=>{
-  let id=q('eId').value;
-  let name=q('eName').value.trim();
-  if(!name)return alert('Podaj imię pracownika.');
-  let data={ownerUid:user.uid,name,active:true,sort:name.toLowerCase()};
-  if(id) await setDoc(doc(db,'employees',id),data,{merge:true});
-  else await addDoc(collection(db,'employees'),data);
-  closeModal(); await loadAll();
-}
-window.deleteEmployee=async()=>{
-  let id=q('eId').value;
-  if(!id)return;
-  let linkedWork=worklogs.some(w=>w.employeeId===id);
-  let linkedTrips=trips.some(t=>t.driverId===id);
-  let linkedFuel=fuel.some(f=>f.employeeId===id);
-  if(linkedWork||linkedTrips||linkedFuel){
-    return alert('Nie można usunąć pracownika, ponieważ ma już wpisy czasu pracy, przejazdy lub tankowania.');
-  }
-  if(!confirm('Na pewno usunąć tego pracownika?'))return;
-  await deleteDoc(doc(db,'employees',id));
-  closeModal(); await loadAll();
-}
-
-window.openWork=id=>{let w=worklogs.find(x=>x.id===id)||{};q('wId').value=w.id||'';fill(q('wEmployee'),employees,w.employeeId||'');q('wDate').value=w.date||today();q('wBreak').value=w.breakMin||0;q('wStart').value=w.start||'07:00';q('wEnd').value=w.end||'15:00';q('wPlace').value=w.place||'';fill(q('wOrder'),orders,w.orderId||'');q('wTask').value=w.task||'';openForm('workForm')}
-window.saveWork=async()=>{let id=q('wId').value,data={ownerUid:user.uid,employeeId:q('wEmployee').value,date:q('wDate').value,breakMin:Number(q('wBreak').value||0),start:q('wStart').value,end:q('wEnd').value,place:q('wPlace').value.trim(),orderId:q('wOrder').value,task:q('wTask').value.trim()};if(!data.employeeId)return alert('Wybierz pracownika.');id?await setDoc(doc(db,'worklogs',id),data,{merge:true}):await addDoc(collection(db,'worklogs'),data);closeModal();await loadAll()}
-window.openTrip=id=>{let t=trips.find(x=>x.id===id)||{};q('tId').value=t.id||'';fill(q('tVehicle'),vehicles,t.vehicleId||'');fill(q('tDriver'),employees,t.driverId||'');q('tDate').value=t.date||today();q('tPurpose').value=t.purpose||'';q('tRoute').value=t.route||'';q('tStartKm').value=t.startKm||'';q('tEndKm').value=t.endKm||'';openForm('tripForm')}
-window.saveTrip=async()=>{let id=q('tId').value,data={ownerUid:user.uid,vehicleId:q('tVehicle').value,driverId:q('tDriver').value,date:q('tDate').value,purpose:q('tPurpose').value.trim(),route:q('tRoute').value.trim(),startKm:Number(q('tStartKm').value||0),endKm:Number(q('tEndKm').value||0)};if(!data.vehicleId||!data.driverId)return alert('Wybierz auto i kierowcę.');if(data.endKm<data.startKm)return alert('Błędny licznik.');id?await setDoc(doc(db,'trips',id),data,{merge:true}):await addDoc(collection(db,'trips'),data);closeModal();await loadAll()}
-window.openFuel=id=>{let f=fuel.find(x=>x.id===id)||{};q('fId').value=f.id||'';fill(q('fVehicle'),vehicles,f.vehicleId||'');fill(q('fEmployee'),employees,f.employeeId||'');q('fDate').value=f.date||today();q('fOdo').value=f.odo||'';q('fLiters').value=f.liters||'';q('fAmount').value=f.amount||'';q('fStation').value=f.station||'';openForm('fuelForm')}
-window.saveFuel=async()=>{let id=q('fId').value,data={ownerUid:user.uid,vehicleId:q('fVehicle').value,employeeId:q('fEmployee').value,date:q('fDate').value,odo:Number(q('fOdo').value||0),liters:Number(q('fLiters').value||0),amount:Number(q('fAmount').value||0),station:q('fStation').value.trim()};if(!data.vehicleId)return alert('Wybierz auto.');id?await setDoc(doc(db,'fuel',id),data,{merge:true}):await addDoc(collection(db,'fuel'),data);closeModal();await loadAll()}
-window.enablePush=async()=>{try{let p=await Notification.requestPermission();if(p!=='granted')return alert('Brak zgody.');let reg=await navigator.serviceWorker.register('./firebase-messaging-sw.js');let token=await getToken(messaging,{vapidKey,serviceWorkerRegistration:reg});await setDoc(doc(db,'pushTokens',user.uid),{ownerUid:user.uid,token,updatedAt:new Date().toISOString()},{merge:true});q('pushState').textContent='Powiadomienia aktywne.'}catch(e){alert('Nie udało się włączyć push. Sprawdź VAPID.');console.error(e)}}
-function renderClients(){let z=(q('clientSearch')?.value||'').trim().toLowerCase();let a=clients.filter(c=>{let ds=devices.filter(d=>d.clientId===c.id);let hay=[c.name,c.phone,c.city,c.address,...ds.flatMap(d=>[d.category,d.brand,d.model,d.serial,d.serialNumber])].join(' ').toLowerCase();return hay.includes(z)});q('clientList').innerHTML=a.length?a.map(c=>{let ds=devices.filter(d=>d.clientId===c.id).sort((a,b)=>deviceName(a).localeCompare(deviceName(b),'pl'));return `<div class="item"><div class="device-head"><div onclick="openClient('${c.id}')" style="cursor:pointer;flex:1"><h3>${esc(c.name)}</h3><div class="meta">${esc(c.phone||'')} ${c.city?`• ${esc(c.city)}`:''}${c.address?`<br>${esc(c.address)}`:''}</div></div><button class="smallbtn" onclick="event.stopPropagation();openDevice('', '${c.id}')">+ Urządzenie</button></div>${ds.length?ds.map(d=>{let next=nextInspection(d.id);return `<div class="device-mini" onclick="openDeviceDetails('${d.id}')"><div class="device-title">${esc(deviceName(d))}</div><div class="meta">${d.serial?`SN: <span class="serial">${esc(d.serial)}</span> • `:''}${esc(d.status||'Sprawne')}${next?`<br>Następny przegląd: <b>${fmt(next.date)}</b>`:''}</div></div>`}).join(''):'<div class="meta" style="margin-top:8px">Brak urządzeń u klienta.</div>'}</div>`}).join(''):'<div class="empty">Brak klientów lub urządzeń pasujących do wyszukiwania.</div>'}
-function renderOrders(){let z=(q('orderSearch')?.value||'').toLowerCase();let a=orders.filter(o=>[o.title,o.desc,o.status].join(' ').toLowerCase().includes(z));q('orderList').innerHTML=a.length?a.map(o=>{let c=clients.find(x=>x.id===o.clientId),ens=(o.employees||[]).map(id=>employees.find(e=>e.id===id)?.name).filter(Boolean).join(', ');let d=devices.find(x=>x.id===o.deviceId);return `<div class="item info" onclick="openOrder('${o.id}')"><h3>${esc(o.title)}</h3><div class="meta">${esc(c?.name||'')}${d?` • ${esc(deviceName(d))}`:''} • ${esc(o.status)} • ${fmt(o.date)} ${esc(o.time||'')}<br>${ens?`Ekipa: ${esc(ens)}`:''}</div></div>`}).join(''):'<div class="empty">Brak zleceń.</div>'}
-function renderEmployees(){q('employeeCards').innerHTML=employees.map(e=>{let arr=worklogs.filter(w=>w.employeeId===e.id&&w.date.startsWith(month())),h=arr.reduce((s,w)=>s+hours(w.start,w.end,w.breakMin),0);return `<div class="item purple" onclick="openEmployee('${e.id}')"><h3>${esc(e.name)}</h3><div class="meta">Godziny w miesiącu: <b>${h.toFixed(1)}</b><br><span class="badge">Kliknij, aby edytować lub usunąć</span></div></div>`}).join('');q('workList').innerHTML=worklogs.length?[...worklogs].sort((a,b)=>(b.date+b.start).localeCompare(a.date+a.start)).map(w=>{let e=employees.find(x=>x.id===w.employeeId),o=orders.find(x=>x.id===w.orderId);return `<div class="item" onclick="openWork('${w.id}')"><h3>${esc(e?.name||'')} — ${fmt(w.date)}</h3><div class="meta">${esc(w.start)}–${esc(w.end)} • ${hours(w.start,w.end,w.breakMin).toFixed(1)} h<br>${esc(w.place||'')}${o?` • ${esc(o.title)}`:''}<br>${esc(w.task||'')}</div></div>`}).join(''):'<div class="empty">Brak czasu pracy.</div>'}
-function vstats(id){let ts=trips.filter(t=>t.vehicleId===id),km=ts.reduce((s,t)=>s+Math.max(0,t.endKm-t.startKm),0),fs=fuel.filter(f=>f.vehicleId===id),lit=fs.reduce((s,f)=>s+f.liters,0),cost=fs.reduce((s,f)=>s+f.amount,0);return{km,lit,cost,avg:km?lit/km*100:0,costKm:km?cost/km:0}}
-function renderVehicles(){for(const [name,el] of [['Ducato','ducatoStats'],['Doblo','dobloStats']]){let v=vehicles.find(x=>x.name===name),s=v?vstats(v.id):{km:0,lit:0,cost:0,avg:0,costKm:0};q(el).innerHTML=`Kilometry: <b>${s.km.toFixed(0)} km</b><br>Paliwo: <b>${s.lit.toFixed(1)} l</b><br>Koszt: <b>${s.cost.toFixed(2)} zł</b><br>Spalanie: <b>${s.avg.toFixed(1)} l/100 km</b><br>Koszt/km: <b>${s.costKm.toFixed(2)} zł</b>`}
-q('tripList').innerHTML=trips.length?[...trips].sort((a,b)=>b.date.localeCompare(a.date)).map(t=>{let v=vehicles.find(x=>x.id===t.vehicleId),e=employees.find(x=>x.id===t.driverId);return `<div class="item info" onclick="openTrip('${t.id}')"><h3>${esc(v?.name||'')} — ${Math.max(0,t.endKm-t.startKm)} km</h3><div class="meta">${fmt(t.date)} • ${esc(e?.name||'')}<br>${esc(t.route||'')}<br>${esc(t.purpose||'')}</div></div>`}).join(''):'<div class="empty">Brak przejazdów.</div>';
-q('fuelList').innerHTML=fuel.length?[...fuel].sort((a,b)=>b.date.localeCompare(a.date)).map(f=>{let v=vehicles.find(x=>x.id===f.vehicleId),e=employees.find(x=>x.id===f.employeeId),p=f.liters?f.amount/f.liters:0;return `<div class="item purple" onclick="openFuel('${f.id}')"><h3>${esc(v?.name||'')} — ${Number(f.liters||0).toFixed(2)} l</h3><div class="meta">${fmt(f.date)} • ${esc(e?.name||'')} • ${Number(f.amount||0).toFixed(2)} zł<br>${p.toFixed(2)} zł/l • ${f.odo||0} km</div></div>`}).join(''):'<div class="empty">Brak tankowań.</div>'}
-function renderDashboard(){q('kClients').textContent=clients.length;q('kDevices').textContent=devices.length;q('kOrders').textContent=orders.filter(o=>o.status!=='Zamknięte').length;let td=today(),tw=worklogs.filter(w=>w.date===td);q('kWorkersToday').textContent=new Set(tw.map(w=>w.employeeId)).size;q('kHoursToday').textContent=tw.reduce((s,w)=>s+hours(w.start,w.end,w.breakMin),0).toFixed(1);q('kKmToday').textContent=trips.filter(t=>t.date===td).reduce((s,t)=>s+Math.max(0,t.endKm-t.startKm),0).toFixed(0);let mf=fuel.filter(f=>f.date.startsWith(month())),cost=mf.reduce((s,f)=>s+f.amount,0),km=trips.filter(t=>t.date.startsWith(month())).reduce((s,t)=>s+Math.max(0,t.endKm-t.startKm),0);q('kFuelMonth').textContent=cost.toFixed(0)+' zł';q('kCostKm').textContent=(km?cost/km:0).toFixed(2)+' zł';let lines=tw.map(w=>{let e=employees.find(x=>x.id===w.employeeId);return `<div class="item"><h3>${esc(e?.name||'')}</h3><div class="meta">${esc(w.start)}–${esc(w.end)} • ${hours(w.start,w.end,w.breakMin).toFixed(1)} h<br>${esc(w.place||'')}<br>${esc(w.task||'')}</div></div>`});q('todaySummary').innerHTML=lines.length?lines.join(''):'<div class="empty">Brak wpisów na dziś.</div>'}
-function renderReports(){let d=q('reportDate').value||today(),ws=worklogs.filter(w=>w.date===d),ts=trips.filter(t=>t.date===d),fs=fuel.filter(f=>f.date===d),h=ws.reduce((s,w)=>s+hours(w.start,w.end,w.breakMin),0),km=ts.reduce((s,t)=>s+Math.max(0,t.endKm-t.startKm),0),fc=fs.reduce((s,f)=>s+f.amount,0);q('dailyReport').innerHTML=`<div class="grid"><div class="card"><div class="label">Godziny</div><div class="stat">${h.toFixed(1)}</div></div><div class="card"><div class="label">Kilometry</div><div class="stat">${km}</div></div><div class="card"><div class="label">Paliwo</div><div class="stat">${fc.toFixed(0)} zł</div></div></div>`+ws.map(w=>{let e=employees.find(x=>x.id===w.employeeId);return `<div class="item"><h3>${esc(e?.name||'')}</h3><div class="meta">${esc(w.place||'')} • ${esc(w.task||'')} • ${hours(w.start,w.end,w.breakMin).toFixed(1)} h</div></div>`}).join('');
-let m=q('reportMonth').value||month(),mw=worklogs.filter(w=>w.date.startsWith(m)),mt=trips.filter(t=>t.date.startsWith(m)),mf=fuel.filter(f=>f.date.startsWith(m)),mh=mw.reduce((s,w)=>s+hours(w.start,w.end,w.breakMin),0),mkm=mt.reduce((s,t)=>s+Math.max(0,t.endKm-t.startKm),0),mfc=mf.reduce((s,f)=>s+f.amount,0);q('monthlyReport').innerHTML=`<p><b>Godziny:</b> ${mh.toFixed(1)} h<br><b>Kilometry:</b> ${mkm.toFixed(0)} km<br><b>Paliwo:</b> ${mfc.toFixed(2)} zł<br><b>Koszt/km:</b> ${(mkm?mfc/mkm:0).toFixed(2)} zł</p>`+employees.map(e=>{let eh=mw.filter(w=>w.employeeId===e.id).reduce((s,w)=>s+hours(w.start,w.end,w.breakMin),0);return `<span class="badge">${esc(e.name)}: ${eh.toFixed(1)} h</span>`}).join(' ')}
-function renderAll(){renderDashboard();renderClients();renderOrders();renderEmployees();renderInspections();renderVehicles();renderReports()}
-q('reportDate').value=today();q('reportMonth').value=month();
-</script>
-</body>
-</html>
+async function loadAll(){try{[clients,devices,orders,employees,worklogs,inspections,photos,protocols,vehicles,trips,fuel]=await Promise.all(['clients','devices','orders','employees','worklogs','inspections','photos','protocols','vehicles','trips','fuel'].map(loadCol));renderAll()}catch(e){console.error(e);alert('Błąd odczytu danych. Sprawdź reguły Firestore dla v7.')}}
+onAuthStateChanged(auth,async u=>{user=u;if(u){q('loginPage').classList.add('hidden');q('app').classList.remove('hidden');q('nav').classList.remove('hidden');q('logoutBtn').classList.remove('hidden');q('uidBox').textContent=u.uid;q('configState').textContent='Firebase połączony.';await loadAll()}else{q('loginPage').classList.remove('hidden');q('app').classList.add('hidden');q('nav').classList.add('hidden');q('logoutBtn').classList.add('hidden')}});
+function fill(sel,arr,val='',labelFn=x=>x.name||x.title){sel.innerHTML='<option value="">— wybierz —</option>'+arr.map(x=>`<option value="${x.id}">${esc(labelFn(x))}</option>`).join('');sel.value=val}function clientName(id){return clients.find(x=>x.id===id)?.name||''}function deviceLabel(d){return [d.type,d.brand,d.model,d.serial?`SN ${d.serial}`:''].filter(Boolean).join(' • ')}function materialCost(o){return (o.materials||[]).reduce((s,m)=>s+Number(m.qty||0)*Number(m.unitCost||0),0)}function orderCost(o){return materialCost(o)+Number(o.laborCost||0)+Number(o.otherCost||0)}
+window.openClient=id=>{let c=clients.find(x=>x.id===id)||{};q('cId').value=c.id||'';q('cName').value=c.name||'';q('cPhone').value=c.phone||'';q('cAddress').value=c.address||'';q('cCity').value=c.city||'';q('cEmail').value=c.email||'';q('cNotes').value=c.notes||'';openForm('clientForm')};window.saveClient=async()=>{let id=q('cId').value,data={ownerUid:user.uid,name:q('cName').value.trim(),phone:q('cPhone').value.trim(),address:q('cAddress').value.trim(),city:q('cCity').value.trim(),email:q('cEmail').value.trim(),notes:q('cNotes').value.trim(),updatedAt:new Date().toISOString()};if(!data.name)return alert('Podaj klienta.');id?await setDoc(doc(db,'clients',id),data,{merge:true}):await addDoc(collection(db,'clients'),{...data,createdAt:new Date().toISOString()});closeModal();await loadAll()};
+window.openClientCard=id=>{let c=clients.find(x=>x.id===id),ds=devices.filter(d=>d.clientId===id),os=orders.filter(o=>o.clientId===id).sort((a,b)=>(b.date||'').localeCompare(a.date||'')),ins=inspections.filter(i=>i.clientId===id).sort((a,b)=>(b.completedDate||b.date||'').localeCompare(a.completedDate||a.date||''));q('clientCardContent').innerHTML=`<h2>${esc(c?.name||'Klient')}</h2><div class="meta">${esc(c?.phone||'')} ${c?.email?`• ${esc(c.email)}`:''}<br>${esc([c?.address,c?.city].filter(Boolean).join(', '))}</div><div class="toolbar"><button onclick="openDevice('', '${id}')">+ Urządzenie</button><button class="secondary" onclick="openClient('${id}')">Edytuj klienta</button></div><h3 class="sectionTitle">Urządzenia (${ds.length})</h3>${ds.map(d=>`<div class="item info"><b>${esc(deviceLabel(d))}</b><div class="toolbar"><button class="smallBtn" onclick="openDeviceHistory('${d.id}')">Historia</button><button class="secondary smallBtn" onclick="openDevice('${d.id}')">Edytuj</button><button class="infoBtn smallBtn" onclick="openPhoto('${id}','${d.id}','')">Zdjęcie</button></div></div>`).join('')||'<div class="empty">Brak urządzeń.</div>'}<h3 class="sectionTitle">Ostatnie zlecenia</h3>${os.slice(0,8).map(o=>`<div class="item"><b>${esc(o.title)}</b><div class="meta">${fmt(o.date)} • ${esc(o.status||'')}</div></div>`).join('')||'<div class="empty">Brak zleceń.</div>'}<h3 class="sectionTitle">Ostatnie przeglądy</h3>${ins.slice(0,8).map(i=>`<div class="item"><b>${esc(i.type||'Przegląd')}</b><div class="meta">${fmt(i.completedDate||i.date)} • ${esc(i.status||'')}</div></div>`).join('')||'<div class="empty">Brak przeglądów.</div>'}`;openForm('clientCardForm')};
+window.openDevice=(id='',clientId='')=>{let d=devices.find(x=>x.id===id)||{};q('dId').value=d.id||'';fill(q('dClient'),clients,d.clientId||clientId);q('dType').value=d.type||'Pompa ciepła';q('dBrand').value=d.brand||'';q('dModel').value=d.model||'';q('dSerial').value=d.serial||'';q('dInstallDate').value=d.installDate||'';q('dWarranty').value=d.warrantyUntil||'';q('dLocation').value=d.location||'';q('dNotes').value=d.notes||'';openForm('deviceForm')};window.saveDevice=async()=>{let id=q('dId').value,data={ownerUid:user.uid,clientId:q('dClient').value,type:q('dType').value,brand:q('dBrand').value.trim(),model:q('dModel').value.trim(),serial:q('dSerial').value.trim(),installDate:q('dInstallDate').value,warrantyUntil:q('dWarranty').value,location:q('dLocation').value.trim(),notes:q('dNotes').value.trim(),updatedAt:new Date().toISOString()};if(!data.clientId)return alert('Wybierz klienta.');if(!data.brand&&!data.model&&!data.serial)return alert('Podaj producenta, model lub numer seryjny.');id?await setDoc(doc(db,'devices',id),data,{merge:true}):await addDoc(collection(db,'devices'),{...data,createdAt:new Date().toISOString()});closeModal();await loadAll()};
+window.openDeviceHistory=id=>{let d=devices.find(x=>x.id===id),c=clients.find(x=>x.id===d?.clientId);let ev=[];orders.filter(o=>o.deviceId===id).forEach(o=>ev.push({date:o.date||'',type:'ZLECENIE',title:o.title||'Zlecenie',text:`${o.status||''}${o.desc?` • ${o.desc}`:''}`,id:o.id}));inspections.filter(i=>i.deviceId===id).forEach(i=>ev.push({date:i.completedDate||i.startedDate||i.date||'',type:'PRZEGLĄD',title:i.type||'Przegląd',text:`${i.status||''}${i.notes?` • ${i.notes}`:''}`}));protocols.filter(p=>p.deviceId===id).forEach(p=>ev.push({date:p.date||'',type:'PROTOKÓŁ',title:'Protokół serwisowy',text:p.work||'',pid:p.id}));ev.sort((a,b)=>(b.date||'').localeCompare(a.date||''));let ps=photos.filter(p=>p.deviceId===id);q('historyContent').innerHTML=`<h2>${esc(deviceLabel(d||{}))}</h2><div class="meta"><b>Klient:</b> ${esc(c?.name||'')}<br><b>Numer seryjny:</b> ${esc(d?.serial||'—')}<br><b>Montaż:</b> ${fmt(d?.installDate)} • <b>Gwarancja:</b> ${fmt(d?.warrantyUntil)}</div><div class="toolbar"><button onclick="openOrder('', '${d?.clientId||''}','${id}')">+ Zlecenie</button><button onclick="openInspection('', '${d?.clientId||''}','${id}')">+ Przegląd</button><button class="infoBtn" onclick="openPhoto('${d?.clientId||''}','${id}','')">+ Zdjęcie</button></div><h3 class="sectionTitle">Zdjęcia (${ps.length})</h3><div class="thumbs">${ps.map(p=>`<img src="${p.dataUrl}" title="${esc(p.caption||p.category||'')}">`).join('')||'<span class="meta">Brak zdjęć.</span>'}</div><h3 class="sectionTitle">Pełna historia</h3>${ev.map(e=>`<div class="item ${e.type==='PRZEGLĄD'?'ok':e.type==='PROTOKÓŁ'?'purple':'info'}"><h3>${fmt(e.date)} — ${esc(e.type)}</h3><b>${esc(e.title)}</b><div class="meta">${esc(e.text||'')}</div>${e.pid?`<div class="toolbar"><button class="purpleBtn smallBtn" onclick="openProtocolById('${e.pid}')">Otwórz protokół</button></div>`:''}</div>`).join('')||'<div class="empty">Brak historii.</div>'}`;openForm('historyForm')};
+window.orderClientChanged=()=>{let cid=q('oClient').value;fill(q('oDevice'),devices.filter(d=>d.clientId===cid),q('oDevice').value,deviceLabel)};window.openOrder=(id='',clientId='',deviceId='')=>{let o=orders.find(x=>x.id===id)||{employees:[],materials:[]};q('oId').value=o.id||'';fill(q('oClient'),clients,o.clientId||clientId);fill(q('oDevice'),devices.filter(d=>d.clientId===(o.clientId||clientId)),o.deviceId||deviceId,deviceLabel);q('oTitle').value=o.title||'';q('oDesc').value=o.desc||'';q('oStatus').value=o.status||'Do kontaktu';q('oPriority').value=o.priority||'Normalny';q('oDate').value=o.date||today();q('oTime').value=o.time||'';q('oEmployees').innerHTML=employees.map(e=>`<label style="display:flex;gap:8px;align-items:center"><input style="width:auto" type="checkbox" data-oe="${e.id}" ${(o.employees||[]).includes(e.id)?'checked':''}> ${esc(e.name)}</label>`).join('')||'<div class="meta">Brak pracowników — dodaj ich w zakładce Pracownicy.</div>';currentMaterials=(o.materials||[]).map(x=>({...x}));renderMaterialRows();q('oLaborCost').value=o.laborCost||'';q('oOtherCost').value=o.otherCost||'';q('oRevenue').value=o.revenue||'';q('oNotes').value=o.notes||'';q('oProtocolBtn').classList.toggle('hidden',!o.id);q('oPhotoBtn').classList.toggle('hidden',!o.id);openForm('orderForm')};
+window.addMaterialRow=()=>{currentMaterials.push({name:'',qty:1,unit:'szt.',unitCost:0});renderMaterialRows()};window.removeMaterialRow=i=>{currentMaterials.splice(i,1);renderMaterialRows()};function renderMaterialRows(){q('materialRows').innerHTML=currentMaterials.length?currentMaterials.map((m,i)=>`<div class="materialRow"><input placeholder="Materiał / część" value="${esc(m.name)}" oninput="matSet(${i},'name',this.value)"><input type="number" step="0.01" value="${Number(m.qty||1)}" oninput="matSet(${i},'qty',this.value)"><input value="${esc(m.unit||'szt.') }" oninput="matSet(${i},'unit',this.value)"><input type="number" step="0.01" placeholder="koszt/szt." value="${Number(m.unitCost||0)}" oninput="matSet(${i},'unitCost',this.value)"><button class="danger smallBtn" onclick="removeMaterialRow(${i})">×</button></div>`).join(''):'<div class="meta">Brak materiałów.</div>'}window.matSet=(i,k,v)=>{currentMaterials[i][k]=(k==='qty'||k==='unitCost')?Number(v||0):v};
+window.saveOrder=async()=>{let id=q('oId').value,data={ownerUid:user.uid,clientId:q('oClient').value,deviceId:q('oDevice').value,title:q('oTitle').value.trim(),desc:q('oDesc').value.trim(),status:q('oStatus').value,priority:q('oPriority').value,date:q('oDate').value,time:q('oTime').value,employees:[...document.querySelectorAll('[data-oe]:checked')].map(x=>x.dataset.oe),materials:currentMaterials.filter(m=>m.name.trim()),laborCost:Number(q('oLaborCost').value||0),otherCost:Number(q('oOtherCost').value||0),revenue:Number(q('oRevenue').value||0),notes:q('oNotes').value.trim(),updatedAt:new Date().toISOString()};if(!data.clientId||!data.title)return alert('Wybierz klienta i wpisz temat.');id?await setDoc(doc(db,'orders',id),data,{merge:true}):await addDoc(collection(db,'orders'),{...data,createdAt:new Date().toISOString()});closeModal();await loadAll()};window.openProtocolForCurrentOrder=()=>openProtocol('',q('oId').value);window.openPhotoForCurrentOrder=()=>{let o=orders.find(x=>x.id===q('oId').value);openPhoto(o?.clientId||'',o?.deviceId||'',o?.id||'')};
+window.inspectionClientChanged=()=>{let cid=q('iClient').value;fill(q('iDevice'),devices.filter(d=>d.clientId===cid),'',deviceLabel);q('iSerial').value=''};window.inspectionDeviceChanged=()=>{let d=devices.find(x=>x.id===q('iDevice').value);q('iSerial').value=d?.serial||''};window.openInspection=(id='',clientId='',deviceId='')=>{let i=inspections.find(x=>x.id===id)||{};q('iId').value=i.id||'';fill(q('iClient'),clients,i.clientId||clientId);fill(q('iDevice'),devices.filter(d=>d.clientId===(i.clientId||clientId)),i.deviceId||deviceId,deviceLabel);q('iSerial').value=i.serial||devices.find(d=>d.id===(i.deviceId||deviceId))?.serial||'';q('iType').value=i.type||'Przegląd okresowy';q('iDate').value=i.date||today();q('iStatus').value=i.status||'Zaplanowany';q('iStartedDate').value=i.startedDate||'';q('iCompletedDate').value=i.completedDate||'';fill(q('iEmployee'),employees,i.employeeId||'');q('iInterval').value=i.intervalMonths||12;q('iAutoNext').checked=i.autoNext!==false;q('iNotes').value=i.notes||'';openForm('inspectionForm')};
+window.saveInspection=async()=>{let id=q('iId').value,old=inspections.find(x=>x.id===id),data={ownerUid:user.uid,clientId:q('iClient').value,deviceId:q('iDevice').value,serial:q('iSerial').value.trim(),type:q('iType').value.trim(),date:q('iDate').value,status:q('iStatus').value,startedDate:q('iStartedDate').value,completedDate:q('iCompletedDate').value,employeeId:q('iEmployee').value,intervalMonths:Number(q('iInterval').value||12),autoNext:q('iAutoNext').checked,notes:q('iNotes').value.trim(),updatedAt:new Date().toISOString()};if(!data.clientId||!data.date)return alert('Wybierz klienta i datę.');if(data.status==='W trakcie'&&!data.startedDate)data.startedDate=today();if(data.status==='Zrobiony'&&!data.completedDate)data.completedDate=today();let ref;if(id){ref=doc(db,'inspections',id);await setDoc(ref,data,{merge:true})}else{ref=await addDoc(collection(db,'inspections'),{...data,createdAt:new Date().toISOString()});id=ref.id}if(data.status==='Zrobiony'&&data.autoNext&&(!old||old.status!=='Zrobiony')){let exists=inspections.some(x=>x.previousInspectionId===id);if(!exists){let base=data.completedDate||data.date;await addDoc(collection(db,'inspections'),{ownerUid:user.uid,clientId:data.clientId,deviceId:data.deviceId,serial:data.serial,type:data.type,date:addMonthsDate(base,data.intervalMonths),status:'Zaplanowany',employeeId:data.employeeId,intervalMonths:data.intervalMonths,autoNext:true,notes:'Utworzony automatycznie po wykonanym przeglądzie.',previousInspectionId:id,createdAt:new Date().toISOString()})}}closeModal();await loadAll()};
+window.openEmployee=id=>{let e=employees.find(x=>x.id===id)||{};q('eId').value=e.id||'';q('eName').value=e.name||'';q('ePhone').value=e.phone||'';q('eSkills').value=e.skills||'';openForm('employeeForm')};window.saveEmployee=async()=>{let id=q('eId').value,data={ownerUid:user.uid,name:q('eName').value.trim(),phone:q('ePhone').value.trim(),skills:q('eSkills').value.trim(),active:true,updatedAt:new Date().toISOString()};if(!data.name)return alert('Podaj pracownika.');id?await setDoc(doc(db,'employees',id),data,{merge:true}):await addDoc(collection(db,'employees'),{...data,createdAt:new Date().toISOString()});closeModal();await loadAll()};window.openWork=id=>{let w=worklogs.find(x=>x.id===id)||{};q('wId').value=w.id||'';fill(q('wEmployee'),employees,w.employeeId||'');q('wDate').value=w.date||today();q('wBreak').value=w.breakMin||0;q('wStart').value=w.start||'07:00';q('wEnd').value=w.end||'15:00';q('wPlace').value=w.place||'';fill(q('wOrder'),orders,w.orderId||'',x=>`${x.title} — ${clientName(x.clientId)}`);q('wTask').value=w.task||'';openForm('workForm')};window.saveWork=async()=>{let id=q('wId').value,data={ownerUid:user.uid,employeeId:q('wEmployee').value,date:q('wDate').value,breakMin:Number(q('wBreak').value||0),start:q('wStart').value,end:q('wEnd').value,place:q('wPlace').value.trim(),orderId:q('wOrder').value,task:q('wTask').value.trim(),updatedAt:new Date().toISOString()};if(!data.employeeId)return alert('Wybierz pracownika.');id?await setDoc(doc(db,'worklogs',id),data,{merge:true}):await addDoc(collection(db,'worklogs'),{...data,createdAt:new Date().toISOString()});closeModal();await loadAll()};
+window.openPhoto=(clientId='',deviceId='',orderId='')=>{q('pClient').value=clientId;q('pDevice').value=deviceId;q('pOrder').value=orderId;q('pCaption').value='';q('pFile').value='';q('pCategory').value=orderId?'naprawa':'urządzenie';openForm('photoForm')};async function compressImage(file){return new Promise((resolve,reject)=>{let img=new Image(),r=new FileReader();r.onload=e=>{img.onload=()=>{let max=1280,scale=Math.min(1,max/Math.max(img.width,img.height)),c=document.createElement('canvas');c.width=Math.round(img.width*scale);c.height=Math.round(img.height*scale);c.getContext('2d').drawImage(img,0,0,c.width,c.height);let data=c.toDataURL('image/jpeg',.68);if(data.length>850000){let s=.65,c2=document.createElement('canvas');c2.width=Math.round(c.width*s);c2.height=Math.round(c.height*s);c2.getContext('2d').drawImage(c,0,0,c2.width,c2.height);data=c2.toDataURL('image/jpeg',.55)}resolve(data)};img.onerror=reject;img.src=e.target.result};r.onerror=reject;r.readAsDataURL(file)})}window.savePhoto=async()=>{let f=q('pFile').files[0];if(!f)return alert('Wybierz zdjęcie.');try{let dataUrl=await compressImage(f);if(dataUrl.length>950000)return alert('Zdjęcie nadal jest za duże. Wybierz mniejsze zdjęcie.');await addDoc(collection(db,'photos'),{ownerUid:user.uid,clientId:q('pClient').value,deviceId:q('pDevice').value,orderId:q('pOrder').value,category:q('pCategory').value,caption:q('pCaption').value.trim(),dataUrl,createdAt:new Date().toISOString()});closeModal();await loadAll()}catch(e){console.error(e);alert('Nie udało się zapisać zdjęcia.')}};
+function templateForDevice(d){let t=(d?.type||'').toLowerCase();if(t.includes('pompa'))return'heatpump';if(t.includes('klim'))return'ac';if(t.includes('kocio'))return'boiler';if(t.includes('reku'))return'reku';return'generic'}window.openProtocol=(id='',orderId='')=>{let p=protocols.find(x=>x.id===id)||{},o=orders.find(x=>x.id===(p.orderId||orderId));currentProtocol=p.id?p:null;q('prId').value=p.id||'';fill(q('prOrder'),orders,p.orderId||orderId,x=>`${x.title} — ${clientName(x.clientId)}`);let d=devices.find(x=>x.id===(p.deviceId||o?.deviceId));q('prTemplate').value=p.template||templateForDevice(d);q('prDate').value=p.date||today();q('prWork').value=p.work||'';q('prMeasurements').value=p.measurements||'';q('prRecommendations').value=p.recommendations||'';q('prCustomer').value=p.customer||clientName(o?.clientId);q('printProtocolBtn').classList.toggle('hidden',!p.id);renderChecklist(p.checks||[]);setTimeout(()=>{setupSignature();if(p.signature){let im=new Image();im.onload=()=>sigCtx.drawImage(im,0,0,q('signature').width,q('signature').height);im.src=p.signature}},50);openForm('protocolForm')};window.openProtocolById=id=>openProtocol(id,'');window.protocolOrderChanged=()=>{let o=orders.find(x=>x.id===q('prOrder').value),d=devices.find(x=>x.id===o?.deviceId);q('prTemplate').value=templateForDevice(d);q('prCustomer').value=clientName(o?.clientId);renderChecklist()};window.renderChecklist=(saved=[])=>{let arr=CHECKS[q('prTemplate').value]||CHECKS.generic;q('checklist').innerHTML=arr.map((text,i)=>{let s=saved.find(x=>x.text===text)||saved[i]||{};return `<label class="checkrow"><input type="checkbox" data-check="${i}" ${s.ok?'checked':''}><span>${esc(text)}</span></label>`}).join('')};
+let sigCtx=null,sigDraw=false;function setupSignature(){let c=q('signature'),rect=c.getBoundingClientRect(),ratio=window.devicePixelRatio||1;c.width=Math.max(500,Math.round(rect.width*ratio));c.height=Math.round(170*ratio);sigCtx=c.getContext('2d');sigCtx.scale(ratio,ratio);sigCtx.lineWidth=2;sigCtx.lineCap='round';sigCtx.strokeStyle='#111';function pos(e){let r=c.getBoundingClientRect(),p=e.touches?e.touches[0]:e;return{x:p.clientX-r.left,y:p.clientY-r.top}}c.onpointerdown=e=>{sigDraw=true;let p=pos(e);sigCtx.beginPath();sigCtx.moveTo(p.x,p.y)};c.onpointermove=e=>{if(!sigDraw)return;let p=pos(e);sigCtx.lineTo(p.x,p.y);sigCtx.stroke()};c.onpointerup=c.onpointerleave=()=>sigDraw=false}window.clearSignature=()=>{if(sigCtx){let c=q('signature');sigCtx.clearRect(0,0,c.width,c.height)}};window.saveProtocol=async()=>{let oid=q('prOrder').value,o=orders.find(x=>x.id===oid);if(!o)return alert('Wybierz zlecenie.');let arr=CHECKS[q('prTemplate').value]||CHECKS.generic,checks=arr.map((text,i)=>({text,ok:document.querySelector(`[data-check="${i}"]`)?.checked||false}));let data={ownerUid:user.uid,orderId:oid,clientId:o.clientId,deviceId:o.deviceId||'',date:q('prDate').value,template:q('prTemplate').value,checks,work:q('prWork').value.trim(),measurements:q('prMeasurements').value.trim(),recommendations:q('prRecommendations').value.trim(),customer:q('prCustomer').value.trim(),signature:q('signature').toDataURL('image/png'),updatedAt:new Date().toISOString()};let id=q('prId').value;if(id)await setDoc(doc(db,'protocols',id),data,{merge:true});else{let r=await addDoc(collection(db,'protocols'),{...data,createdAt:new Date().toISOString()});id=r.id}await loadAll();currentProtocol=protocols.find(x=>x.id===id)||{id,...data};q('prId').value=id;q('printProtocolBtn').classList.remove('hidden');alert('Protokół zapisany.')};
+window.printCurrentProtocol=()=>{let id=q('prId').value,p=protocols.find(x=>x.id===id)||currentProtocol;if(!p)return alert('Najpierw zapisz protokół.');let o=orders.find(x=>x.id===p.orderId),c=clients.find(x=>x.id===p.clientId),d=devices.find(x=>x.id===p.deviceId),mats=o?.materials||[];let w=window.open('','_blank');w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>Protokół serwisowy</title><style>body{font-family:Arial;max-width:850px;margin:30px auto;color:#111}h1{color:#17365D}.box{border:1px solid #bbb;padding:12px;margin:10px 0;border-radius:8px}table{width:100%;border-collapse:collapse}td,th{border:1px solid #ccc;padding:7px;text-align:left}.ok{color:#166534}.no{color:#991b1b}.sig{max-width:320px;max-height:120px}</style></head><body><h1>PROTOKÓŁ SERWISOWY</h1><div class="box"><b>Data:</b> ${fmt(p.date)}<br><b>Klient:</b> ${esc(c?.name||'')}<br><b>Adres:</b> ${esc([c?.address,c?.city].filter(Boolean).join(', '))}<br><b>Urządzenie:</b> ${esc(deviceLabel(d||{}))}<br><b>Numer seryjny:</b> ${esc(d?.serial||'—')}<br><b>Zlecenie:</b> ${esc(o?.title||'')}</div><h2>Checklista</h2><table>${(p.checks||[]).map(x=>`<tr><td>${esc(x.text)}</td><td class="${x.ok?'ok':'no'}">${x.ok?'✓ OK':'—'}</td></tr>`).join('')}</table><h2>Wykonane prace</h2><div class="box">${esc(p.work||'').replace(/\n/g,'<br>')}</div><h2>Pomiary / parametry</h2><div class="box">${esc(p.measurements||'').replace(/\n/g,'<br>')}</div><h2>Materiały i części</h2><table><tr><th>Nazwa</th><th>Ilość</th><th>j.m.</th></tr>${mats.map(m=>`<tr><td>${esc(m.name)}</td><td>${m.qty}</td><td>${esc(m.unit||'')}</td></tr>`).join('')||'<tr><td colspan="3">Brak</td></tr>'}</table><h2>Zalecenia</h2><div class="box">${esc(p.recommendations||'').replace(/\n/g,'<br>')}</div><h2>Odbiór</h2><div class="box"><b>${esc(p.customer||'')}</b><br>${p.signature?`<img class="sig" src="${p.signature}">`:''}</div><script>window.onload=()=>window.print()<\/script></body></html>`);w.document.close()};
+function renderClients(){let z=(q('clientSearch')?.value||'').toLowerCase();let a=clients.filter(c=>[c.name,c.phone,c.city,c.address,c.email].join(' ').toLowerCase().includes(z));q('clientList').innerHTML=a.length?a.sort((a,b)=>(a.name||'').localeCompare(b.name||'')).map(c=>{let dc=devices.filter(d=>d.clientId===c.id).length,oc=orders.filter(o=>o.clientId===c.id&&o.status!=='Zamknięte').length;return `<div class="item"><div class="deviceHead"><div><h3>${esc(c.name)}</h3><div class="meta">${esc(c.phone||'')} • ${esc([c.address,c.city].filter(Boolean).join(', '))}<br><span class="badge">Urządzenia: ${dc}</span><span class="badge">Otwarte zlecenia: ${oc}</span></div></div><div class="toolbar"><button class="smallBtn" onclick="openClientCard('${c.id}')">Karta</button><button class="secondary smallBtn" onclick="openClient('${c.id}')">Edytuj</button></div></div></div>`}).join(''):'<div class="empty">Brak klientów.</div>'}
+function renderDevices(){let z=(q('deviceSearch')?.value||'').toLowerCase();let a=devices.filter(d=>[d.type,d.brand,d.model,d.serial,clientName(d.clientId),d.location].join(' ').toLowerCase().includes(z));q('deviceList').innerHTML=a.length?a.sort((a,b)=>clientName(a.clientId).localeCompare(clientName(b.clientId))).map(d=>{let next=inspections.filter(i=>i.deviceId===d.id&&i.status!=='Zrobiony').sort((a,b)=>(a.date||'').localeCompare(b.date||''))[0],ps=photos.filter(p=>p.deviceId===d.id);return `<div class="item info"><div class="deviceHead"><div><h3>${esc(deviceLabel(d))}</h3><div class="meta"><b>${esc(clientName(d.clientId))}</b> • ${esc(d.location||'')}<br>${next?`Następny przegląd: <b>${fmt(next.date)}</b>`:'Brak zaplanowanego przeglądu'} • Zdjęcia: ${ps.length}</div></div></div><div class="toolbar"><button class="smallBtn" onclick="openDeviceHistory('${d.id}')">Historia</button><button class="secondary smallBtn" onclick="openDevice('${d.id}')">Edytuj</button><button class="infoBtn smallBtn" onclick="openPhoto('${d.clientId}','${d.id}','')">Zdjęcie</button></div></div>`}).join(''):'<div class="empty">Brak urządzeń.</div>'}
+function renderOrders(){let z=(q('orderSearch')?.value||'').toLowerCase(),f=q('orderFilter')?.value||'';let a=orders.filter(o=>(!f||o.status===f)&&[o.title,o.desc,o.status,clientName(o.clientId),devices.find(d=>d.id===o.deviceId)?.serial].join(' ').toLowerCase().includes(z));q('orderList').innerHTML=a.length?[...a].sort((a,b)=>(b.date||'').localeCompare(a.date||'')).map(o=>{let d=devices.find(x=>x.id===o.deviceId),ens=(o.employees||[]).map(id=>employees.find(e=>e.id===id)?.name).filter(Boolean).join(', '),cost=orderCost(o);return `<div class="item ${o.priority==='Awaria'?'dangerItem':o.status==='Wykonane'||o.status==='Zamknięte'?'ok':'info'}"><h3>${esc(o.title)}</h3><div class="meta"><b>${esc(clientName(o.clientId))}</b>${d?` • ${esc(deviceLabel(d))}`:''}<br>${fmt(o.date)} ${esc(o.time||'')} • ${esc(o.status||'')} • ${esc(o.priority||'')}<br>${ens?`Ekipa: ${esc(ens)}<br>`:''}Koszt: <b>${money(cost)}</b> • Dla klienta: <b>${money(o.revenue)}</b></div><div class="toolbar"><button class="smallBtn" onclick="openOrder('${o.id}')">Otwórz</button><button class="purpleBtn smallBtn" onclick="openProtocol('', '${o.id}')">Protokół</button><button class="infoBtn smallBtn" onclick="openPhoto('${o.clientId}','${o.deviceId||''}','${o.id}')">Zdjęcie</button></div></div>`}).join(''):'<div class="empty">Brak zleceń.</div>'}
+function renderInspections(){let z=(q('inspectionSearch')?.value||'').toLowerCase(),f=q('inspectionFilter')?.value||'',td=today();let a=inspections.filter(i=>(!f||i.status===f)&&[clientName(i.clientId),deviceLabel(devices.find(d=>d.id===i.deviceId)||{}),i.serial,i.type,i.notes].join(' ').toLowerCase().includes(z));let active=inspections.filter(i=>i.status!=='Zrobiony'&&i.date),over=active.filter(i=>i.date<td),d7=active.filter(i=>daysBetween(td,i.date)>=0&&daysBetween(td,i.date)<=7),d30=active.filter(i=>daysBetween(td,i.date)>7&&daysBetween(td,i.date)<=30);q('iOverdue').textContent=over.length;q('i7').textContent=d7.length;q('i30').textContent=d30.length;q('iDoneMonth').textContent=inspections.filter(i=>i.status==='Zrobiony'&&(i.completedDate||i.date||'').startsWith(month())).length;q('inspectionList').innerHTML=a.length?[...a].sort((a,b)=>(a.status==='Zrobiony'?1:0)-(b.status==='Zrobiony'?1:0)||(a.date||'').localeCompare(b.date||'')).map(i=>{let cls=i.status!=='Zrobiony'&&i.date<td?'dangerItem':i.status==='Zrobiony'?'ok':i.status==='W trakcie'?'warn':'info',d=devices.find(x=>x.id===i.deviceId),e=employees.find(x=>x.id===i.employeeId);return `<div class="item ${cls}" onclick="openInspection('${i.id}')"><h3>${esc(i.type||'Przegląd')} — ${fmt(i.date)}</h3><div class="meta"><b>${esc(clientName(i.clientId))}</b>${d?` • ${esc(deviceLabel(d))}`:''}<br>${esc(i.status||'')} ${e?`• ${esc(e.name)}`:''}${i.status!=='Zrobiony'&&i.date<td?' • PO TERMINIE':''}</div></div>`}).join(''):'<div class="empty">Brak przeglądów.</div>'}
+function mondayOf(dateStr){let d=new Date((dateStr||today())+'T12:00:00'),day=(d.getDay()+6)%7;d.setDate(d.getDate()-day);return d}function iso(d){return d.toISOString().slice(0,10)}window.shiftWeek=n=>{let d=new Date((q('calendarDate').value||today())+'T12:00:00');d.setDate(d.getDate()+n);q('calendarDate').value=iso(d);renderCalendar()};function renderCalendar(){let mon=mondayOf(q('calendarDate')?.value||today()),days=[...Array(7)].map((_,i)=>{let d=new Date(mon);d.setDate(d.getDate()+i);return iso(d)});q('calendarList').innerHTML=employees.length?employees.map(e=>{let events=[];orders.filter(o=>(o.employees||[]).includes(e.id)&&days.includes(o.date)).forEach(o=>events.push({date:o.date,time:o.time||'',kind:'Zlecenie',name:o.title,client:clientName(o.clientId)}));inspections.filter(i=>i.employeeId===e.id&&days.includes(i.date)&&i.status!=='Zrobiony').forEach(i=>events.push({date:i.date,time:'',kind:'Przegląd',name:i.type||'Przegląd',client:clientName(i.clientId)}));events.sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));return `<div class="card"><h2>${esc(e.name)}</h2>${days.map(d=>{let es=events.filter(x=>x.date===d);return `<div class="calendarDay"><strong>${new Date(d+'T12:00:00').toLocaleDateString('pl-PL',{weekday:'short',day:'2-digit',month:'2-digit'})}</strong>${es.length?es.map(x=>`<div class="meta"><span class="badge ${x.kind==='Przegląd'?'green':'blue'}">${x.kind}</span>${esc(x.time)} <b>${esc(x.client)}</b> — ${esc(x.name)}</div>`).join(''):'<div class="meta">—</div>'}</div>`}).join('')}</div>`}).join(''):'<div class="empty">Brak pracowników.</div>'}
+function renderEmployees(){q('employeeCards').innerHTML=employees.length?employees.map(e=>{let arr=worklogs.filter(w=>w.employeeId===e.id&&w.date.startsWith(month())),h=arr.reduce((s,w)=>s+hours(w.start,w.end,w.breakMin),0);return `<div class="item purple"><h3>${esc(e.name)}</h3><div class="meta">${esc(e.phone||'')} ${e.skills?`• ${esc(e.skills)}`:''}<br>Godziny w miesiącu: <b>${h.toFixed(1)}</b></div><div class="toolbar"><button class="secondary smallBtn" onclick="openEmployee('${e.id}')">Edytuj</button></div></div>`}).join(''):'<div class="empty">Brak pracowników.</div>';q('workList').innerHTML=worklogs.length?[...worklogs].sort((a,b)=>(b.date+b.start).localeCompare(a.date+a.start)).slice(0,50).map(w=>{let e=employees.find(x=>x.id===w.employeeId),o=orders.find(x=>x.id===w.orderId);return `<div class="item"><h3>${esc(e?.name||'')} — ${fmt(w.date)}</h3><div class="meta">${esc(w.start)}–${esc(w.end)} • ${hours(w.start,w.end,w.breakMin).toFixed(1)} h<br>${esc(w.place||'')}${o?` • ${esc(o.title)}`:''}<br>${esc(w.task||'')}</div></div>`}).join(''):'<div class="empty">Brak czasu pracy.</div>'}
+function renderDashboard(){q('kClients').textContent=clients.length;q('kDevices').textContent=devices.length;q('kOrders').textContent=orders.filter(o=>o.status!=='Zamknięte').length;let td=today(),active=inspections.filter(i=>i.status!=='Zrobiony'&&i.date);q('kOverdue').textContent=active.filter(i=>i.date<td).length;q('k7days').textContent=active.filter(i=>daysBetween(td,i.date)>=0&&daysBetween(td,i.date)<=7).length;let mo=orders.filter(o=>(o.date||'').startsWith(month())&&(o.status==='Wykonane'||o.status==='Do faktury'||o.status==='Zamknięte')),rev=mo.reduce((s,o)=>s+Number(o.revenue||0),0),cost=mo.reduce((s,o)=>s+orderCost(o),0);q('kRevenue').textContent=money(rev);q('kCosts').textContent=money(cost);q('kProfit').textContent=money(rev-cost);let ev=[];orders.filter(o=>o.date===td).forEach(o=>ev.push(`<div class="item info"><h3>${esc(o.time||'')} ${esc(clientName(o.clientId))}</h3><div class="meta">Zlecenie: ${esc(o.title)} • ${esc(o.status||'')}</div></div>`));inspections.filter(i=>i.date===td&&i.status!=='Zrobiony').forEach(i=>ev.push(`<div class="item ok"><h3>${esc(clientName(i.clientId))}</h3><div class="meta">Przegląd: ${esc(i.type||'')} • ${esc(i.status||'')}</div></div>`));q('todaySummary').innerHTML=ev.join('')||'<div class="empty">Brak zaplanowanych prac na dziś.</div>'}
+function renderReports(){let m=q('reportMonth').value||month(),os=orders.filter(o=>(o.date||'').startsWith(m)),done=os.filter(o=>['Wykonane','Do faktury','Zamknięte'].includes(o.status)),rev=done.reduce((s,o)=>s+Number(o.revenue||0),0),mat=done.reduce((s,o)=>s+materialCost(o),0),lab=done.reduce((s,o)=>s+Number(o.laborCost||0),0),other=done.reduce((s,o)=>s+Number(o.otherCost||0),0),cost=mat+lab+other,ins=inspections.filter(i=>(i.completedDate||i.date||'').startsWith(m)&&i.status==='Zrobiony');q('reportSummary').innerHTML=`<div class="grid"><div class="card"><div class="label">Zlecenia zakończone</div><div class="stat">${done.length}</div></div><div class="card"><div class="label">Przychód</div><div class="stat">${money(rev)}</div></div><div class="card"><div class="label">Koszty</div><div class="stat">${money(cost)}</div></div><div class="card"><div class="label">Wynik</div><div class="stat">${money(rev-cost)}</div></div></div>`;let mw=worklogs.filter(w=>(w.date||'').startsWith(m));q('reportDetails').innerHTML=`<div class="card"><h2>Struktura kosztów</h2><p>Materiały: <b>${money(mat)}</b><br>Robocizna: <b>${money(lab)}</b><br>Inne: <b>${money(other)}</b><br>Wykonane przeglądy: <b>${ins.length}</b></p></div><div class="card"><h2>Godziny pracowników</h2>${employees.map(e=>{let h=mw.filter(w=>w.employeeId===e.id).reduce((s,w)=>s+hours(w.start,w.end,w.breakMin),0);return `<span class="badge">${esc(e.name)}: ${h.toFixed(1)} h</span>`}).join(' ')||'<div class="meta">Brak danych.</div>'}</div><h2>Zlecenia</h2>${done.map(o=>`<div class="item"><b>${esc(clientName(o.clientId))} — ${esc(o.title)}</b><div class="meta">Przychód ${money(o.revenue)} • Koszt ${money(orderCost(o))} • Wynik ${money(Number(o.revenue||0)-orderCost(o))}</div></div>`).join('')||'<div class="empty">Brak zakończonych zleceń.</div>'}`}
+window.exportReportCsv=()=>{let m=q('reportMonth').value||month(),os=orders.filter(o=>(o.date||'').startsWith(m));let rows=[['Data','Klient','Zlecenie','Status','Materiały','Robocizna','Inne koszty','Przychód','Wynik'],...os.map(o=>[o.date,clientName(o.clientId),o.title,o.status,materialCost(o),Number(o.laborCost||0),Number(o.otherCost||0),Number(o.revenue||0),Number(o.revenue||0)-orderCost(o)])];let csv=rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(';')).join('\n'),blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`Serwisant_PRO_raport_${m}.csv`;a.click();URL.revokeObjectURL(a.href)};
+window.enablePush=async()=>{try{let p=await Notification.requestPermission();if(p!=='granted')return alert('Brak zgody.');let reg=await navigator.serviceWorker.register('./firebase-messaging-sw.js');let token=await getToken(messaging,{vapidKey,serviceWorkerRegistration:reg});await setDoc(doc(db,'pushTokens',user.uid),{ownerUid:user.uid,token,updatedAt:new Date().toISOString()},{merge:true});q('pushState').textContent='Powiadomienia aktywne.'}catch(e){console.error(e);alert('Nie udało się włączyć powiadomień.')}};
+function renderAll(){renderDashboard();renderClients();renderDevices();renderOrders();renderCalendar();renderEmployees();renderInspections();renderReports()}q('reportMonth').value=month();q('calendarDate').value=today();
+</script></body></html>
