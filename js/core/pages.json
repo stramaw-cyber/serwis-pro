@@ -60,6 +60,10 @@
     "file": "./partials/pages/trashPage.html"
   },
   {
+    "id": "users",
+    "file": "./partials/pages/users.html"
+  },
+  {
     "id": "settings",
     "file": "./partials/pages/settings.html"
   }

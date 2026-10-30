@@ -56,7 +56,7 @@ async function safeImport(url) {
 
     // Moduły funkcjonalne — od tej wersji rozwijamy je osobno.
     const files = [
-      "clients","devices","orders","inspections","service","employees","worktime",
+      "clients","devices","orders","inspections","service","employees","worktime","users",
       "vehicles","fuel","buildings","finance","certificates","bhp","firstaid",
       "notes","links","messages","i18n","weather"
     ];
