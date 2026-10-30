@@ -2,7 +2,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebas
 import { getAuth,onAuthStateChanged,signInWithEmailAndPassword,createUserWithEmailAndPassword,signOut } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
 import { getFirestore,collection,doc,addDoc,setDoc,getDocs,query,where } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
 import { getMessaging,getToken } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-messaging.js";
-import { firebaseConfig,vapidKey } from "./firebase-config.js";
+import { firebaseConfig,vapidKey } from "../../firebase-config.js";
 const appFb=initializeApp(firebaseConfig),auth=getAuth(appFb),db=getFirestore(appFb),messaging=getMessaging(appFb),q=id=>document.getElementById(id);
 let user=null,clients=[],devices=[],orders=[],employees=[],worklogs=[],absences=[],inspections=[],photos=[],protocols=[],vehicles=[],trips=[],fuel=[],callbacks=[],knowledge=[];let currentMaterials=[];let currentProtocol=null;let currentWorkTab='today';
 const CHECKS={
