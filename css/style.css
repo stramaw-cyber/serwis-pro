@@ -51,3 +51,32 @@ body[data-page="calendar"] .calendarDay{border-left-color:#7c3aed}
 body[data-page="worktime"] .monthCell{border-top:3px solid #f59e0b}
 body[data-page="photosPage"] .photoCard{border-top:4px solid #db2777}
 
+
+
+.permissions-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:10px;
+  margin:12px 0 18px;
+}
+.permission-card{
+  border:1px solid #dfe6ee;
+  border-radius:14px;
+  padding:12px;
+  background:#fff;
+}
+.permission-card h4{margin:0 0 8px}
+.permission-row{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  flex-wrap:wrap;
+  font-size:14px;
+}
+.permission-row label{
+  display:flex;
+  gap:5px;
+  align-items:center;
+  margin:0;
+}
+.permission-row input{width:auto}
