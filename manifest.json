@@ -1,8 +1,7 @@
 {
-  "name": "Serwisant PRO v6",
-  "short_name": "Serwisant",
+  "name": "Serwisant PRO",
+  "short_name": "Serwisant PRO",
   "start_url": "./",
-  "scope": "./",
   "display": "standalone",
   "background_color": "#eef3f7",
   "theme_color": "#17365D"

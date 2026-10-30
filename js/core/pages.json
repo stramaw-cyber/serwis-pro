@@ -1,0 +1,66 @@
+[
+  {
+    "id": "dashboard",
+    "file": "./partials/pages/dashboard.html"
+  },
+  {
+    "id": "clients",
+    "file": "./partials/pages/clients.html"
+  },
+  {
+    "id": "devices",
+    "file": "./partials/pages/devices.html"
+  },
+  {
+    "id": "orders",
+    "file": "./partials/pages/orders.html"
+  },
+  {
+    "id": "calendar",
+    "file": "./partials/pages/calendar.html"
+  },
+  {
+    "id": "employees",
+    "file": "./partials/pages/employees.html"
+  },
+  {
+    "id": "worktime",
+    "file": "./partials/pages/worktime.html"
+  },
+  {
+    "id": "inspections",
+    "file": "./partials/pages/inspections.html"
+  },
+  {
+    "id": "reports",
+    "file": "./partials/pages/reports.html"
+  },
+  {
+    "id": "protocolsPage",
+    "file": "./partials/pages/protocolsPage.html"
+  },
+  {
+    "id": "photosPage",
+    "file": "./partials/pages/photosPage.html"
+  },
+  {
+    "id": "materialsPage",
+    "file": "./partials/pages/materialsPage.html"
+  },
+  {
+    "id": "callbacksPage",
+    "file": "./partials/pages/callbacksPage.html"
+  },
+  {
+    "id": "knowledgePage",
+    "file": "./partials/pages/knowledgePage.html"
+  },
+  {
+    "id": "trashPage",
+    "file": "./partials/pages/trashPage.html"
+  },
+  {
+    "id": "settings",
+    "file": "./partials/pages/settings.html"
+  }
+]
