@@ -1,33 +1,5 @@
 <div class="modal" id="modal" onclick="if(event.target===this)closeModal()"><div class="sheet">
-<div class="form hidden" id="clientForm"><h2>Klient</h2><input id="cId" type="hidden"/><label>Nazwa / imię</label><input id="cName"/><label>Telefon</label><input id="cPhone"/><div class="row"><div><label>Adres</label><input id="cAddress"/>
-<div id="userPermissionsForm" class="form hidden">
-  <h2>Użytkownik</h2>
-  <input id="uProfileId" type="hidden">
-
-  <label>Imię i nazwisko</label>
-  <input id="uProfileName" placeholder="np. Yurii Yaremchuk">
-
-  <label>E-mail logowania</label>
-  <input id="uProfileEmail" type="email" placeholder="pracownik@firma.pl">
-
-  <label>Rola</label>
-  <select id="uProfileRole">
-    <option value="worker">Pracownik</option>
-    <option value="office">Biuro</option>
-    <option value="admin">Administrator</option>
-  </select>
-
-  <h3>Uprawnienia</h3>
-  <div id="permissionsGrid" class="permissions-grid"></div>
-
-  <div class="toolbar">
-    <button onclick="saveUserPermissions()">Zapisz</button>
-    <button class="secondary" onclick="closeModal()">Anuluj</button>
-    <button id="deleteUserProfileBtn" class="danger hidden" onclick="deleteUserProfile()">Usuń profil</button>
-  </div>
-</div>
-
-</div><div><label>Miejscowość</label><input id="cCity"/></div></div><label>E-mail</label><input id="cEmail" type="email"/><label>Uwagi</label><textarea id="cNotes"></textarea><div class="toolbar"><button onclick="saveClient()">Zapisz</button><button class="secondary" onclick="closeModal()">Anuluj</button></div></div>
+<div class="form hidden" id="clientForm"><h2>Klient</h2><input id="cId" type="hidden"/><label>Nazwa / imię</label><input id="cName"/><label>Telefon</label><input id="cPhone"/><div class="row"><div><label>Adres</label><input id="cAddress"/></div><div><label>Miejscowość</label><input id="cCity"/></div></div><label>E-mail</label><input id="cEmail" type="email"/><label>Uwagi</label><textarea id="cNotes"></textarea><div class="toolbar"><button onclick="saveClient()">Zapisz</button><button class="secondary" onclick="closeModal()">Anuluj</button></div></div>
 <div class="form hidden" id="clientCardForm"><div id="clientCardContent"></div><div class="toolbar"><button class="secondary" onclick="closeModal()">Zamknij</button></div></div>
 <div class="form hidden" id="deviceForm"><h2>Urządzenie</h2><input id="dId" type="hidden"/><label>Klient</label><select id="dClient"></select><div class="row"><div><label>Typ urządzenia</label><select id="dType"><option>Pompa ciepła</option><option>Klimatyzacja</option><option>Kocioł gazowy</option><option>Kocioł pelletowy</option><option>Rekuperator</option><option>Uzdatnianie wody</option><option>Automatyka / alarm</option><option>Inne</option></select></div><div><label>Producent</label><input id="dBrand"/></div></div><div class="row"><div><label>Model</label><input id="dModel"/></div><div><label>Numer seryjny</label><input id="dSerial"/></div></div><div class="row"><div><label>Data montażu</label><input id="dInstallDate" type="date"/></div><div><label>Gwarancja do</label><input id="dWarranty" type="date"/></div></div><label>Lokalizacja urządzenia</label><input id="dLocation" placeholder="np. kotłownia, poddasze"/><div class="row"><div><label>Status urządzenia</label><select id="dStatus"><option>Sprawne</option><option>Obserwacja</option><option>Wymaga naprawy</option><option>Niesprawne</option><option>Do wymiany</option></select></div><div><label>Instrukcja / DTR (link)</label><input id="dManualUrl" placeholder="https://..."/></div></div><label>Dokumenty urządzenia — jeden link w linii</label><textarea id="dDocs" placeholder="Instrukcja: https://...
 Karta gwarancyjna: https://..."></textarea><label>Notatki serwisowe / procedura</label><textarea id="dServiceNotes" placeholder="Własne informacje, kody serwisowe, ustawienia…"></textarea><label>Uwagi</label><textarea id="dNotes"></textarea><div class="toolbar"><button onclick="saveDevice()">Zapisz</button><button class="secondary" onclick="closeModal()">Anuluj</button></div></div>
@@ -44,4 +16,26 @@ Karta gwarancyjna: https://..."></textarea><label>Notatki serwisowe / procedura<
 <div class="form hidden" id="protocolForm"><h2>Protokół serwisowy</h2><input id="prId" type="hidden"/><label>Zlecenie</label><select id="prOrder" onchange="protocolOrderChanged()"></select><div class="row"><div><label>Typ checklisty</label><select id="prTemplate" onchange="renderChecklist()"><option value="heatpump">Pompa ciepła</option><option value="ac">Klimatyzacja</option><option value="boiler">Kocioł</option><option value="reku">Rekuperacja</option><option value="generic">Ogólna</option><option value="custom">Własna checklista</option></select></div><div><label>Data</label><input id="prDate" type="date"/></div></div><div class="hidden" id="customChecklistWrap"><label>Własna checklista — jeden punkt w linii</label><textarea id="prCustomChecklist" placeholder="Sprawdzenie szczelności
 Kontrola filtrów
 Pomiar temperatur"></textarea><button class="secondary smallBtn" onclick="renderChecklist()">Odśwież checklistę</button></div><h3 class="sectionTitle">Checklista</h3><div class="checkgrid" id="checklist"></div><label>Wykonane prace</label><textarea id="prWork"></textarea><label>Pomiary / parametry</label><textarea id="prMeasurements" placeholder="np. ciśnienia, temperatury, CO₂, pobór prądu"></textarea><label>Zalecenia dla klienta</label><textarea id="prRecommendations"></textarea><label>Imię klienta / osoby odbierającej</label><input id="prCustomer"/><h3 class="sectionTitle">Podpis klienta</h3><canvas class="sig" id="signature"></canvas><div class="toolbar"><button class="secondary smallBtn" onclick="clearSignature()">Wyczyść podpis</button></div><div class="toolbar"><button onclick="saveProtocol()">Zapisz protokół</button><button class="purpleBtn hidden" id="printProtocolBtn" onclick="printCurrentProtocol()">PDF / drukuj</button><button class="secondary" onclick="closeModal()">Anuluj</button></div></div>
+
+<div id="userPermissionsForm" class="form hidden">
+  <h2>Użytkownik</h2>
+  <input id="uProfileId" type="hidden">
+  <label>Imię i nazwisko</label>
+  <input id="uProfileName" placeholder="np. Yurii Yaremchuk">
+  <label>E-mail logowania</label>
+  <input id="uProfileEmail" type="email" placeholder="pracownik@firma.pl">
+  <label>Rola</label>
+  <select id="uProfileRole">
+    <option value="worker">Pracownik</option>
+    <option value="office">Biuro</option>
+    <option value="admin">Administrator</option>
+  </select>
+  <h3>Uprawnienia</h3>
+  <div id="permissionsGrid" class="permissions-grid"></div>
+  <div class="toolbar">
+    <button onclick="saveUserPermissions()">Zapisz</button>
+    <button class="secondary" onclick="closeModal()">Anuluj</button>
+    <button id="deleteUserProfileBtn" class="danger hidden" onclick="deleteUserProfile()">Usuń profil</button>
+  </div>
+</div>
 </div></div>
