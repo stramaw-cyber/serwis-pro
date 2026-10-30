@@ -1,31 +1,19 @@
 const MODULES = [
-  ["clients","Klienci"],
-  ["devices","Urządzenia"],
-  ["orders","Zlecenia"],
-  ["inspections","Przeglądy"],
-  ["service","Serwisy"],
-  ["photos","Zdjęcia"],
-  ["worktime","Czas pracy"],
-  ["vehicles","Samochody"],
-  ["fuel","Paliwo"],
-  ["reports","Raporty"],
-  ["protocols","Protokoły"],
-  ["materials","Części / Materiały"],
-  ["callbacks","Do oddzwonienia"],
-  ["knowledge","Baza serwisowa"],
-  ["trash","Kosz"],
-  ["settings","Ustawienia"]
+  ["clients","Klienci"],["devices","Urządzenia"],["orders","Zlecenia"],
+  ["inspections","Przeglądy"],["service","Serwisy"],["photos","Zdjęcia"],
+  ["worktime","Czas pracy"],["vehicles","Samochody"],["fuel","Paliwo"],
+  ["reports","Raporty"],["protocols","Protokoły"],["materials","Części / Materiały"],
+  ["callbacks","Do oddzwonienia"],["knowledge","Baza serwisowa"],
+  ["trash","Kosz"],["settings","Ustawienia"]
 ];
 
-const defaultPermissions = ()=>{
-  const out={};
-  for(const [id] of MODULES){
-    out[id]={view:true,add:true,edit:true,delete:false};
-  }
-  return out;
-};
-
 function q(id){ return document.getElementById(id); }
+
+function defaultPermissions(){
+  const out={};
+  for(const [id] of MODULES) out[id]={view:true,add:true,edit:true,delete:false};
+  return out;
+}
 
 function renderPermissionEditor(perms={}){
   const root=q("permissionsGrid");
@@ -44,52 +32,35 @@ function renderPermissionEditor(perms={}){
   }).join("");
 }
 
-function collectPermissions(){
-  const perms={};
-  for(const [id] of MODULES){
-    perms[id]={view:false,add:false,edit:false,delete:false};
+function showUserForm(){
+  document.querySelectorAll("#modal .form").forEach(x=>x.classList.add("hidden"));
+  const form=q("userPermissionsForm");
+  const modal=q("modal");
+  if(!form || !modal){
+    alert("Nie znaleziono formularza użytkownika. Sprawdź plik partials/modal.html.");
+    return false;
   }
-  document.querySelectorAll("[data-perm]").forEach(el=>{
-    perms[el.dataset.perm][el.dataset.k]=el.checked;
-  });
-  return perms;
+  form.classList.remove("hidden");
+  modal.classList.add("show");
+  return true;
 }
 
 window.openUserPermissions=(profile={})=>{
+  if(!showUserForm()) return;
   q("uProfileId").value=profile.id||"";
   q("uProfileName").value=profile.name||"";
   q("uProfileEmail").value=profile.email||"";
   q("uProfileRole").value=profile.role||"worker";
   renderPermissionEditor(profile.permissions||defaultPermissions());
   q("deleteUserProfileBtn").classList.toggle("hidden",!profile.id);
-  if(typeof openForm==="function") openForm("userPermissionsForm");
 };
 
-window.SerwisantUsers = {
-  MODULES,
-  defaultPermissions,
-  renderPermissionEditor,
-  collectPermissions
+window.saveUserPermissions=()=>{
+  alert("Formularz działa. W następnym kroku podłączymy zapisywanie użytkowników do Firebase i wspólnej firmy.");
 };
 
-// Integracja z obecnym silnikiem aplikacji.
-// Jeśli app.js wystawia firebase/db/user globalnie, moduł wykorzysta je.
-// Jeśli nie, funkcje pokażą czytelny komunikat zamiast psuć aplikację.
-async function getCtx(){
-  const db=window.db||window.firebaseDb||null;
-  const user=window.user||window.currentUser||null;
-  return {db,user};
-}
-
-window.saveUserPermissions=async()=>{
-  const {db,user}=await getCtx();
-  if(!db||!user){
-    return alert("Moduł użytkowników wymaga podłączenia do wspólnego kontekstu Firebase. To zrobimy w następnym kroku integracji.");
-  }
+window.deleteUserProfile=()=>{
+  alert("Usuwanie profilu uruchomimy razem z zapisem użytkowników w Firebase.");
 };
 
-window.deleteUserProfile=async()=>{
-  alert("Usuwanie profilu użytkownika zostanie aktywowane po podłączeniu wspólnego kontekstu Firebase.");
-};
-
-window.renderUsersAdmin=()=>{};
+window.SerwisantUsers={MODULES,defaultPermissions,renderPermissionEditor};
