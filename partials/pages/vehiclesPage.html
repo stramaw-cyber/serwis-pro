@@ -1,0 +1,19 @@
+<section class="page" id="vehiclesPage">
+<div class="pageHomeBar"><button class="secondary" onclick="go('dashboard')">← Strona główna</button></div>
+<div class="pageHeader"><div><h2>🚐 Samochody</h2><div class="meta">Flota firmy, terminy, przebieg, serwis i koszty.</div></div><button onclick="openVehicleForm()">+ Dodaj pojazd</button></div>
+<div id="vehicleAlerts"></div>
+<div class="grid homeKpis" id="vehicleKpis"></div>
+<div class="card"><input id="vehicleSearch" placeholder="Szukaj po nazwie, rejestracji, VIN..." oninput="renderVehiclesModule()"></div>
+<div id="vehicleList"></div>
+<div class="card hidden" id="vehicleFormCard">
+<h3 id="vehicleFormTitle">Pojazd</h3><input type="hidden" id="vId">
+<div class="grid3"><div><label>Nazwa</label><input id="vName" placeholder="np. Ducato"></div><div><label>Marka</label><input id="vBrand" placeholder="Fiat"></div><div><label>Model</label><input id="vModel"></div></div>
+<div class="grid3"><div><label>Nr rejestracyjny</label><input id="vReg"></div><div><label>VIN</label><input id="vVin"></div><div><label>Rok</label><input id="vYear" type="number"></div></div>
+<div class="grid3"><div><label>Przebieg [km]</label><input id="vMileage" type="number"></div><div><label>Przegląd techniczny do</label><input id="vInspection" type="date"></div><div><label>OC do</label><input id="vInsurance" type="date"></div></div>
+<div class="grid3"><div><label>AC do</label><input id="vAc" type="date"></div><div><label>Nr polisy</label><input id="vPolicy"></div><div><label>Status</label><select id="vStatus"><option>Aktywny</option><option>Serwis</option><option>Wyłączony</option></select></div></div>
+<label>Linki do dokumentów / zdjęć — jeden w linii</label><textarea id="vDocs" placeholder="Dowód rejestracyjny: https://...&#10;Zdjęcie auta: https://..."></textarea>
+<label>Notatki</label><textarea id="vNotes"></textarea>
+<h3>Serwis / naprawy</h3><div id="repairRows"></div><button class="secondary smallBtn" onclick="addVehicleRepairRow()">+ Dodaj wpis serwisowy</button>
+<div class="toolbar"><button onclick="saveVehicleRecord()">Zapisz</button><button class="secondary" onclick="closeVehicleForm()">Anuluj</button></div>
+</div>
+</section>

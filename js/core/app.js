@@ -8,7 +8,7 @@ const appFb=initializeApp(firebaseConfig),auth=getAuth(appFb),db=getFirestore(ap
 let user=null,userProfile=null,companyId=null,companyOwnerUid=null,clients=[],devices=[],orders=[],employees=[],worklogs=[],absences=[],inspections=[],photos=[],protocols=[],vehicles=[],trips=[],fuel=[],callbacks=[],knowledge=[];let currentMaterials=[];let currentProtocol=null;let currentWorkTab='today';
 const getMyCompanyContextFn=httpsCallable(functions,"getMyCompanyContext");
 const migrateCompanyDataFn=httpsCallable(functions,"migrateCompanyData");
-const CORE_MODULES={clients:'clients',devices:'devices',orders:'orders',inspections:'inspections',employees:'worktime',worktime:'worktime',reports:'reports',protocolsPage:'protocols',photosPage:'photos',callbacksPage:'callbacks',knowledgePage:'knowledge',trashPage:'trash',settings:'settings'};
+const CORE_MODULES={clients:'clients',devices:'devices',orders:'orders',inspections:'inspections',employees:'worktime',worktime:'worktime',reports:'reports',protocolsPage:'protocols',photosPage:'photos',callbacksPage:'callbacks',knowledgePage:'knowledge',trashPage:'trash',settings:'settings',vehiclesPage:'vehicles',fuelPage:'fuel'};
 const COLLECTION_MODULE={clients:'clients',devices:'devices',orders:'orders',employees:'worktime',worklogs:'worktime',absences:'worktime',inspections:'inspections',photos:'photos',protocols:'protocols',vehicles:'vehicles',trips:'vehicles',fuel:'fuel',callbacks:'callbacks',knowledge:'knowledge'};
 function hasPerm(module,action='view'){if(userProfile?.role==='admin')return true;return userProfile?.permissions?.[module]?.[action]===true}
 function requirePerm(module,action='view'){if(hasPerm(module,action))return true;alert(`Brak uprawnienia: ${module} / ${action}`);return false}

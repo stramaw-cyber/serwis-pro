@@ -1,0 +1,8 @@
+<section class="page" id="fuelPage">
+<div class="pageHomeBar"><button class="secondary" onclick="go('dashboard')">← Strona główna</button></div>
+<div class="pageHeader"><div><h2>⛽ Paliwo</h2><div class="meta">Tankowania, koszt paliwa i średnie spalanie.</div></div><button onclick="openFuelForm()">+ Dodaj tankowanie</button></div>
+<div class="grid homeKpis" id="fuelKpis"></div>
+<div class="card"><div class="row"><div><label>Pojazd</label><select id="fuelVehicleFilter" onchange="renderFuelModule()"><option value="">Wszystkie</option></select></div><div><label>Miesiąc</label><input id="fuelMonthFilter" type="month" onchange="renderFuelModule()"></div></div></div>
+<div id="fuelList"></div>
+<div class="card hidden" id="fuelFormCard"><h3>Tankowanie</h3><input type="hidden" id="fId"><div class="grid3"><div><label>Pojazd</label><select id="fVehicle"></select></div><div><label>Data</label><input id="fDate" type="date"></div><div><label>Przebieg [km]</label><input id="fMileage" type="number"></div></div><div class="grid3"><div><label>Litry</label><input id="fLiters" type="number" step="0.01"></div><div><label>Cena / l [zł]</label><input id="fPrice" type="number" step="0.01"></div><div><label>Koszt [zł]</label><input id="fCost" type="number" step="0.01"></div></div><label style="display:flex;gap:8px;align-items:center"><input id="fFull" type="checkbox" style="width:auto"> Tankowanie do pełna</label><label>Stacja / uwagi</label><input id="fNotes"><div class="toolbar"><button onclick="saveFuelRecord()">Zapisz</button><button class="secondary" onclick="closeFuelForm()">Anuluj</button></div></div>
+</section>

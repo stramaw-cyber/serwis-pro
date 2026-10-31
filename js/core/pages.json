@@ -32,6 +32,14 @@
     "file": "./partials/pages/inspections.html"
   },
   {
+    "id": "vehiclesPage",
+    "file": "./partials/pages/vehiclesPage.html"
+  },
+  {
+    "id": "fuelPage",
+    "file": "./partials/pages/fuelPage.html"
+  },
+  {
     "id": "reports",
     "file": "./partials/pages/reports.html"
   },
