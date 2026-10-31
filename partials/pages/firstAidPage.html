@@ -1,1 +1,41 @@
-<section class="page" id="firstAidPage"><div class="pageHomeBar"><div class="sectionPageTitle"><strong>Pierwsza pomoc</strong></div><button class="homeBack" onclick="go('dashboard')">← Strona główna</button></div><div class="card"><h2>🚑 Szybkie procedury terenowe</h2><div class="meta">Materiał pomocniczy do szybkiego przypomnienia. W sytuacji zagrożenia życia dzwoń 112 i postępuj zgodnie z poleceniami dyspozytora.</div></div><div id="firstAidCards" class="grid"></div></section>
+<section class="page" id="firstAidPage">
+  <div class="pageHomeBar">
+    <div class="sectionPageTitle"><strong>Pierwsza pomoc</strong></div>
+    <button class="homeBack" onclick="go('dashboard')">← Strona główna</button>
+  </div>
+
+  <div class="card dangerItem">
+    <div class="pageHeader">
+      <div>
+        <h2 style="margin:0">🚑 Szybka pomoc w terenie</h2>
+        <div class="meta">Materiały pomocnicze do szybkiego przypomnienia. W zagrożeniu życia dzwoń 112 i wykonuj polecenia dyspozytora.</div>
+      </div>
+      <a class="btn danger" href="tel:112" style="font-size:1.15rem;font-weight:800">📞 ZADZWOŃ 112</a>
+    </div>
+  </div>
+
+  <div class="grid3">
+    <a class="card" href="tel:112" style="text-decoration:none;color:inherit"><div class="label">Numer alarmowy</div><div class="stat">112</div><div class="meta">Policja • Straż • Pogotowie</div></a>
+    <a class="card" href="tel:999" style="text-decoration:none;color:inherit"><div class="label">Pogotowie ratunkowe</div><div class="stat">999</div><div class="meta">Nagłe zagrożenie zdrowia i życia</div></a>
+    <div class="card"><div class="label">Zasada podstawowa</div><div class="stat" style="font-size:1.35rem">Bezpieczeństwo</div><div class="meta">Najpierw zabezpiecz siebie, poszkodowanego i miejsce zdarzenia.</div></div>
+  </div>
+
+  <div class="card">
+    <label for="firstAidSearch">Szukaj procedury</label>
+    <input id="firstAidSearch" placeholder="np. prąd, krwotok, oparzenie, chemia, gaz..." oninput="renderFirstAid()">
+    <div class="toolbar" id="firstAidQuickFilters" style="margin-top:10px">
+      <button class="secondary smallBtn" onclick="setFirstAidFilter('')">Wszystkie</button>
+      <button class="secondary smallBtn" onclick="setFirstAidFilter('112')">Natychmiast 112</button>
+      <button class="secondary smallBtn" onclick="setFirstAidFilter('instalacje')">Instalacje</button>
+      <button class="secondary smallBtn" onclick="setFirstAidFilter('uraz')">Urazy</button>
+    </div>
+  </div>
+
+  <div id="firstAidPriority"></div>
+  <div id="firstAidCards" class="grid"></div>
+
+  <div class="card">
+    <h3>⚠ Ważne</h3>
+    <div class="meta" style="font-size:1rem;line-height:1.55">Ta zakładka nie zastępuje szkolenia z pierwszej pomocy. Procedury są skrócone i przeznaczone do przypomnienia podstawowych działań w sytuacji nagłej.</div>
+  </div>
+</section>
