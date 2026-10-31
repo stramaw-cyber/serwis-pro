@@ -4,9 +4,14 @@ on:
   push:
     paths:
       - 'js/core/app.js'
+      - 'js/core/bootstrap.js'
       - 'js/modules/vehicles.js'
       - 'js/modules/fuel.js'
       - 'js/modules/buildings.js'
+      - 'js/modules/bhp.js'
+      - 'js/modules/certificates.js'
+      - 'js/modules/firstaid.js'
+      - 'js/modules/hr-permissions.js'
       - '.github/workflows/js-syntax-check.yml'
 
 jobs:
@@ -19,9 +24,19 @@ jobs:
           node-version: '22'
       - name: Check app.js
         run: node --check js/core/app.js
+      - name: Check bootstrap.js
+        run: node --check js/core/bootstrap.js
       - name: Check vehicles.js
         run: node --check js/modules/vehicles.js
       - name: Check fuel.js
         run: node --check js/modules/fuel.js
       - name: Check buildings.js
         run: node --check js/modules/buildings.js
+      - name: Check bhp.js
+        run: node --check js/modules/bhp.js
+      - name: Check certificates.js
+        run: node --check js/modules/certificates.js
+      - name: Check firstaid.js
+        run: node --check js/modules/firstaid.js
+      - name: Check hr-permissions.js
+        run: node --check js/modules/hr-permissions.js
