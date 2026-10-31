@@ -1,0 +1,21 @@
+name: JS syntax check
+
+on:
+  push:
+    paths:
+      - 'js/modules/vehicles.js'
+      - 'js/modules/fuel.js'
+      - '.github/workflows/js-syntax-check.yml'
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check vehicles.js
+        run: node --check js/modules/vehicles.js
+      - name: Check fuel.js
+        run: node --check js/modules/fuel.js
