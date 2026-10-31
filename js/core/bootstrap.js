@@ -50,17 +50,13 @@ async function safeImport(url) {
 (async()=>{
   try{
     await buildInterface();
-
-    // Stabilny silnik odziedziczony z v9.
     await import("./app.js");
-
-    // Moduły funkcjonalne — od tej wersji rozwijamy je osobno.
     const files = [
       "clients","devices","orders","inspections","service","employees","worktime","users",
       "vehicles","fuel","buildings","finance","certificates","bhp","firstaid",
       "notes","links","messages","i18n","weather"
     ];
-    const moduleVersions={buildings:"10.11.1"};
+    const moduleVersions={buildings:"10.12"};
     for(const f of files){
       const base=new URL(`../modules/${f}.js`, import.meta.url).href;
       const url=moduleVersions[f]?`${base}?v=${moduleVersions[f]}`:base;
