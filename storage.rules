@@ -31,6 +31,28 @@ service firebase.storage {
       );
     }
 
+    function hasPhotoPermission(action) {
+      return activeMember() && (
+        isAdmin() ||
+        ('permissions' in profile().data &&
+         'photos' in profile().data.permissions &&
+         action in profile().data.permissions.photos &&
+         profile().data.permissions.photos[action] == true)
+      );
+    }
+
+
+    match /companies/{companyId}/photos/{photoId}/{fileName} {
+      allow read: if sameCompany(companyId) && hasPhotoPermission('view');
+      allow create: if sameCompany(companyId) && hasPhotoPermission('add')
+                    && request.resource.size < 10 * 1024 * 1024
+                    && request.resource.contentType.matches('image/.*');
+      allow update: if sameCompany(companyId) && hasPhotoPermission('edit')
+                    && request.resource.size < 10 * 1024 * 1024
+                    && request.resource.contentType.matches('image/.*');
+      allow delete: if sameCompany(companyId) && hasPhotoPermission('delete');
+    }
+
     match /companies/{companyId}/buildings/{buildingId}/{folderId}/{fileName} {
       allow read: if sameCompany(companyId) && hasBuildingPermission('view');
       allow create, update: if sameCompany(companyId) && hasBuildingPermission('edit') && request.resource.size < 25 * 1024 * 1024;
