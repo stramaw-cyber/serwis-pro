@@ -18,7 +18,7 @@ const MODULES = [
   ["clients","Klienci"],["devices","Urządzenia"],["orders","Zlecenia"],
   ["inspections","Przeglądy"],["service","Serwisy"],["photos","Zdjęcia"],
   ["worktime","Czas pracy"],["vehicles","Samochody"],["fuel","Paliwo"],
-  ["buildings","Budowy / Projekty"],
+  ["buildings","Budowy / Projekty"],["bhp","BHP pracowników"],["certificates","Zaświadczenia / uprawnienia"],
   ["reports","Raporty"],["protocols","Protokoły"],["materials","Części / Materiały"],
   ["callbacks","Do oddzwonienia"],["knowledge","Baza serwisowa"],
   ["trash","Kosz"],["settings","Ustawienia"]
