@@ -5,60 +5,39 @@
     <div class="card">
       <div class="row">
         <input id="buildingSearch" placeholder="Szukaj budowy, klienta, adresu..." oninput="renderBuildingsModule()">
-        <select id="buildingStatusFilter" onchange="renderBuildingsModule()">
-          <option value="">Wszystkie statusy</option>
-          <option>Planowana</option><option>W trakcie</option><option>Wstrzymana</option><option>Zakończona</option>
-        </select>
+        <select id="buildingStatusFilter" onchange="renderBuildingsModule()"><option value="">Wszystkie statusy</option><option>Planowana</option><option>W trakcie</option><option>Wstrzymana</option><option>Zakończona</option></select>
         <button id="addBuildingBtn" onclick="openBuildingForm()">+ Nowa budowa</button>
       </div>
     </div>
-    <div id="buildingKpis" class="grid"></div>
-    <div id="buildingList"></div>
+    <div id="buildingKpis" class="grid"></div><div id="buildingList"></div>
 
     <div id="buildingEditor" class="card hidden">
       <div class="pageHeader"><div><h2 id="buildingFormTitle">Nowa budowa</h2><div class="meta">Dane projektu i terminy.</div></div><button class="secondary" onclick="closeBuildingForm()">Zamknij</button></div>
-      <input id="bId" type="hidden">
-      <div class="grid">
+      <input id="bId" type="hidden"><div class="grid">
         <div><label>Nazwa budowy / projektu</label><input id="bName" placeholder="np. Dom Kościelisko"></div>
         <div><label>Klient</label><input id="bClient" placeholder="imię / firma"></div>
         <div><label>Adres</label><input id="bAddress" placeholder="adres inwestycji"></div>
         <div><label>Status</label><select id="bStatus"><option>Planowana</option><option>W trakcie</option><option>Wstrzymana</option><option>Zakończona</option></select></div>
-        <div><label>Start</label><input id="bStart" type="date"></div>
-        <div><label>Planowane zakończenie</label><input id="bEnd" type="date"></div>
+        <div><label>Start</label><input id="bStart" type="date"></div><div><label>Planowane zakończenie</label><input id="bEnd" type="date"></div>
       </div>
       <label>Opis / zakres prac</label><textarea id="bScope" rows="3" placeholder="np. elektryka, hydraulika, rekuperacja, pompa ciepła..."></textarea>
-      <label>Uwagi</label><textarea id="bNotes" rows="3"></textarea>
-      <div class="toolbar"><button onclick="saveBuildingRecord()">Zapisz budowę</button></div>
+      <label>Uwagi</label><textarea id="bNotes" rows="3"></textarea><div class="toolbar"><button onclick="saveBuildingRecord()">Zapisz budowę</button></div>
     </div>
 
     <div id="buildingDetail" class="hidden">
-      <div class="card">
-        <div class="pageHeader"><div><h2 id="buildingDetailTitle">Budowa</h2><div id="buildingDetailMeta" class="meta"></div></div><div class="toolbar"><button class="secondary" onclick="closeBuildingDetail()">← Lista budów</button><button id="editCurrentBuildingBtn" class="secondary" onclick="editCurrentBuilding()">Edytuj</button><button id="archiveCurrentBuildingBtn" class="danger" onclick="archiveCurrentBuilding()">Do kosza</button></div></div>
-      </div>
-      <div class="grid">
-        <div class="card"><div class="label">Folderów</div><div class="stat" id="buildingFolderCount">0</div></div>
-        <div class="card"><div class="label">Podfolderów</div><div class="stat" id="buildingSubfolderCount">0</div></div>
-      </div>
-      <div class="card">
-        <div class="pageHeader"><div><h3>📁 Foldery projektu</h3><div class="meta">Możesz tworzyć dowolną liczbę poziomów.</div></div><button id="addRootFolderBtn" onclick="openFolderForm('')">+ Folder główny</button></div>
-        <div id="buildingFolderTree"></div>
-      </div>
+      <div class="card"><div class="pageHeader"><div><h2 id="buildingDetailTitle">Budowa</h2><div id="buildingDetailMeta" class="meta"></div></div><div class="toolbar"><button class="secondary" onclick="closeBuildingDetail()">← Lista budów</button><button id="editCurrentBuildingBtn" class="secondary" onclick="editCurrentBuilding()">Edytuj</button><button id="archiveCurrentBuildingBtn" class="danger" onclick="archiveCurrentBuilding()">Do kosza</button></div></div></div>
+      <div class="grid"><div class="card"><div class="label">Folderów</div><div class="stat" id="buildingFolderCount">0</div></div><div class="card"><div class="label">Podfolderów</div><div class="stat" id="buildingSubfolderCount">0</div></div><div class="card"><div class="label">Plików</div><div class="stat" id="buildingFileCount">0</div></div></div>
+      <div class="card"><div class="pageHeader"><div><h3>📁 Foldery projektu</h3><div class="meta">Zdjęcia, PDF-y, schematy, instrukcje i inne dokumenty możesz zapisywać bezpośrednio w folderach.</div></div><button id="addRootFolderBtn" onclick="openFolderForm('')">+ Folder główny</button></div><div id="buildingUploadStatus" class="meta"></div><div id="buildingFolderTree"></div></div>
     </div>
 
     <div id="folderEditor" class="card hidden">
       <div class="pageHeader"><div><h3 id="folderFormTitle">Nowy folder</h3></div><button class="secondary smallBtn" onclick="closeFolderForm()">Zamknij</button></div>
-      <input id="folderId" type="hidden"><input id="folderParentId" type="hidden">
-      <div class="grid">
-        <div><label>Nazwa folderu</label><input id="folderName" placeholder="np. Elektryka"></div>
-        <div><label>Rodzaj</label><select id="folderType"><option>Ogólny</option><option>Dokumentacja</option><option>Elektryka</option><option>Hydraulika</option><option>Wentylacja</option><option>Klimatyzacja</option><option>Pompa ciepła</option><option>Gaz</option><option>Zdjęcia</option><option>Materiały</option><option>Protokoły</option><option>Inne</option></select></div>
-      </div>
-      <label>Notatka folderu</label><textarea id="folderNotes" rows="3"></textarea>
-      <div class="toolbar"><button onclick="saveBuildingFolder()">Zapisz folder</button></div>
+      <input id="folderId" type="hidden"><input id="folderParentId" type="hidden"><div class="grid"><div><label>Nazwa folderu</label><input id="folderName" placeholder="np. Elektryka"></div><div><label>Rodzaj</label><select id="folderType"><option>Ogólny</option><option>Dokumentacja</option><option>Elektryka</option><option>Hydraulika</option><option>Wentylacja</option><option>Klimatyzacja</option><option>Pompa ciepła</option><option>Gaz</option><option>Zdjęcia</option><option>Materiały</option><option>Protokoły</option><option>Inne</option></select></div></div>
+      <label>Notatka folderu</label><textarea id="folderNotes" rows="3"></textarea><div class="toolbar"><button onclick="saveBuildingFolder()">Zapisz folder</button></div>
     </div>
 
-    <div class="card">
-      <h3>Archiwum budów</h3>
-      <div id="buildingArchiveList"></div>
-    </div>
+    <div class="card"><h3>Archiwum budów</h3><div id="buildingArchiveList"></div></div>
   </div>
+  <input id="buildingFileInput" type="file" multiple class="hidden" onchange="handleBuildingFiles(event)">
+  <input id="buildingCameraInput" type="file" accept="image/*" capture="environment" class="hidden" onchange="handleBuildingFiles(event)">
 </section>
