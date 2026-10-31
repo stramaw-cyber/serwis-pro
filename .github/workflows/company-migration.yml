@@ -1,4 +1,4 @@
-name: Serwisant PRO companyId migration patch
+name: Serwisant PRO permissions v10.6
 
 on:
   push:
@@ -15,10 +15,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Patch app.js diagnostics
+      - name: Patch permissions
         run: python3 scripts/company_migration_patch.py
 
-      - name: Commit patched app.js
+      - name: Commit patched app and rules
         run: |
           if git diff --quiet; then
             echo "No changes needed"
@@ -26,6 +26,6 @@ jobs:
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add js/core/app.js
-          git commit -m "v10.5.1: show exact Firestore collection error"
+          git add js/core/app.js firestore.rules
+          git commit -m "v10.6: enforce permissions for core modules"
           git push
