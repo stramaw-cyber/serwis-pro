@@ -52,11 +52,11 @@ async function safeImport(url) {
     await buildInterface();
     await import("./app.js");
     const files = [
-      "clients","devices","orders","inspections","service","employees","worktime","users",
+      "clients","devices","orders","inspections","service","employees","worktime","users","hr-permissions",
       "vehicles","fuel","buildings","finance","certificates","bhp","firstaid",
       "notes","links","messages","i18n","weather"
     ];
-    const moduleVersions={buildings:"10.12"};
+    const moduleVersions={buildings:"10.12",certificates:"10.13",bhp:"10.13",firstaid:"10.13","hr-permissions":"10.13"};
     for(const f of files){
       const base=new URL(`../modules/${f}.js`, import.meta.url).href;
       const url=moduleVersions[f]?`${base}?v=${moduleVersions[f]}`:base;
