@@ -128,6 +128,12 @@ service cloud.firestore {
       allow update: if canUpdateCompanyDoc() && (hasPermission('fuel', 'edit') || hasPermission('fuel', 'delete'));
       allow delete: if canReadCompanyDoc() && hasPermission('fuel', 'delete');
     }
+    match /buildings/{id} {
+      allow read: if canReadCompanyDoc() && hasPermission('buildings', 'view');
+      allow create: if canCreateCompanyDoc() && hasPermission('buildings', 'add');
+      allow update: if canUpdateCompanyDoc() && (hasPermission('buildings', 'edit') || hasPermission('buildings', 'delete'));
+      allow delete: if canReadCompanyDoc() && hasPermission('buildings', 'delete');
+    }
     match /callbacks/{id} {
       allow read: if canReadCompanyDoc() && hasPermission('callbacks', 'view');
       allow create: if canCreateCompanyDoc() && hasPermission('callbacks', 'add');
