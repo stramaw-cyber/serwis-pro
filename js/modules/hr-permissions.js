@@ -1,0 +1,3 @@
+const extra=[['bhp','BHP'],['certificates','Certyfikaty / Uprawnienia'],['firstaid','Pierwsza pomoc']];
+const t=setInterval(()=>{const api=window.SerwisantUsers;if(!api?.MODULES)return;clearInterval(t);for(const item of extra)if(!api.MODULES.some(x=>x[0]===item[0]))api.MODULES.push(item)},200);setTimeout(()=>clearInterval(t),10000);
+window.SerwisantModules=window.SerwisantModules||{};window.SerwisantModules['hr-permissions']={name:'Uprawnienia HR',version:'10.13',loaded:true};
