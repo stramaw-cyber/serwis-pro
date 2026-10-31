@@ -1,4 +1,4 @@
-name: Serwisant PRO vehicles v10.8
+name: Serwisant PRO edit-delete v10.10
 
 on:
   push:
@@ -15,8 +15,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Patch vehicles and fuel
-        run: python3 scripts/vehicles_fuel_patch.py
+      - name: Patch edit delete and trash
+        run: python3 scripts/edit_delete_patch.py
 
       - name: Commit patched app
         run: |
@@ -26,6 +26,6 @@ jobs:
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add js/core/app.js js/core/pages.json partials/pages/dashboard.html partials/pages/vehiclesPage.html partials/pages/fuelPage.html js/modules/vehicles.js js/modules/fuel.js
-          git commit -m "v10.8: add vehicles and fuel modules"
+          git add js/core/app.js
+          git commit -m "v10.10: add edit delete and expanded trash"
           git push
