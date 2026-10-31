@@ -13,6 +13,19 @@ service cloud.firestore {
       return signedIn() && myProfile().data.active == true;
     }
 
+    function isAdmin() {
+      return activeMember() && myProfile().data.role == 'admin';
+    }
+
+    function hasPermission(module, action) {
+      return activeMember() && (
+        isAdmin() ||
+        (module in myProfile().data.permissions &&
+         action in myProfile().data.permissions[module] &&
+         myProfile().data.permissions[module][action] == true)
+      );
+    }
+
     function sameCompany(companyId) {
       return activeMember() && myProfile().data.companyId == companyId;
     }
@@ -44,22 +57,22 @@ service cloud.firestore {
     }
 
     match /clients/{id} {
-      allow read: if canReadCompanyDoc();
-      allow create: if canCreateCompanyDoc();
-      allow update: if canUpdateCompanyDoc();
-      allow delete: if canReadCompanyDoc();
+      allow read: if canReadCompanyDoc() && hasPermission('clients', 'view');
+      allow create: if canCreateCompanyDoc() && hasPermission('clients', 'add');
+      allow update: if canUpdateCompanyDoc() && hasPermission('clients', 'edit');
+      allow delete: if canReadCompanyDoc() && hasPermission('clients', 'delete');
     }
     match /devices/{id} {
-      allow read: if canReadCompanyDoc();
-      allow create: if canCreateCompanyDoc();
-      allow update: if canUpdateCompanyDoc();
-      allow delete: if canReadCompanyDoc();
+      allow read: if canReadCompanyDoc() && hasPermission('devices', 'view');
+      allow create: if canCreateCompanyDoc() && hasPermission('devices', 'add');
+      allow update: if canUpdateCompanyDoc() && hasPermission('devices', 'edit');
+      allow delete: if canReadCompanyDoc() && hasPermission('devices', 'delete');
     }
     match /orders/{id} {
-      allow read: if canReadCompanyDoc();
-      allow create: if canCreateCompanyDoc();
-      allow update: if canUpdateCompanyDoc();
-      allow delete: if canReadCompanyDoc();
+      allow read: if canReadCompanyDoc() && hasPermission('orders', 'view');
+      allow create: if canCreateCompanyDoc() && hasPermission('orders', 'add');
+      allow update: if canUpdateCompanyDoc() && hasPermission('orders', 'edit');
+      allow delete: if canReadCompanyDoc() && hasPermission('orders', 'delete');
     }
     match /employees/{id} {
       allow read: if canReadCompanyDoc();
@@ -80,10 +93,10 @@ service cloud.firestore {
       allow delete: if canReadCompanyDoc();
     }
     match /inspections/{id} {
-      allow read: if canReadCompanyDoc();
-      allow create: if canCreateCompanyDoc();
-      allow update: if canUpdateCompanyDoc();
-      allow delete: if canReadCompanyDoc();
+      allow read: if canReadCompanyDoc() && hasPermission('inspections', 'view');
+      allow create: if canCreateCompanyDoc() && hasPermission('inspections', 'add');
+      allow update: if canUpdateCompanyDoc() && hasPermission('inspections', 'edit');
+      allow delete: if canReadCompanyDoc() && hasPermission('inspections', 'delete');
     }
     match /photos/{id} {
       allow read: if canReadCompanyDoc();
