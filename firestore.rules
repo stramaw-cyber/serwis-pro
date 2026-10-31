@@ -1,0 +1,136 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function myProfile() {
+      return get(/databases/$(database)/documents/userProfiles/$(request.auth.uid));
+    }
+
+    function activeMember() {
+      return signedIn() && myProfile().data.active == true;
+    }
+
+    function sameCompany(companyId) {
+      return activeMember() && myProfile().data.companyId == companyId;
+    }
+
+    function canReadCompanyDoc() {
+      return sameCompany(resource.data.companyId);
+    }
+
+    function canCreateCompanyDoc() {
+      return sameCompany(request.resource.data.companyId);
+    }
+
+    function canUpdateCompanyDoc() {
+      return sameCompany(resource.data.companyId)
+        && request.resource.data.companyId == resource.data.companyId;
+    }
+
+    match /companies/{companyId} {
+      allow read: if sameCompany(companyId);
+      allow write: if false;
+    }
+
+    match /userProfiles/{uid} {
+      allow read: if signedIn() && (
+        uid == request.auth.uid ||
+        (activeMember() && myProfile().data.role == 'admin' && myProfile().data.companyId == resource.data.companyId)
+      );
+      allow write: if false;
+    }
+
+    match /clients/{id} {
+      allow read: if canReadCompanyDoc();
+      allow create: if canCreateCompanyDoc();
+      allow update: if canUpdateCompanyDoc();
+      allow delete: if canReadCompanyDoc();
+    }
+    match /devices/{id} {
+      allow read: if canReadCompanyDoc();
+      allow create: if canCreateCompanyDoc();
+      allow update: if canUpdateCompanyDoc();
+      allow delete: if canReadCompanyDoc();
+    }
+    match /orders/{id} {
+      allow read: if canReadCompanyDoc();
+      allow create: if canCreateCompanyDoc();
+      allow update: if canUpdateCompanyDoc();
+      allow delete: if canReadCompanyDoc();
+    }
+    match /employees/{id} {
+      allow read: if canReadCompanyDoc();
+      allow create: if canCreateCompanyDoc();
+      allow update: if canUpdateCompanyDoc();
+      allow delete: if canReadCompanyDoc();
+    }
+    match /worklogs/{id} {
+      allow read: if canReadCompanyDoc();
+      allow create: if canCreateCompanyDoc();
+      allow update: if canUpdateCompanyDoc();
+      allow delete: if canReadCompanyDoc();
+    }
+    match /absences/{id} {
+      allow read: if canReadCompanyDoc();
+      allow create: if canCreateCompanyDoc();
+      allow update: if canUpdateCompanyDoc();
+      allow delete: if canReadCompanyDoc();
+    }
+    match /inspections/{id} {
+      allow read: if canReadCompanyDoc();
+      allow create: if canCreateCompanyDoc();
+      allow update: if canUpdateCompanyDoc();
+      allow delete: if canReadCompanyDoc();
+    }
+    match /photos/{id} {
+      allow read: if canReadCompanyDoc();
+      allow create: if canCreateCompanyDoc();
+      allow update: if canUpdateCompanyDoc();
+      allow delete: if canReadCompanyDoc();
+    }
+    match /protocols/{id} {
+      allow read: if canReadCompanyDoc();
+      allow create: if canCreateCompanyDoc();
+      allow update: if canUpdateCompanyDoc();
+      allow delete: if canReadCompanyDoc();
+    }
+    match /vehicles/{id} {
+      allow read: if canReadCompanyDoc();
+      allow create: if canCreateCompanyDoc();
+      allow update: if canUpdateCompanyDoc();
+      allow delete: if canReadCompanyDoc();
+    }
+    match /trips/{id} {
+      allow read: if canReadCompanyDoc();
+      allow create: if canCreateCompanyDoc();
+      allow update: if canUpdateCompanyDoc();
+      allow delete: if canReadCompanyDoc();
+    }
+    match /fuel/{id} {
+      allow read: if canReadCompanyDoc();
+      allow create: if canCreateCompanyDoc();
+      allow update: if canUpdateCompanyDoc();
+      allow delete: if canReadCompanyDoc();
+    }
+    match /callbacks/{id} {
+      allow read: if canReadCompanyDoc();
+      allow create: if canCreateCompanyDoc();
+      allow update: if canUpdateCompanyDoc();
+      allow delete: if canReadCompanyDoc();
+    }
+    match /knowledge/{id} {
+      allow read: if canReadCompanyDoc();
+      allow create: if canCreateCompanyDoc();
+      allow update: if canUpdateCompanyDoc();
+      allow delete: if canReadCompanyDoc();
+    }
+    match /pushTokens/{id} {
+      allow read: if activeMember() && id == request.auth.uid;
+      allow create, update: if activeMember() && id == request.auth.uid && request.resource.data.companyId == myProfile().data.companyId;
+      allow delete: if signedIn() && id == request.auth.uid;
+    }
+  }
+}
