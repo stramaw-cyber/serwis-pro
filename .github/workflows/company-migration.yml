@@ -1,4 +1,4 @@
-name: Serwisant PRO edit-delete v10.10
+name: Serwisant PRO photo storage v10.11
 
 on:
   push:
@@ -15,10 +15,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Patch edit delete and trash
-        run: python3 scripts/edit_delete_patch.py
+      - name: Patch photo storage
+        run: python3 scripts/photo_storage_patch.py
 
-      - name: Commit patched app
+      - name: Commit patched app and Storage rules
         run: |
           if git diff --quiet; then
             echo "No changes needed"
@@ -26,6 +26,6 @@ jobs:
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add js/core/app.js
-          git commit -m "v10.10: add edit delete and expanded trash"
+          git add js/core/app.js storage.rules
+          git commit -m "v10.11: store service photos in Firebase Storage"
           git push
