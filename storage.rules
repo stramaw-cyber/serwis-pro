@@ -1,62 +1,38 @@
 rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
-    function signedIn() {
-      return request.auth != null;
+    function signedIn(){ return request.auth != null; }
+    function profile(){ return firestore.get(/databases/(default)/documents/userProfiles/$(request.auth.uid)); }
+    function activeMember(){ return signedIn() && profile().data.active == true; }
+    function sameCompany(companyId){ return activeMember() && profile().data.companyId == companyId; }
+    function isAdmin(){ return activeMember() && profile().data.role == 'admin'; }
+    function hasPermission(module, action){
+      return activeMember() && (isAdmin() || ('permissions' in profile().data && module in profile().data.permissions && action in profile().data.permissions[module] && profile().data.permissions[module][action] == true));
     }
-
-    function profile() {
-      return firestore.get(/databases/(default)/documents/userProfiles/$(request.auth.uid));
-    }
-
-    function activeMember() {
-      return signedIn() && profile().data.active == true;
-    }
-
-    function sameCompany(companyId) {
-      return activeMember() && profile().data.companyId == companyId;
-    }
-
-    function isAdmin() {
-      return activeMember() && profile().data.role == 'admin';
-    }
-
-    function hasBuildingPermission(action) {
-      return activeMember() && (
-        isAdmin() ||
-        ('permissions' in profile().data &&
-         'buildings' in profile().data.permissions &&
-         action in profile().data.permissions.buildings &&
-         profile().data.permissions.buildings[action] == true)
-      );
-    }
-
-    function hasPhotoPermission(action) {
-      return activeMember() && (
-        isAdmin() ||
-        ('permissions' in profile().data &&
-         'photos' in profile().data.permissions &&
-         action in profile().data.permissions.photos &&
-         profile().data.permissions.photos[action] == true)
-      );
-    }
-
 
     match /companies/{companyId}/photos/{photoId}/{fileName} {
-      allow read: if sameCompany(companyId) && hasPhotoPermission('view');
-      allow create: if sameCompany(companyId) && hasPhotoPermission('add')
-                    && request.resource.size < 10 * 1024 * 1024
-                    && request.resource.contentType.matches('image/.*');
-      allow update: if sameCompany(companyId) && hasPhotoPermission('edit')
-                    && request.resource.size < 10 * 1024 * 1024
-                    && request.resource.contentType.matches('image/.*');
-      allow delete: if sameCompany(companyId) && hasPhotoPermission('delete');
+      allow read: if sameCompany(companyId) && hasPermission('photos','view');
+      allow create: if sameCompany(companyId) && hasPermission('photos','add') && request.resource.size < 10 * 1024 * 1024 && request.resource.contentType.matches('image/.*');
+      allow update: if sameCompany(companyId) && hasPermission('photos','edit') && request.resource.size < 10 * 1024 * 1024 && request.resource.contentType.matches('image/.*');
+      allow delete: if sameCompany(companyId) && hasPermission('photos','delete');
     }
 
     match /companies/{companyId}/buildings/{buildingId}/{folderId}/{fileName} {
-      allow read: if sameCompany(companyId) && hasBuildingPermission('view');
-      allow create, update: if sameCompany(companyId) && hasBuildingPermission('edit') && request.resource.size < 25 * 1024 * 1024;
-      allow delete: if sameCompany(companyId) && hasBuildingPermission('delete');
+      allow read: if sameCompany(companyId) && hasPermission('buildings','view');
+      allow create, update: if sameCompany(companyId) && hasPermission('buildings','edit') && request.resource.size < 25 * 1024 * 1024;
+      allow delete: if sameCompany(companyId) && hasPermission('buildings','delete');
+    }
+
+    match /company/{companyId}/hr/bhp/{employeeId}/{fileName} {
+      allow read: if sameCompany(companyId) && hasPermission('bhp','view');
+      allow create, update: if sameCompany(companyId) && (hasPermission('bhp','add') || hasPermission('bhp','edit')) && request.resource.size < 25 * 1024 * 1024;
+      allow delete: if sameCompany(companyId) && hasPermission('bhp','delete');
+    }
+
+    match /company/{companyId}/hr/certificates/{employeeId}/{fileName} {
+      allow read: if sameCompany(companyId) && hasPermission('certificates','view');
+      allow create, update: if sameCompany(companyId) && (hasPermission('certificates','add') || hasPermission('certificates','edit')) && request.resource.size < 25 * 1024 * 1024;
+      allow delete: if sameCompany(companyId) && hasPermission('certificates','delete');
     }
   }
 }
