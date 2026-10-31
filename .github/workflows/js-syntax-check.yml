@@ -3,6 +3,7 @@ name: JS syntax check
 on:
   push:
     paths:
+      - 'js/core/app.js'
       - 'js/modules/vehicles.js'
       - 'js/modules/fuel.js'
       - '.github/workflows/js-syntax-check.yml'
@@ -15,6 +16,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Check app.js
+        run: node --check js/core/app.js
       - name: Check vehicles.js
         run: node --check js/modules/vehicles.js
       - name: Check fuel.js
