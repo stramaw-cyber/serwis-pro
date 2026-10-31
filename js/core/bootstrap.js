@@ -60,8 +60,11 @@ async function safeImport(url) {
       "vehicles","fuel","buildings","finance","certificates","bhp","firstaid",
       "notes","links","messages","i18n","weather"
     ];
+    const moduleVersions={buildings:"10.11.1"};
     for(const f of files){
-      await safeImport(new URL(`../modules/${f}.js`, import.meta.url).href);
+      const base=new URL(`../modules/${f}.js`, import.meta.url).href;
+      const url=moduleVersions[f]?`${base}?v=${moduleVersions[f]}`:base;
+      await safeImport(url);
     }
   }catch(e){
     console.error(e);
