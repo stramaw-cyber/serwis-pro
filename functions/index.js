@@ -7,6 +7,11 @@ initializeApp();
 const db = getFirestore();
 
 const REGION = "europe-west1";
+const COMPANY_COLLECTIONS = [
+  "clients","devices","orders","employees","worklogs","absences",
+  "inspections","photos","protocols","vehicles","trips","fuel",
+  "callbacks","knowledge"
+];
 
 function requireAuth(request){
   if(!request.auth) throw new HttpsError("unauthenticated","Musisz być zalogowany.");
@@ -60,6 +65,60 @@ exports.ensureCompanyAdmin = onCall({region:REGION}, async (request)=>{
   });
 
   return {ok:true,companyId,role:"admin"};
+});
+
+exports.getMyCompanyContext = onCall({region:REGION}, async (request)=>{
+  const uid=requireAuth(request);
+  const profile=await getProfile(uid);
+  if(!profile || profile.active===false){
+    throw new HttpsError("permission-denied","Brak aktywnego profilu użytkownika.");
+  }
+  return {
+    ok:true,
+    profile,
+    companyId:profile.companyId,
+    ownerUid:profile.ownerUid||uid
+  };
+});
+
+exports.migrateCompanyData = onCall({region:REGION, timeoutSeconds:540}, async (request)=>{
+  const admin=await requireAdmin(request);
+  const ownerUid=admin.ownerUid||request.auth.uid;
+  const companyId=admin.companyId;
+  if(!companyId) throw new HttpsError("failed-precondition","Brak companyId administratora.");
+
+  const companyRef=db.collection("companies").doc(companyId);
+  const companySnap=await companyRef.get();
+  if(companySnap.exists && companySnap.data()?.companyMigrationV1Done===true){
+    return {ok:true,alreadyDone:true,migrated:0};
+  }
+
+  let migrated=0;
+  for(const name of COMPANY_COLLECTIONS){
+    const snap=await db.collection(name).where("ownerUid","==",ownerUid).get();
+    let batch=db.batch();
+    let count=0;
+    for(const d of snap.docs){
+      if(d.data().companyId===companyId) continue;
+      batch.set(d.ref,{companyId,ownerUid},{merge:true});
+      migrated++;
+      count++;
+      if(count>=400){
+        await batch.commit();
+        batch=db.batch();
+        count=0;
+      }
+    }
+    if(count>0) await batch.commit();
+  }
+
+  await companyRef.set({
+    companyMigrationV1Done:true,
+    companyMigrationV1At:FieldValue.serverTimestamp(),
+    companyMigrationV1Count:migrated
+  },{merge:true});
+
+  return {ok:true,migrated};
 });
 
 exports.createCompanyUser = onCall({region:REGION}, async (request)=>{
