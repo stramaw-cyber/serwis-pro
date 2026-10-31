@@ -15,7 +15,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Patch app.js
+      - name: Patch app.js diagnostics
         run: python3 scripts/company_migration_patch.py
 
       - name: Commit patched app.js
@@ -27,5 +27,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add js/core/app.js
-          git commit -m "v10.5: switch application data to shared companyId"
+          git commit -m "v10.5.1: show exact Firestore collection error"
           git push
