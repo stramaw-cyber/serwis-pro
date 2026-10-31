@@ -6,6 +6,7 @@ on:
       - 'js/core/app.js'
       - 'js/modules/vehicles.js'
       - 'js/modules/fuel.js'
+      - 'js/modules/buildings.js'
       - '.github/workflows/js-syntax-check.yml'
 
 jobs:
@@ -22,3 +23,5 @@ jobs:
         run: node --check js/modules/vehicles.js
       - name: Check fuel.js
         run: node --check js/modules/fuel.js
+      - name: Check buildings.js
+        run: node --check js/modules/buildings.js
