@@ -1,0 +1,40 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function profile() {
+      return firestore.get(/databases/(default)/documents/userProfiles/$(request.auth.uid));
+    }
+
+    function activeMember() {
+      return signedIn() && profile().data.active == true;
+    }
+
+    function sameCompany(companyId) {
+      return activeMember() && profile().data.companyId == companyId;
+    }
+
+    function isAdmin() {
+      return activeMember() && profile().data.role == 'admin';
+    }
+
+    function hasBuildingPermission(action) {
+      return activeMember() && (
+        isAdmin() ||
+        ('permissions' in profile().data &&
+         'buildings' in profile().data.permissions &&
+         action in profile().data.permissions.buildings &&
+         profile().data.permissions.buildings[action] == true)
+      );
+    }
+
+    match /companies/{companyId}/buildings/{buildingId}/{folderId}/{fileName} {
+      allow read: if sameCompany(companyId) && hasBuildingPermission('view');
+      allow create, update: if sameCompany(companyId) && hasBuildingPermission('edit') && request.resource.size < 25 * 1024 * 1024;
+      allow delete: if sameCompany(companyId) && hasBuildingPermission('delete');
+    }
+  }
+}
