@@ -41,7 +41,7 @@ async function load(){
 }
 
 function repairTotal(v){return (v.repairs||[]).reduce((s,r)=>s+Number(r.cost||0),0)}
-function fuelTotal(id){return fuel.filter(x=>x.vehicleId===id).reduce((s,x)=>s+Number(x.cost||0),0)}
+function fuelTotal(id){return fuel.filter(x=>x.vehicleId===id&&!x.archived).reduce((s,x)=>s+Number(x.cost||0),0)}
 
 function render(){
   const list=$('vehicleList');
@@ -61,10 +61,11 @@ function render(){
     if(b<=30)alerts.push(`${v.name||v.reg}: OC ${b<0?'po terminie':`za ${b} dni`} (${fmt(v.insuranceUntil)})`);
   });
   if($('vehicleAlerts'))$('vehicleAlerts').innerHTML=alerts.map(x=>`<div class="v8Alert red">⚠ ${esc(x)}</div>`).join('');
-  list.innerHTML=arr.length?arr.map(v=>`<div class="card"><div class="pageHeader"><div><h3>${esc(v.name||[v.brand,v.model].filter(Boolean).join(' ')||'Pojazd')}</h3><div class="meta">${esc([v.brand,v.model,v.reg].filter(Boolean).join(' • '))}<br>Przebieg: <b>${Number(v.mileage||0).toLocaleString('pl-PL')} km</b> • Przegląd: ${fmt(v.inspectionUntil)} • OC: ${fmt(v.insuranceUntil)}</div></div><div class="stat money">${money(repairTotal(v)+fuelTotal(v.id))}</div></div><div class="toolbar">${perm('edit')?`<button class="secondary smallBtn" onclick="openVehicleForm('${v.id}')">Edytuj</button>`:''}${fuelPerm('view')?`<button class="infoBtn smallBtn" onclick="go('fuelPage');setTimeout(()=>{const f=document.getElementById('fuelVehicleFilter');if(f){f.value='${v.id}';window.renderFuelModule?.()}},100)">Tankowania</button>`:''}</div>${(v.repairs||[]).length?`<h4>Ostatni serwis</h4><div class="meta">${esc((v.repairs||[]).slice(-1)[0].type||'')} • ${fmt((v.repairs||[]).slice(-1)[0].date)} • ${money((v.repairs||[]).slice(-1)[0].cost)}</div>`:''}</div>`).join(''):'<div class="empty">Brak pojazdów.</div>';
+  list.innerHTML=arr.length?arr.map(v=>`<div class="card"><div class="pageHeader"><div><h3>${esc(v.name||[v.brand,v.model].filter(Boolean).join(' ')||'Pojazd')}</h3><div class="meta">${esc([v.brand,v.model,v.reg].filter(Boolean).join(' • '))}<br>Przebieg: <b>${Number(v.mileage||0).toLocaleString('pl-PL')} km</b> • Przegląd: ${fmt(v.inspectionUntil)} • OC: ${fmt(v.insuranceUntil)}</div></div><div class="stat money">${money(repairTotal(v)+fuelTotal(v.id))}</div></div><div class="toolbar">${perm('edit')?`<button class="secondary smallBtn" onclick="openVehicleForm('${v.id}')">Edytuj</button>`:''}${fuelPerm('view')?`<button class="infoBtn smallBtn" onclick="go('fuelPage');setTimeout(()=>{const f=document.getElementById('fuelVehicleFilter');if(f){f.value='${v.id}';window.renderFuelModule?.()}},100)">Tankowania</button>`:''}${perm('delete')?`<button class="danger smallBtn" onclick="archiveVehicle('${v.id}')">Do kosza</button>`:''}</div>${(v.repairs||[]).length?`<h4>Ostatni serwis</h4><div class="meta">${esc((v.repairs||[]).slice(-1)[0].type||'')} • ${fmt((v.repairs||[]).slice(-1)[0].date)} • ${money((v.repairs||[]).slice(-1)[0].cost)}</div>`:''}</div>`).join(''):'<div class="empty">Brak pojazdów.</div>';
 }
 
 window.renderVehiclesModule=render;
+window.archiveVehicle=async id=>{if(!perm('delete'))return alert('Brak uprawnienia.');if(!confirm('Przenieść samochód do Kosza?'))return;await setDoc(doc(db,'vehicles',id),{archived:true,archivedAt:new Date().toISOString()},{merge:true});await load();window.renderTrash?.()};
 window.openVehicleForm=id=>{
   if(!(id?perm('edit'):perm('add')))return alert('Brak uprawnienia do '+(id?'edycji':'dodawania')+' pojazdu.');
   const v=vehicles.find(x=>x.id===id)||{};
@@ -113,4 +114,4 @@ window.saveVehicleRecord=async()=>{
 
 onAuthStateChanged(auth,u=>{if(u)setTimeout(load,250);else{profile=null;companyId=null;vehicles=[];fuel=[]}});
 window.SerwisantModules=window.SerwisantModules||{};
-window.SerwisantModules.vehicles={name:'Samochody',version:'10.8.1',loaded:true,reload:load};
+window.SerwisantModules.vehicles={name:'Samochody',version:'10.10',loaded:true,reload:load};
