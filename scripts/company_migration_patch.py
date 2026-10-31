@@ -3,62 +3,81 @@ from pathlib import Path
 app = Path('js/core/app.js')
 s = app.read_text(encoding='utf-8')
 
-if 'function hasPerm(module,action=' not in s:
-    anchor = 'const migrateCompanyDataFn=httpsCallable(functions,"migrateCompanyData");\n'
-    helper = '''const CORE_MODULES={clients:'clients',devices:'devices',orders:'orders',inspections:'inspections'};\nconst COLLECTION_MODULE={clients:'clients',devices:'devices',orders:'orders',inspections:'inspections'};\nfunction hasPerm(module,action='view'){if(userProfile?.role==='admin')return true;return userProfile?.permissions?.[module]?.[action]===true}\nfunction requirePerm(module,action='view'){if(hasPerm(module,action))return true;alert(`Brak uprawnienia: ${module} / ${action}`);return false}\nfunction applyUiPermissions(){for(const [page,module] of Object.entries(CORE_MODULES)){const allowed=hasPerm(module,'view');document.querySelectorAll(`[onclick*=\\"go('${page}'\\"]`).forEach(el=>el.style.display=allowed?'':'none');const p=q(page);if(p&&!allowed&&p.classList.contains('active'))window.go('dashboard')}}\n'''
-    if anchor not in s: raise SystemExit('permissions helper anchor not found')
-    s=s.replace(anchor,anchor+helper,1)
+old_core="const CORE_MODULES={clients:'clients',devices:'devices',orders:'orders',inspections:'inspections'};"
+new_core="const CORE_MODULES={clients:'clients',devices:'devices',orders:'orders',inspections:'inspections',employees:'worktime',worktime:'worktime',reports:'reports',protocolsPage:'protocols',photosPage:'photos',callbacksPage:'callbacks',knowledgePage:'knowledge',trashPage:'trash',settings:'settings'};"
+if old_core in s:
+    s=s.replace(old_core,new_core,1)
+elif new_core not in s:
+    raise SystemExit('CORE_MODULES pattern not found')
 
-    old_go="window.go=(id,btn)=>{document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));let p=q(id);if(!p)return;p.classList.add('active');document.body.dataset.page=id;document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));if(btn)btn.classList.add('active');window.scrollTo({top:0,behavior:'smooth'});renderAll()};"
-    new_go="window.go=(id,btn)=>{let mod=CORE_MODULES[id];if(mod&&!requirePerm(mod,'view'))return;document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));let p=q(id);if(!p)return;p.classList.add('active');document.body.dataset.page=id;document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));if(btn)btn.classList.add('active');window.scrollTo({top:0,behavior:'smooth'});renderAll()};"
-    if old_go not in s: raise SystemExit('window.go not found')
-    s=s.replace(old_go,new_go,1)
+old_coll="const COLLECTION_MODULE={clients:'clients',devices:'devices',orders:'orders',inspections:'inspections'};"
+new_coll="const COLLECTION_MODULE={clients:'clients',devices:'devices',orders:'orders',employees:'worktime',worklogs:'worktime',absences:'worktime',inspections:'inspections',photos:'photos',protocols:'protocols',vehicles:'vehicles',trips:'vehicles',fuel:'fuel',callbacks:'callbacks',knowledge:'knowledge'};"
+if old_coll in s:
+    s=s.replace(old_coll,new_coll,1)
+elif new_coll not in s:
+    raise SystemExit('COLLECTION_MODULE pattern not found')
 
-    old_load="async function loadCol(name){if(!companyId)return[];try{let s=await getDocs(query(collection(db,name),where('companyId','==',companyId)));return s.docs.map(d=>({id:d.id,...d.data()}))}catch(e){console.error('Firestore load error',name,e);throw new Error(`${name}: ${e.code||e.message||'unknown-error'}`)}}"
-    new_load="async function loadCol(name){if(!companyId)return[];let mod=COLLECTION_MODULE[name];if(mod&&!hasPerm(mod,'view'))return[];try{let s=await getDocs(query(collection(db,name),where('companyId','==',companyId)));return s.docs.map(d=>({id:d.id,...d.data()}))}catch(e){console.error('Firestore load error',name,e);throw new Error(`${name}: ${e.code||e.message||'unknown-error'}`)}}"
-    if old_load not in s: raise SystemExit('loadCol not found')
-    s=s.replace(old_load,new_load,1)
+pairs=[
+ ("window.openWork=id=>{","window.openWork=id=>{if(!requirePerm('worktime',id?'edit':'add'))return;"),
+ ("window.saveWork=async()=>{let id=q('wId').value,data=","window.saveWork=async()=>{let id=q('wId').value;if(!requirePerm('worktime',id?'edit':'add'))return;let data="),
+ ("window.openAbsence=id=>{","window.openAbsence=id=>{if(!requirePerm('worktime',id?'edit':'add'))return;"),
+ ("window.saveAbsence=async()=>{let id=q('aId').value,data=","window.saveAbsence=async()=>{let id=q('aId').value;if(!requirePerm('worktime',id?'edit':'add'))return;let data="),
+ ("window.quickStart=async employeeId=>{","window.quickStart=async employeeId=>{if(!requirePerm('worktime','add'))return;"),
+ ("window.quickStop=async employeeId=>{","window.quickStop=async employeeId=>{if(!requirePerm('worktime','edit'))return;"),
+ ("window.openPhoto=(clientId='',deviceId='',orderId='')=>{","window.openPhoto=(clientId='',deviceId='',orderId='')=>{if(!requirePerm('photos','add'))return;"),
+ ("window.savePhoto=async()=>{","window.savePhoto=async()=>{if(!requirePerm('photos','add'))return;"),
+ ("window.openProtocol=(id='',orderId='')=>{","window.openProtocol=(id='',orderId='')=>{if(!requirePerm('protocols',id?'edit':'add'))return;"),
+ ("window.saveProtocol=async()=>{","window.saveProtocol=async()=>{let __pid=q('prId').value;if(!requirePerm('protocols',__pid?'edit':'add'))return;"),
+ ("window.openCallback=id=>{","window.openCallback=id=>{if(!requirePerm('callbacks',id?'edit':'add'))return;"),
+ ("window.saveCallback=async()=>{let id=q('cbId').value,data=","window.saveCallback=async()=>{let id=q('cbId').value;if(!requirePerm('callbacks',id?'edit':'add'))return;let data="),
+ ("window.finishCallback=async id=>{","window.finishCallback=async id=>{if(!requirePerm('callbacks','edit'))return;"),
+ ("window.openKnowledge=id=>{","window.openKnowledge=id=>{if(!requirePerm('knowledge',id?'edit':'add'))return;"),
+ ("window.saveKnowledge=async()=>{let id=q('kbId').value,data=","window.saveKnowledge=async()=>{let id=q('kbId').value;if(!requirePerm('knowledge',id?'edit':'add'))return;let data="),
+]
+for old,new in pairs:
+    if new in s:
+        continue
+    if old not in s:
+        raise SystemExit('app pattern not found: '+old[:70])
+    s=s.replace(old,new,1)
 
-    old_auth="companyOwnerUid=ctx.data?.ownerUid||userProfile?.ownerUid||u.uid;if(userProfile?.role==='admin'){await migrateCompanyDataFn({});}await loadAll()"
-    new_auth="companyOwnerUid=ctx.data?.ownerUid||userProfile?.ownerUid||u.uid;applyUiPermissions();if(userProfile?.role==='admin'){await migrateCompanyDataFn({});}await loadAll();applyUiPermissions()"
-    if old_auth not in s: raise SystemExit('auth context not found')
-    s=s.replace(old_auth,new_auth,1)
+old_archive="window.archiveRecord=async(col,id)=>{if(!confirm('Przenieść ten rekord do Kosza? Dane nie zostaną skasowane.'))return;"
+new_archive="window.archiveRecord=async(col,id)=>{let mod=COLLECTION_MODULE[col]||col;if(!requirePerm(mod,'delete'))return;if(!confirm('Przenieść ten rekord do Kosza? Dane nie zostaną skasowane.'))return;"
+if new_archive not in s:
+    if old_archive not in s: raise SystemExit('archiveRecord pattern not found')
+    s=s.replace(old_archive,new_archive,1)
 
-    pairs=[
-      ("window.openClient=id=>{","window.openClient=id=>{if(!requirePerm('clients',id?'edit':'add'))return;"),
-      ("window.openClientCard=id=>{","window.openClientCard=id=>{if(!requirePerm('clients','view'))return;"),
-      ("window.saveClient=async()=>{let id=q('cId').value,data=","window.saveClient=async()=>{let id=q('cId').value;if(!requirePerm('clients',id?'edit':'add'))return;let data="),
-      ("window.openDevice=(id='',clientId='')=>{","window.openDevice=(id='',clientId='')=>{if(!requirePerm('devices',id?'edit':'add'))return;"),
-      ("window.openDeviceHistory=id=>{","window.openDeviceHistory=id=>{if(!requirePerm('devices','view'))return;"),
-      ("window.saveDevice=async()=>{let id=q('dId').value,data=","window.saveDevice=async()=>{let id=q('dId').value;if(!requirePerm('devices',id?'edit':'add'))return;let data="),
-      ("window.openOrder=(id='',clientId='',deviceId='')=>{","window.openOrder=(id='',clientId='',deviceId='')=>{if(!requirePerm('orders',id?'edit':'add'))return;"),
-      ("window.saveOrder=async()=>{let id=q('oId').value,data=","window.saveOrder=async()=>{let id=q('oId').value;if(!requirePerm('orders',id?'edit':'add'))return;let data="),
-      ("window.openInspection=(id='',clientId='',deviceId='')=>{","window.openInspection=(id='',clientId='',deviceId='')=>{if(!requirePerm('inspections',id?'edit':'add'))return;"),
-      ("window.saveInspection=async()=>{let id=q('iId').value,old=","window.saveInspection=async()=>{let id=q('iId').value;if(!requirePerm('inspections',id?'edit':'add'))return;let old=")
-    ]
-    for old,new in pairs:
-        if old not in s: raise SystemExit('app pattern not found: '+old[:55])
-        s=s.replace(old,new,1)
+old_restore="window.restoreRecord=async(col,id)=>{await setDoc(doc(db,col,id),{archived:false,restoredAt:new Date().toISOString()},{merge:true});"
+new_restore="window.restoreRecord=async(col,id)=>{let mod=COLLECTION_MODULE[col]||col;if(!requirePerm('trash','edit')||!requirePerm(mod,'edit'))return;await setDoc(doc(db,col,id),{archived:false,restoredAt:new Date().toISOString()},{merge:true});"
+if new_restore not in s:
+    if old_restore not in s: raise SystemExit('restoreRecord pattern not found')
+    s=s.replace(old_restore,new_restore,1)
 
-    app.write_text(s,encoding='utf-8')
-    print('Installed UI/core permission enforcement')
-else:
-    print('UI/core permissions already installed')
+app.write_text(s,encoding='utf-8')
+print('Expanded UI permissions to remaining modules')
 
 rules=Path('firestore.rules')
 r=rules.read_text(encoding='utf-8')
-if 'function hasPermission(module, action)' not in r:
-    anchor="    function sameCompany(companyId) {\n"
-    helper="""    function isAdmin() {\n      return activeMember() && myProfile().data.role == 'admin';\n    }\n\n    function hasPermission(module, action) {\n      return activeMember() && (\n        isAdmin() ||\n        (module in myProfile().data.permissions &&\n         action in myProfile().data.permissions[module] &&\n         myProfile().data.permissions[module][action] == true)\n      );\n    }\n\n"""
-    if anchor not in r: raise SystemExit('rules helper anchor not found')
-    r=r.replace(anchor,helper+anchor,1)
+blocks=[
+ ('employees','worktime'),('worklogs','worktime'),('absences','worktime'),
+ ('photos','photos'),('protocols','protocols'),('vehicles','vehicles'),('trips','vehicles'),
+ ('fuel','fuel'),('callbacks','callbacks'),('knowledge','knowledge')
+]
+for name,module in blocks:
+    old=f"""    match /{name}/{{id}} {{\n      allow read: if canReadCompanyDoc();\n      allow create: if canCreateCompanyDoc();\n      allow update: if canUpdateCompanyDoc();\n      allow delete: if canReadCompanyDoc();\n    }}\n"""
+    new=f"""    match /{name}/{{id}} {{\n      allow read: if canReadCompanyDoc() && hasPermission('{module}', 'view');\n      allow create: if canCreateCompanyDoc() && hasPermission('{module}', 'add');\n      allow update: if canUpdateCompanyDoc() && (hasPermission('{module}', 'edit') || hasPermission('{module}', 'delete'));\n      allow delete: if canReadCompanyDoc() && hasPermission('{module}', 'delete');\n    }}\n"""
+    if new in r:
+        continue
+    if old not in r:
+        raise SystemExit('rules block not found: '+name)
+    r=r.replace(old,new,1)
 
-    for name,module in [('clients','clients'),('devices','devices'),('orders','orders'),('inspections','inspections')]:
-        old=f"""    match /{name}/{{id}} {{\n      allow read: if canReadCompanyDoc();\n      allow create: if canCreateCompanyDoc();\n      allow update: if canUpdateCompanyDoc();\n      allow delete: if canReadCompanyDoc();\n    }}\n"""
-        new=f"""    match /{name}/{{id}} {{\n      allow read: if canReadCompanyDoc() && hasPermission('{module}', 'view');\n      allow create: if canCreateCompanyDoc() && hasPermission('{module}', 'add');\n      allow update: if canUpdateCompanyDoc() && hasPermission('{module}', 'edit');\n      allow delete: if canReadCompanyDoc() && hasPermission('{module}', 'delete');\n    }}\n"""
-        if old not in r: raise SystemExit('rules block not found: '+name)
+# Core modules: archiving is an update, so permit update when user has delete permission as well.
+for name,module in [('clients','clients'),('devices','devices'),('orders','orders'),('inspections','inspections')]:
+    old=f"allow update: if canUpdateCompanyDoc() && hasPermission('{module}', 'edit');"
+    new=f"allow update: if canUpdateCompanyDoc() && (hasPermission('{module}', 'edit') || hasPermission('{module}', 'delete'));"
+    if old in r:
         r=r.replace(old,new,1)
-    rules.write_text(r,encoding='utf-8')
-    print('Installed Firestore permission enforcement')
-else:
-    print('Firestore permissions already installed')
+
+rules.write_text(r,encoding='utf-8')
+print('Expanded Firestore permissions to remaining collections')
