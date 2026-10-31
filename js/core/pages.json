@@ -40,6 +40,10 @@
     "file": "./partials/pages/fuelPage.html"
   },
   {
+    "id": "buildingsPage",
+    "file": "./partials/pages/buildingsPage.html"
+  },
+  {
     "id": "reports",
     "file": "./partials/pages/reports.html"
   },
