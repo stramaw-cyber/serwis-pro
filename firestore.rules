@@ -1,155 +1,45 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    function signedIn() {
-      return request.auth != null;
+    function signedIn(){ return request.auth != null; }
+    function myProfile(){ return get(/databases/$(database)/documents/userProfiles/$(request.auth.uid)); }
+    function activeMember(){ return signedIn() && myProfile().data.active == true; }
+    function isAdmin(){ return activeMember() && myProfile().data.role == 'admin'; }
+    function hasPermission(module, action){
+      return activeMember() && (isAdmin() || (module in myProfile().data.permissions && action in myProfile().data.permissions[module] && myProfile().data.permissions[module][action] == true));
     }
+    function sameCompany(companyId){ return activeMember() && myProfile().data.companyId == companyId; }
+    function canReadCompanyDoc(){ return sameCompany(resource.data.companyId); }
+    function canCreateCompanyDoc(){ return sameCompany(request.resource.data.companyId); }
+    function canUpdateCompanyDoc(){ return sameCompany(resource.data.companyId) && request.resource.data.companyId == resource.data.companyId; }
 
-    function myProfile() {
-      return get(/databases/$(database)/documents/userProfiles/$(request.auth.uid));
-    }
-
-    function activeMember() {
-      return signedIn() && myProfile().data.active == true;
-    }
-
-    function isAdmin() {
-      return activeMember() && myProfile().data.role == 'admin';
-    }
-
-    function hasPermission(module, action) {
-      return activeMember() && (
-        isAdmin() ||
-        (module in myProfile().data.permissions &&
-         action in myProfile().data.permissions[module] &&
-         myProfile().data.permissions[module][action] == true)
-      );
-    }
-
-    function sameCompany(companyId) {
-      return activeMember() && myProfile().data.companyId == companyId;
-    }
-
-    function canReadCompanyDoc() {
-      return sameCompany(resource.data.companyId);
-    }
-
-    function canCreateCompanyDoc() {
-      return sameCompany(request.resource.data.companyId);
-    }
-
-    function canUpdateCompanyDoc() {
-      return sameCompany(resource.data.companyId)
-        && request.resource.data.companyId == resource.data.companyId;
-    }
-
-    match /companies/{companyId} {
-      allow read: if sameCompany(companyId);
-      allow write: if false;
-    }
-
+    match /companies/{companyId} { allow read: if sameCompany(companyId); allow write: if false; }
     match /userProfiles/{uid} {
-      allow read: if signedIn() && (
-        uid == request.auth.uid ||
-        (activeMember() && myProfile().data.role == 'admin' && myProfile().data.companyId == resource.data.companyId)
-      );
+      allow read: if signedIn() && (uid == request.auth.uid || (activeMember() && isAdmin() && myProfile().data.companyId == resource.data.companyId));
       allow write: if false;
     }
-
-    match /clients/{id} {
-      allow read: if canReadCompanyDoc() && hasPermission('clients', 'view');
-      allow create: if canCreateCompanyDoc() && hasPermission('clients', 'add');
-      allow update: if canUpdateCompanyDoc() && (hasPermission('clients', 'edit') || hasPermission('clients', 'delete'));
-      allow delete: if canReadCompanyDoc() && hasPermission('clients', 'delete');
-    }
-    match /devices/{id} {
-      allow read: if canReadCompanyDoc() && hasPermission('devices', 'view');
-      allow create: if canCreateCompanyDoc() && hasPermission('devices', 'add');
-      allow update: if canUpdateCompanyDoc() && (hasPermission('devices', 'edit') || hasPermission('devices', 'delete'));
-      allow delete: if canReadCompanyDoc() && hasPermission('devices', 'delete');
-    }
-    match /orders/{id} {
-      allow read: if canReadCompanyDoc() && hasPermission('orders', 'view');
-      allow create: if canCreateCompanyDoc() && hasPermission('orders', 'add');
-      allow update: if canUpdateCompanyDoc() && (hasPermission('orders', 'edit') || hasPermission('orders', 'delete'));
-      allow delete: if canReadCompanyDoc() && hasPermission('orders', 'delete');
-    }
+    match /clients/{id} { allow read: if canReadCompanyDoc() && hasPermission('clients','view'); allow create: if canCreateCompanyDoc() && hasPermission('clients','add'); allow update: if canUpdateCompanyDoc() && (hasPermission('clients','edit') || hasPermission('clients','delete')); allow delete: if canReadCompanyDoc() && hasPermission('clients','delete'); }
+    match /devices/{id} { allow read: if canReadCompanyDoc() && hasPermission('devices','view'); allow create: if canCreateCompanyDoc() && hasPermission('devices','add'); allow update: if canUpdateCompanyDoc() && (hasPermission('devices','edit') || hasPermission('devices','delete')); allow delete: if canReadCompanyDoc() && hasPermission('devices','delete'); }
+    match /orders/{id} { allow read: if canReadCompanyDoc() && hasPermission('orders','view'); allow create: if canCreateCompanyDoc() && hasPermission('orders','add'); allow update: if canUpdateCompanyDoc() && (hasPermission('orders','edit') || hasPermission('orders','delete')); allow delete: if canReadCompanyDoc() && hasPermission('orders','delete'); }
     match /employees/{id} {
-      allow read: if canReadCompanyDoc() && hasPermission('worktime', 'view');
-      allow create: if canCreateCompanyDoc() && hasPermission('worktime', 'add');
-      allow update: if canUpdateCompanyDoc() && (hasPermission('worktime', 'edit') || hasPermission('worktime', 'delete'));
-      allow delete: if canReadCompanyDoc() && hasPermission('worktime', 'delete');
+      allow read: if canReadCompanyDoc() && (hasPermission('worktime','view') || hasPermission('bhp','view') || hasPermission('certificates','view'));
+      allow create: if canCreateCompanyDoc() && hasPermission('worktime','add');
+      allow update: if canUpdateCompanyDoc() && (hasPermission('worktime','edit') || hasPermission('worktime','delete'));
+      allow delete: if canReadCompanyDoc() && hasPermission('worktime','delete');
     }
-    match /worklogs/{id} {
-      allow read: if canReadCompanyDoc() && hasPermission('worktime', 'view');
-      allow create: if canCreateCompanyDoc() && hasPermission('worktime', 'add');
-      allow update: if canUpdateCompanyDoc() && (hasPermission('worktime', 'edit') || hasPermission('worktime', 'delete'));
-      allow delete: if canReadCompanyDoc() && hasPermission('worktime', 'delete');
-    }
-    match /absences/{id} {
-      allow read: if canReadCompanyDoc() && hasPermission('worktime', 'view');
-      allow create: if canCreateCompanyDoc() && hasPermission('worktime', 'add');
-      allow update: if canUpdateCompanyDoc() && (hasPermission('worktime', 'edit') || hasPermission('worktime', 'delete'));
-      allow delete: if canReadCompanyDoc() && hasPermission('worktime', 'delete');
-    }
-    match /inspections/{id} {
-      allow read: if canReadCompanyDoc() && hasPermission('inspections', 'view');
-      allow create: if canCreateCompanyDoc() && hasPermission('inspections', 'add');
-      allow update: if canUpdateCompanyDoc() && (hasPermission('inspections', 'edit') || hasPermission('inspections', 'delete'));
-      allow delete: if canReadCompanyDoc() && hasPermission('inspections', 'delete');
-    }
-    match /photos/{id} {
-      allow read: if canReadCompanyDoc() && hasPermission('photos', 'view');
-      allow create: if canCreateCompanyDoc() && hasPermission('photos', 'add');
-      allow update: if canUpdateCompanyDoc() && (hasPermission('photos', 'edit') || hasPermission('photos', 'delete'));
-      allow delete: if canReadCompanyDoc() && hasPermission('photos', 'delete');
-    }
-    match /protocols/{id} {
-      allow read: if canReadCompanyDoc() && hasPermission('protocols', 'view');
-      allow create: if canCreateCompanyDoc() && hasPermission('protocols', 'add');
-      allow update: if canUpdateCompanyDoc() && (hasPermission('protocols', 'edit') || hasPermission('protocols', 'delete'));
-      allow delete: if canReadCompanyDoc() && hasPermission('protocols', 'delete');
-    }
-    match /vehicles/{id} {
-      allow read: if canReadCompanyDoc() && hasPermission('vehicles', 'view');
-      allow create: if canCreateCompanyDoc() && hasPermission('vehicles', 'add');
-      allow update: if canUpdateCompanyDoc() && (hasPermission('vehicles', 'edit') || hasPermission('vehicles', 'delete'));
-      allow delete: if canReadCompanyDoc() && hasPermission('vehicles', 'delete');
-    }
-    match /trips/{id} {
-      allow read: if canReadCompanyDoc() && hasPermission('vehicles', 'view');
-      allow create: if canCreateCompanyDoc() && hasPermission('vehicles', 'add');
-      allow update: if canUpdateCompanyDoc() && (hasPermission('vehicles', 'edit') || hasPermission('vehicles', 'delete'));
-      allow delete: if canReadCompanyDoc() && hasPermission('vehicles', 'delete');
-    }
-    match /fuel/{id} {
-      allow read: if canReadCompanyDoc() && hasPermission('fuel', 'view');
-      allow create: if canCreateCompanyDoc() && hasPermission('fuel', 'add');
-      allow update: if canUpdateCompanyDoc() && (hasPermission('fuel', 'edit') || hasPermission('fuel', 'delete'));
-      allow delete: if canReadCompanyDoc() && hasPermission('fuel', 'delete');
-    }
-    match /buildings/{id} {
-      allow read: if canReadCompanyDoc() && hasPermission('buildings', 'view');
-      allow create: if canCreateCompanyDoc() && hasPermission('buildings', 'add');
-      allow update: if canUpdateCompanyDoc() && (hasPermission('buildings', 'edit') || hasPermission('buildings', 'delete'));
-      allow delete: if canReadCompanyDoc() && hasPermission('buildings', 'delete');
-    }
-    match /callbacks/{id} {
-      allow read: if canReadCompanyDoc() && hasPermission('callbacks', 'view');
-      allow create: if canCreateCompanyDoc() && hasPermission('callbacks', 'add');
-      allow update: if canUpdateCompanyDoc() && (hasPermission('callbacks', 'edit') || hasPermission('callbacks', 'delete'));
-      allow delete: if canReadCompanyDoc() && hasPermission('callbacks', 'delete');
-    }
-    match /knowledge/{id} {
-      allow read: if canReadCompanyDoc() && hasPermission('knowledge', 'view');
-      allow create: if canCreateCompanyDoc() && hasPermission('knowledge', 'add');
-      allow update: if canUpdateCompanyDoc() && (hasPermission('knowledge', 'edit') || hasPermission('knowledge', 'delete'));
-      allow delete: if canReadCompanyDoc() && hasPermission('knowledge', 'delete');
-    }
-    match /pushTokens/{id} {
-      allow read: if activeMember() && id == request.auth.uid;
-      allow create, update: if activeMember() && id == request.auth.uid && request.resource.data.companyId == myProfile().data.companyId;
-      allow delete: if signedIn() && id == request.auth.uid;
-    }
+    match /worklogs/{id} { allow read: if canReadCompanyDoc() && hasPermission('worktime','view'); allow create: if canCreateCompanyDoc() && hasPermission('worktime','add'); allow update: if canUpdateCompanyDoc() && (hasPermission('worktime','edit') || hasPermission('worktime','delete')); allow delete: if canReadCompanyDoc() && hasPermission('worktime','delete'); }
+    match /absences/{id} { allow read: if canReadCompanyDoc() && hasPermission('worktime','view'); allow create: if canCreateCompanyDoc() && hasPermission('worktime','add'); allow update: if canUpdateCompanyDoc() && (hasPermission('worktime','edit') || hasPermission('worktime','delete')); allow delete: if canReadCompanyDoc() && hasPermission('worktime','delete'); }
+    match /inspections/{id} { allow read: if canReadCompanyDoc() && hasPermission('inspections','view'); allow create: if canCreateCompanyDoc() && hasPermission('inspections','add'); allow update: if canUpdateCompanyDoc() && (hasPermission('inspections','edit') || hasPermission('inspections','delete')); allow delete: if canReadCompanyDoc() && hasPermission('inspections','delete'); }
+    match /photos/{id} { allow read: if canReadCompanyDoc() && hasPermission('photos','view'); allow create: if canCreateCompanyDoc() && hasPermission('photos','add'); allow update: if canUpdateCompanyDoc() && (hasPermission('photos','edit') || hasPermission('photos','delete')); allow delete: if canReadCompanyDoc() && hasPermission('photos','delete'); }
+    match /protocols/{id} { allow read: if canReadCompanyDoc() && hasPermission('protocols','view'); allow create: if canCreateCompanyDoc() && hasPermission('protocols','add'); allow update: if canUpdateCompanyDoc() && (hasPermission('protocols','edit') || hasPermission('protocols','delete')); allow delete: if canReadCompanyDoc() && hasPermission('protocols','delete'); }
+    match /vehicles/{id} { allow read: if canReadCompanyDoc() && hasPermission('vehicles','view'); allow create: if canCreateCompanyDoc() && hasPermission('vehicles','add'); allow update: if canUpdateCompanyDoc() && (hasPermission('vehicles','edit') || hasPermission('vehicles','delete')); allow delete: if canReadCompanyDoc() && hasPermission('vehicles','delete'); }
+    match /trips/{id} { allow read: if canReadCompanyDoc() && hasPermission('vehicles','view'); allow create: if canCreateCompanyDoc() && hasPermission('vehicles','add'); allow update: if canUpdateCompanyDoc() && (hasPermission('vehicles','edit') || hasPermission('vehicles','delete')); allow delete: if canReadCompanyDoc() && hasPermission('vehicles','delete'); }
+    match /fuel/{id} { allow read: if canReadCompanyDoc() && hasPermission('fuel','view'); allow create: if canCreateCompanyDoc() && hasPermission('fuel','add'); allow update: if canUpdateCompanyDoc() && (hasPermission('fuel','edit') || hasPermission('fuel','delete')); allow delete: if canReadCompanyDoc() && hasPermission('fuel','delete'); }
+    match /buildings/{id} { allow read: if canReadCompanyDoc() && hasPermission('buildings','view'); allow create: if canCreateCompanyDoc() && hasPermission('buildings','add'); allow update: if canUpdateCompanyDoc() && (hasPermission('buildings','edit') || hasPermission('buildings','delete')); allow delete: if canReadCompanyDoc() && hasPermission('buildings','delete'); }
+    match /bhpRecords/{id} { allow read: if canReadCompanyDoc() && hasPermission('bhp','view'); allow create: if canCreateCompanyDoc() && hasPermission('bhp','add'); allow update: if canUpdateCompanyDoc() && (hasPermission('bhp','edit') || hasPermission('bhp','delete')); allow delete: if canReadCompanyDoc() && hasPermission('bhp','delete'); }
+    match /certificates/{id} { allow read: if canReadCompanyDoc() && hasPermission('certificates','view'); allow create: if canCreateCompanyDoc() && hasPermission('certificates','add'); allow update: if canUpdateCompanyDoc() && (hasPermission('certificates','edit') || hasPermission('certificates','delete')); allow delete: if canReadCompanyDoc() && hasPermission('certificates','delete'); }
+    match /callbacks/{id} { allow read: if canReadCompanyDoc() && hasPermission('callbacks','view'); allow create: if canCreateCompanyDoc() && hasPermission('callbacks','add'); allow update: if canUpdateCompanyDoc() && (hasPermission('callbacks','edit') || hasPermission('callbacks','delete')); allow delete: if canReadCompanyDoc() && hasPermission('callbacks','delete'); }
+    match /knowledge/{id} { allow read: if canReadCompanyDoc() && hasPermission('knowledge','view'); allow create: if canCreateCompanyDoc() && hasPermission('knowledge','add'); allow update: if canUpdateCompanyDoc() && (hasPermission('knowledge','edit') || hasPermission('knowledge','delete')); allow delete: if canReadCompanyDoc() && hasPermission('knowledge','delete'); }
+    match /pushTokens/{id} { allow read: if activeMember() && id == request.auth.uid; allow create, update: if activeMember() && id == request.auth.uid && request.resource.data.companyId == myProfile().data.companyId; allow delete: if signedIn() && id == request.auth.uid; }
   }
 }
