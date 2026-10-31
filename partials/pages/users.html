@@ -2,11 +2,11 @@
   <div class="card">
     <div class="toolbar" style="justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
       <button class="secondary" onclick="go('dashboard')">← Strona główna</button>
-      <button onclick="openUserPermissions()">+ Dodaj użytkownika</button>
+      <button id="addCompanyUserBtn" onclick="openUserPermissions()">+ Dodaj użytkownika</button>
     </div>
     <div style="margin-top:14px">
       <h2 style="margin:0">Użytkownicy i uprawnienia</h2>
-      <div class="hint">Tylko administrator zarządza dostępem pracowników.</div>
+      <div id="companyStatus" class="hint">Sprawdzanie firmy i uprawnień administratora…</div>
     </div>
   </div>
   <div id="usersList"></div>
