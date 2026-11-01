@@ -1,6 +1,13 @@
 <section class="page" id="alertsPage">
   <div class="pageHomeBar"><div class="sectionPageTitle"><strong>Powiadomienia i alerty</strong></div><button class="homeBack" onclick="go('dashboard')">← Strona główna</button></div>
   <div class="card"><div class="pageHeader"><div><h2>🔔 Centrum alertów</h2><div class="meta">Przeglądy, BHP, uprawnienia, samochody, budowy i oddzwanianie w jednym miejscu.</div></div><button class="secondary" onclick="window.SerwisantModules?.messages?.reload?.()">Odśwież</button></div></div>
+  <div class="card">
+    <div class="pageHeader"><div><h3>📲 Powiadomienia push</h3><div class="meta">Po włączeniu to urządzenie może dostawać przypomnienia także wtedy, gdy aplikacja nie jest otwarta.</div></div></div>
+    <div id="pushStatus" class="item">Sprawdzanie stanu…</div>
+    <div id="pushForeground"></div>
+    <div class="toolbar"><button id="enablePushBtn" onclick="enablePushNotifications()">Włącz push na tym urządzeniu</button><button id="disablePushBtn" class="secondary" onclick="disablePushNotifications()" style="display:none">Wyłącz push</button><button id="testPushBtn" class="infoBtn" onclick="sendTestPush()" disabled>Wyślij test</button></div>
+    <div class="meta">Automatyczne przypomnienia są planowane codziennie o 7:00 czasu polskiego dla terminów po terminie i na najbliższe 7 dni.</div>
+  </div>
   <div id="alertsKpis" class="grid"></div>
   <div class="card"><div class="row"><select id="alertsScope" onchange="renderAlertsModule()"><option value="">Wszystko</option><option value="overdue">Po terminie</option><option value="7">Do 7 dni</option><option value="30">Do 30 dni</option></select><select id="alertsType" onchange="renderAlertsModule()"><option value="">Wszystkie typy</option><option>Przegląd</option><option>BHP</option><option>Uprawnienie</option><option>Samochód</option><option>Budowa</option><option>Oddzwonienie</option></select></div></div>
   <div id="alertsList"></div>
