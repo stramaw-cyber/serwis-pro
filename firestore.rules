@@ -42,6 +42,11 @@ service cloud.firestore {
     match /knowledge/{id} { allow read: if canReadCompanyDoc() && hasPermission('knowledge','view'); allow create: if canCreateCompanyDoc() && hasPermission('knowledge','add'); allow update: if canUpdateCompanyDoc() && (hasPermission('knowledge','edit') || hasPermission('knowledge','delete')); allow delete: if canReadCompanyDoc() && hasPermission('knowledge','delete'); }
     match /notes/{id} { allow read: if canReadCompanyDoc() && hasPermission('knowledge','view'); allow create: if canCreateCompanyDoc() && hasPermission('knowledge','add'); allow update: if canUpdateCompanyDoc() && (hasPermission('knowledge','edit') || hasPermission('knowledge','delete')); allow delete: if canReadCompanyDoc() && hasPermission('knowledge','delete'); }
     match /quickLinks/{id} { allow read: if canReadCompanyDoc() && hasPermission('knowledge','view'); allow create: if canCreateCompanyDoc() && hasPermission('knowledge','add'); allow update: if canUpdateCompanyDoc() && (hasPermission('knowledge','edit') || hasPermission('knowledge','delete')); allow delete: if canReadCompanyDoc() && hasPermission('knowledge','delete'); }
-    match /pushTokens/{id} { allow read: if activeMember() && id == request.auth.uid; allow create, update: if activeMember() && id == request.auth.uid && request.resource.data.companyId == myProfile().data.companyId; allow delete: if signedIn() && id == request.auth.uid; }
+    match /pushTokens/{id} {
+      allow read: if activeMember() && resource.data.uid == request.auth.uid && resource.data.companyId == myProfile().data.companyId;
+      allow create: if activeMember() && request.resource.data.uid == request.auth.uid && request.resource.data.companyId == myProfile().data.companyId;
+      allow update: if activeMember() && resource.data.uid == request.auth.uid && request.resource.data.uid == request.auth.uid && resource.data.companyId == myProfile().data.companyId && request.resource.data.companyId == resource.data.companyId;
+      allow delete: if signedIn() && resource.data.uid == request.auth.uid;
+    }
   }
 }
