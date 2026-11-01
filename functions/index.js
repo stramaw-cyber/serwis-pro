@@ -1,7 +1,9 @@
 const { onCall, HttpsError } = require("firebase-functions/v2/https");
+const { onSchedule } = require("firebase-functions/v2/scheduler");
 const { initializeApp } = require("firebase-admin/app");
 const { getAuth } = require("firebase-admin/auth");
 const { getFirestore, FieldValue } = require("firebase-admin/firestore");
+const { getMessaging } = require("firebase-admin/messaging");
 
 initializeApp();
 const db = getFirestore();
@@ -206,4 +208,71 @@ exports.disableCompanyUser = onCall({region:REGION}, async (request)=>{
     updatedAt:FieldValue.serverTimestamp()
   });
   return {ok:true};
+});
+
+function canView(profile,module){
+  return profile?.active!==false && (profile?.role==="admin" || profile?.permissions?.[module]?.view===true);
+}
+function plToday(){
+  return new Intl.DateTimeFormat("en-CA",{timeZone:"Europe/Warsaw",year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date());
+}
+function daysFromToday(date){
+  if(!date)return 99999;
+  return Math.ceil((new Date(`${date}T12:00:00+01:00`)-new Date(`${plToday()}T12:00:00+01:00`))/86400000);
+}
+function whenText(d){return d<0?`${Math.abs(d)} dni po terminie`:d===0?"dzisiaj":`za ${d} dni`;}
+function buildCompanyAlerts(data){
+  const out=[];
+  const add=(module,type,title,date)=>{if(!date)return;const d=daysFromToday(date);if(d<=7)out.push({module,type,title,date,d});};
+  for(const x of data.inspections)if(!x.archived&&x.status!=="Zrobiony")add("inspections","Przegląd",`${x.clientName||"Klient"} — ${x.type||"Przegląd"}`,x.date);
+  for(const x of data.bhpRecords)if(!x.archived)add("bhp","BHP",x.type||"BHP",x.validTo);
+  for(const x of data.certificates)if(!x.archived)add("certificates","Uprawnienie",x.type||"Uprawnienie",x.validTo);
+  for(const v of data.vehicles)if(!v.archived){const n=v.name||v.reg||[v.brand,v.model].filter(Boolean).join(" ")||"Pojazd";add("vehicles","Samochód",`${n} — przegląd techniczny`,v.inspectionUntil);add("vehicles","Samochód",`${n} — OC`,v.insuranceUntil);add("vehicles","Samochód",`${n} — serwis`,v.serviceDate);add("vehicles","Samochód",`${n} — opony`,v.tiresDate);}
+  for(const x of data.buildings)if(!x.archived&&x.status!=="Zakończona")add("buildings","Budowa",x.name||"Budowa",x.endDate);
+  for(const x of data.callbacks)if(!x.archived&&x.status!=="Załatwione")add("callbacks","Oddzwonienie",x.subject||"Kontakt",x.date);
+  return out.sort((a,b)=>a.d-b.d||a.type.localeCompare(b.type));
+}
+async function companyData(companyId){
+  const names=["inspections","bhpRecords","certificates","vehicles","buildings","callbacks"];
+  const snaps=await Promise.all(names.map(n=>db.collection(n).where("companyId","==",companyId).get()));
+  const out={};names.forEach((n,i)=>out[n]=snaps[i].docs.map(d=>({id:d.id,...d.data()})));return out;
+}
+async function removeDeadTokens(tokenDocs,response){
+  const dead=[];
+  response.responses.forEach((r,i)=>{const code=r.error?.code||"";if(!r.success&&(code.includes("registration-token-not-registered")||code.includes("invalid-registration-token")))dead.push(tokenDocs[i].ref);});
+  if(!dead.length)return;
+  const batch=db.batch();dead.forEach(ref=>batch.delete(ref));await batch.commit();
+}
+
+exports.sendTestPush = onCall({region:REGION}, async (request)=>{
+  const uid=requireAuth(request);
+  const profile=await getProfile(uid);
+  if(!profile||profile.active===false)throw new HttpsError("permission-denied","Brak aktywnego profilu.");
+  const snap=await db.collection("pushTokens").where("uid","==",uid).get();
+  const docs=snap.docs.filter(d=>d.data()?.enabled===true&&d.data()?.token);
+  if(!docs.length)return{ok:true,sent:0};
+  const response=await getMessaging().sendEachForMulticast({tokens:docs.map(d=>d.data().token),notification:{title:"Serwisant PRO",body:"Powiadomienia push działają poprawnie ✅"},data:{url:"?page=alertsPage",tag:"serwisant-pro-test"},webpush:{fcmOptions:{link:"https://stramaw-cyber.github.io/serwis-pro/?page=alertsPage"}}});
+  await removeDeadTokens(docs,response);
+  return{ok:true,sent:response.successCount,failed:response.failureCount};
+});
+
+exports.sendDailyAlerts = onSchedule({region:REGION,schedule:"0 7 * * *",timeZone:"Europe/Warsaw",timeoutSeconds:300},async()=>{
+  const tokenSnap=await db.collection("pushTokens").where("enabled","==",true).get();
+  const tokenDocs=tokenSnap.docs.filter(d=>d.data()?.token&&d.data()?.uid&&d.data()?.companyId);
+  if(!tokenDocs.length)return;
+  const profileSnap=await db.collection("userProfiles").get();
+  const profiles=new Map(profileSnap.docs.map(d=>[d.id,{id:d.id,...d.data()}]));
+  const companies=[...new Set(tokenDocs.map(d=>d.data().companyId))];
+  for(const companyId of companies){
+    const data=await companyData(companyId),all=buildCompanyAlerts(data);
+    const byUid=new Map();
+    for(const td of tokenDocs.filter(d=>d.data().companyId===companyId)){const uid=td.data().uid;if(!byUid.has(uid))byUid.set(uid,[]);byUid.get(uid).push(td);}
+    for(const [uid,docs] of byUid){
+      const profile=profiles.get(uid);if(!profile||profile.active===false)continue;
+      const allowed=all.filter(a=>canView(profile,a.module));if(!allowed.length)continue;
+      const urgent=allowed.slice(0,10),first=urgent[0],body=allowed.length===1?`${first.type}: ${first.title} — ${whenText(first.d)}`:`${allowed.length} spraw do uwagi. Najpilniejsze: ${first.title} — ${whenText(first.d)}`;
+      const response=await getMessaging().sendEachForMulticast({tokens:docs.map(d=>d.data().token),notification:{title:"Serwisant PRO — alerty",body},data:{url:"?page=alertsPage",tag:"serwisant-pro-daily"},webpush:{fcmOptions:{link:"https://stramaw-cyber.github.io/serwis-pro/?page=alertsPage"}}});
+      await removeDeadTokens(docs,response);
+    }
+  }
 });
