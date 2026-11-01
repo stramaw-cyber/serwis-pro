@@ -1,0 +1,7 @@
+<section class="page" id="alertsPage">
+  <div class="pageHomeBar"><div class="sectionPageTitle"><strong>Powiadomienia i alerty</strong></div><button class="homeBack" onclick="go('dashboard')">← Strona główna</button></div>
+  <div class="card"><div class="pageHeader"><div><h2>🔔 Centrum alertów</h2><div class="meta">Przeglądy, BHP, uprawnienia, samochody, budowy i oddzwanianie w jednym miejscu.</div></div><button class="secondary" onclick="window.SerwisantModules?.messages?.reload?.()">Odśwież</button></div></div>
+  <div id="alertsKpis" class="grid"></div>
+  <div class="card"><div class="row"><select id="alertsScope" onchange="renderAlertsModule()"><option value="">Wszystko</option><option value="overdue">Po terminie</option><option value="7">Do 7 dni</option><option value="30">Do 30 dni</option></select><select id="alertsType" onchange="renderAlertsModule()"><option value="">Wszystkie typy</option><option>Przegląd</option><option>BHP</option><option>Uprawnienie</option><option>Samochód</option><option>Budowa</option><option>Oddzwonienie</option></select></div></div>
+  <div id="alertsList"></div>
+</section>
