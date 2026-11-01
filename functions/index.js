@@ -223,7 +223,7 @@ function daysFromToday(date){
 function whenText(d){return d<0?`${Math.abs(d)} dni po terminie`:d===0?"dzisiaj":`za ${d} dni`;}
 function buildCompanyAlerts(data){
   const out=[];
-  const add=(module,type,title,date)=>{if(!date)return;const d=daysFromToday(date);if(d<=7)out.push({module,type,title,date,d});};
+  const add=(module,type,title,date)=>{if(!date)return;const d=daysFromToday(date);if(d<=30)out.push({module,type,title,date,d});};
   for(const x of data.inspections)if(!x.archived&&x.status!=="Zrobiony")add("inspections","Przegląd",`${x.clientName||"Klient"} — ${x.type||"Przegląd"}`,x.date);
   for(const x of data.bhpRecords)if(!x.archived)add("bhp","BHP",x.type||"BHP",x.validTo);
   for(const x of data.certificates)if(!x.archived)add("certificates","Uprawnienie",x.type||"Uprawnienie",x.validTo);
@@ -270,8 +270,10 @@ exports.sendDailyAlerts = onSchedule({region:REGION,schedule:"0 7 * * *",timeZon
     for(const [uid,docs] of byUid){
       const profile=profiles.get(uid);if(!profile||profile.active===false)continue;
       const allowed=all.filter(a=>canView(profile,a.module));if(!allowed.length)continue;
-      const urgent=allowed.slice(0,10),first=urgent[0],body=allowed.length===1?`${first.type}: ${first.title} — ${whenText(first.d)}`:`${allowed.length} spraw do uwagi. Najpilniejsze: ${first.title} — ${whenText(first.d)}`;
-      const response=await getMessaging().sendEachForMulticast({tokens:docs.map(d=>d.data().token),notification:{title:"Serwisant PRO — alerty",body},data:{url:"?page=alertsPage",tag:"serwisant-pro-daily"},webpush:{fcmOptions:{link:"https://stramaw-cyber.github.io/serwis-pro/?page=alertsPage"}}});
+      const first=allowed[0],overdue=allowed.filter(a=>a.d<0).length,week=allowed.filter(a=>a.d>=0&&a.d<=7).length,month=allowed.filter(a=>a.d>7&&a.d<=30).length;
+      const parts=[];if(overdue)parts.push(`${overdue} po terminie`);if(week)parts.push(`${week} do 7 dni`);if(month)parts.push(`${month} do 30 dni`);
+      const body=`${parts.join(', ')}. Najpilniejsze: ${first.title} — ${whenText(first.d)}`;
+      const response=await getMessaging().sendEachForMulticast({tokens:docs.map(d=>d.data().token),notification:{title:"Serwisant PRO — codzienne alerty",body},data:{url:"?page=alertsPage",tag:"serwisant-pro-daily"},webpush:{fcmOptions:{link:"https://stramaw-cyber.github.io/serwis-pro/?page=alertsPage"}}});
       await removeDeadTokens(docs,response);
     }
   }
