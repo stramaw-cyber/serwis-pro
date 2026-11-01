@@ -1,5 +1,22 @@
-// Serwisant PRO v10 Modular — Wiadomości push
-// Ten plik można aktualizować niezależnie od index.html.
-// Kolejne funkcje modułu "Wiadomości push" będą rozwijane tutaj.
-window.SerwisantModules = window.SerwisantModules || {};
-window.SerwisantModules["messages"] = {name:"Wiadomości push",version:"10.0",loaded:true};
+import {getApps,getApp,initializeApp} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+import {getAuth,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+import {getFirestore,collection,doc,getDoc,getDocs,query,where} from "https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js";
+import {firebaseConfig} from "../../firebase-config.js";
+const app=getApps().length?getApp():initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app);
+let profile=null,companyId=null,alerts=[];
+const $=id=>document.getElementById(id),esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const today=()=>new Date().toISOString().slice(0,10),fmt=s=>s?new Date(s+'T12:00:00').toLocaleDateString('pl-PL'):'—';
+const days=s=>s?Math.ceil((new Date(s+'T12:00:00')-new Date(today()+'T12:00:00'))/86400000):99999;
+function can(module){return profile?.role==='admin'||profile?.permissions?.[module]?.view===true}
+async function col(name,module){if(!companyId||!can(module))return[];try{const s=await getDocs(query(collection(db,name),where('companyId','==',companyId)));return s.docs.map(d=>({id:d.id,...d.data()}))}catch(e){console.warn('Alerts load',name,e);return[]}}
+function add(type,title,date,detail,target=''){if(!date)return;alerts.push({type,title,date,detail,target,d:days(date)})}
+async function load(){if(!auth.currentUser)return;const ps=await getDoc(doc(db,'userProfiles',auth.currentUser.uid));profile=ps.data()||null;companyId=profile?.companyId||null;if(!companyId)return;const [ins,bhp,cert,veh,bld,cb]=await Promise.all([col('inspections','inspections'),col('bhpRecords','bhp'),col('certificates','certificates'),col('vehicles','vehicles'),col('buildings','buildings'),col('callbacks','callbacks')]);alerts=[];
+ins.filter(x=>!x.archived&&x.status!=='Zrobiony').forEach(x=>add('Przegląd',`${x.clientName||'Klient'} — ${x.type||'Przegląd'}`,x.date,[x.deviceBrand,x.deviceModel,x.serial].filter(Boolean).join(' • '),'inspections'));
+bhp.filter(x=>!x.archived&&x.validTo).forEach(x=>add('BHP',x.type||'BHP',x.validTo,x.notes||'','bhpPage'));
+cert.filter(x=>!x.archived&&x.validTo).forEach(x=>add('Uprawnienie',x.type||'Uprawnienie',x.validTo,x.number||'','certificatesPage'));
+veh.filter(x=>!x.archived).forEach(v=>{const n=v.name||v.reg||[v.brand,v.model].filter(Boolean).join(' ')||'Pojazd';add('Samochód',`${n} — przegląd techniczny`,v.inspectionUntil,'','vehiclesPage');add('Samochód',`${n} — OC`,v.insuranceUntil,'','vehiclesPage');add('Samochód',`${n} — serwis okresowy`,v.serviceDate,'','vehiclesPage');add('Samochód',`${n} — opony`,v.tiresDate,'','vehiclesPage')});
+bld.filter(x=>!x.archived&&x.status!=='Zakończona'&&x.endDate).forEach(x=>add('Budowa',x.name||'Budowa',x.endDate,[x.client,x.address].filter(Boolean).join(' • '),'buildingsPage'));
+cb.filter(x=>!x.archived&&x.status!=='Załatwione').forEach(x=>add('Oddzwonienie',x.subject||'Kontakt',x.date,x.notes||'','callbacksPage'));
+alerts=alerts.filter(a=>a.d<=60).sort((a,b)=>a.d-b.d||a.type.localeCompare(b.type));render()}
+window.renderAlertsModule=render;function render(){const list=$('alertsList');if(!list)return;const scope=$('alertsScope')?.value||'',type=$('alertsType')?.value||'';let arr=alerts.filter(a=>!type||a.type===type);if(scope==='overdue')arr=arr.filter(a=>a.d<0);else if(scope==='7')arr=arr.filter(a=>a.d>=0&&a.d<=7);else if(scope==='30')arr=arr.filter(a=>a.d>=0&&a.d<=30);const overdue=alerts.filter(a=>a.d<0).length,week=alerts.filter(a=>a.d>=0&&a.d<=7).length,month=alerts.filter(a=>a.d>=0&&a.d<=30).length;if($('alertsKpis'))$('alertsKpis').innerHTML=`<div class="card"><div class="label">Po terminie</div><div class="stat">${overdue}</div></div><div class="card"><div class="label">Do 7 dni</div><div class="stat">${week}</div></div><div class="card"><div class="label">Do 30 dni</div><div class="stat">${month}</div></div><div class="card"><div class="label">Łącznie</div><div class="stat">${alerts.length}</div></div>`;list.innerHTML=arr.length?arr.map(a=>`<div class="item ${a.d<0?'danger':a.d<=7?'warn':'info'}"><div class="pageHeader"><div><h3>${a.d<0?'🔴':a.d<=7?'🟠':'🔔'} ${esc(a.type)} — ${esc(a.title)}</h3><div class="meta">Termin: <b>${fmt(a.date)}</b> • ${a.d<0?`${Math.abs(a.d)} dni po terminie`:a.d===0?'dzisiaj':`za ${a.d} dni`}${a.detail?'<br>'+esc(a.detail):''}</div></div>${a.target?`<button class="secondary smallBtn" onclick="go('${a.target}')">Otwórz</button>`:''}</div></div>`).join(''):'<div class="empty">Brak alertów dla wybranego filtra.</div>'}
+onAuthStateChanged(auth,u=>{if(u)setTimeout(load,300);else{profile=null;companyId=null;alerts=[]}});window.SerwisantModules=window.SerwisantModules||{};window.SerwisantModules.messages={name:'Powiadomienia i alerty',version:'10.20',loaded:true,reload:load};
