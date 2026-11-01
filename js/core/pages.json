@@ -13,6 +13,8 @@
   {"id":"bhpPage","file":"./partials/pages/bhpPage.html"},
   {"id":"certificatesPage","file":"./partials/pages/certificatesPage.html"},
   {"id":"firstAidPage","file":"./partials/pages/firstAidPage.html"},
+  {"id":"notesPage","file":"./partials/pages/notesPage.html"},
+  {"id":"linksPage","file":"./partials/pages/linksPage.html"},
   {"id":"reports","file":"./partials/pages/reports.html"},
   {"id":"protocolsPage","file":"./partials/pages/protocolsPage.html"},
   {"id":"photosPage","file":"./partials/pages/photosPage.html"},
