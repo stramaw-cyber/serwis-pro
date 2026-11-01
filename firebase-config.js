@@ -8,4 +8,4 @@ export const firebaseConfig = {
   appId: "1:442263267918:web:61127c949fa41c8f87f11f",
   measurementId: "G-58L45TPBKB"
 };
-export const vapidKey = "WKLEJ_PUBLICZNY_KLUCZ_VAPID";
+export const vapidKey = "BGN7YxtpYMoc4Enc95KCHmJcnsgluTLk0f3MMDAw9YCuBgj6no0wzHMXfs920hzPoWxlDmRL_ViujQbBMY--1pI";
