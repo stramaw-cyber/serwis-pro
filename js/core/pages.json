@@ -15,6 +15,7 @@
   {"id":"firstAidPage","file":"./partials/pages/firstAidPage.html"},
   {"id":"notesPage","file":"./partials/pages/notesPage.html"},
   {"id":"linksPage","file":"./partials/pages/linksPage.html"},
+  {"id":"alertsPage","file":"./partials/pages/alertsPage.html"},
   {"id":"reports","file":"./partials/pages/reports.html"},
   {"id":"protocolsPage","file":"./partials/pages/protocolsPage.html"},
   {"id":"photosPage","file":"./partials/pages/photosPage.html"},
