@@ -42,6 +42,9 @@ async function load(){
 
 function repairTotal(v){return (v.repairs||[]).reduce((s,r)=>s+Number(r.cost||0),0)}
 function fuelTotal(id){return fuel.filter(x=>x.vehicleId===id&&!x.archived).reduce((s,x)=>s+Number(x.cost||0),0)}
+function latestFuelMileage(id){return fuel.filter(x=>x.vehicleId===id&&!x.archived&&Number(x.mileage||0)>0).reduce((m,x)=>Math.max(m,Number(x.mileage||0)),0)}
+function effectiveMileage(v){return Math.max(Number(v.mileage||0),latestFuelMileage(v.id))}
+function kmToService(v){const target=Number(v.serviceMileage||0);return target?target-effectiveMileage(v):null}
 
 function render(){
   const list=$('vehicleList');
@@ -53,15 +56,18 @@ function render(){
   const search=($('vehicleSearch')?.value||'').toLowerCase();
   const arr=vehicles.filter(v=>!v.archived&&[v.name,v.brand,v.model,v.reg,v.vin].join(' ').toLowerCase().includes(search));
   const costs=arr.reduce((s,v)=>s+repairTotal(v)+fuelTotal(v.id),0);
-  if($('vehicleKpis'))$('vehicleKpis').innerHTML=`<div class="card"><div class="label">Pojazdy</div><div class="stat">${arr.length}</div></div><div class="card"><div class="label">Łączny przebieg</div><div class="stat">${arr.reduce((s,v)=>s+Number(v.mileage||0),0).toLocaleString('pl-PL')} km</div></div><div class="card"><div class="label">Koszty floty</div><div class="stat money">${money(costs)}</div></div>`;
+  if($('vehicleKpis'))$('vehicleKpis').innerHTML=`<div class="card"><div class="label">Pojazdy</div><div class="stat">${arr.length}</div></div><div class="card"><div class="label">Łączny przebieg</div><div class="stat">${arr.reduce((s,v)=>s+effectiveMileage(v),0).toLocaleString('pl-PL')} km</div></div><div class="card"><div class="label">Koszty floty</div><div class="stat money">${money(costs)}</div></div>`;
   const alerts=[];
   arr.forEach(v=>{
-    const a=days(v.inspectionUntil),b=days(v.insuranceUntil);
+    const a=days(v.inspectionUntil),b=days(v.insuranceUntil),sd=days(v.serviceDate),td=days(v.tiresDate),ks=kmToService(v);
     if(a<=30)alerts.push(`${v.name||v.reg}: przegląd ${a<0?'po terminie':`za ${a} dni`} (${fmt(v.inspectionUntil)})`);
     if(b<=30)alerts.push(`${v.name||v.reg}: OC ${b<0?'po terminie':`za ${b} dni`} (${fmt(v.insuranceUntil)})`);
+    if(sd<=30)alerts.push(`${v.name||v.reg}: serwis okresowy ${sd<0?'po terminie':`za ${sd} dni`} (${fmt(v.serviceDate)})`);
+    if(td<=30)alerts.push(`${v.name||v.reg}: wymiana opon ${td<0?'po terminie':`za ${td} dni`} (${fmt(v.tiresDate)})`);
+    if(ks!==null&&ks<=1000)alerts.push(`${v.name||v.reg}: serwis olejowy ${ks<0?`${Math.abs(ks).toLocaleString('pl-PL')} km po terminie`:`za ${ks.toLocaleString('pl-PL')} km`}`);
   });
   if($('vehicleAlerts'))$('vehicleAlerts').innerHTML=alerts.map(x=>`<div class="v8Alert red">⚠ ${esc(x)}</div>`).join('');
-  list.innerHTML=arr.length?arr.map(v=>`<div class="card"><div class="pageHeader"><div><h3>${esc(v.name||[v.brand,v.model].filter(Boolean).join(' ')||'Pojazd')}</h3><div class="meta">${esc([v.brand,v.model,v.reg].filter(Boolean).join(' • '))}<br>Przebieg: <b>${Number(v.mileage||0).toLocaleString('pl-PL')} km</b> • Przegląd: ${fmt(v.inspectionUntil)} • OC: ${fmt(v.insuranceUntil)}</div></div><div class="stat money">${money(repairTotal(v)+fuelTotal(v.id))}</div></div><div class="toolbar">${perm('edit')?`<button class="secondary smallBtn" onclick="openVehicleForm('${v.id}')">Edytuj</button>`:''}${fuelPerm('view')?`<button class="infoBtn smallBtn" onclick="go('fuelPage');setTimeout(()=>{const f=document.getElementById('fuelVehicleFilter');if(f){f.value='${v.id}';window.renderFuelModule?.()}},100)">Tankowania</button>`:''}${perm('delete')?`<button class="danger smallBtn" onclick="archiveVehicle('${v.id}')">Do kosza</button>`:''}</div>${(v.repairs||[]).length?`<h4>Ostatni serwis</h4><div class="meta">${esc((v.repairs||[]).slice(-1)[0].type||'')} • ${fmt((v.repairs||[]).slice(-1)[0].date)} • ${money((v.repairs||[]).slice(-1)[0].cost)}</div>`:''}</div>`).join(''):'<div class="empty">Brak pojazdów.</div>';
+  list.innerHTML=arr.length?arr.map(v=>{const mileage=effectiveMileage(v),ks=kmToService(v),last=(v.repairs||[]).slice(-1)[0];return `<div class="card"><div class="pageHeader"><div><h3>${esc(v.name||[v.brand,v.model].filter(Boolean).join(' ')||'Pojazd')}</h3><div class="meta">${esc([v.brand,v.model,v.reg].filter(Boolean).join(' • '))}<br>Przebieg: <b>${mileage.toLocaleString('pl-PL')} km</b> • Przegląd: ${fmt(v.inspectionUntil)} • OC: ${fmt(v.insuranceUntil)}${v.tires?`<br>Opony: <b>${esc(v.tires)}</b>`:''}${v.serviceMileage?` • Serwis przy: <b>${Number(v.serviceMileage).toLocaleString('pl-PL')} km</b>${ks!==null?` (${ks>=0?ks.toLocaleString('pl-PL')+' km zostało':Math.abs(ks).toLocaleString('pl-PL')+' km po terminie'})`:''}`:''}</div></div><div class="stat money">${money(repairTotal(v)+fuelTotal(v.id))}</div></div><div class="toolbar">${perm('edit')?`<button class="secondary smallBtn" onclick="openVehicleForm('${v.id}')">Edytuj</button>`:''}${fuelPerm('view')?`<button class="infoBtn smallBtn" onclick="go('fuelPage');setTimeout(()=>{const f=document.getElementById('fuelVehicleFilter');if(f){f.value='${v.id}';window.renderFuelModule?.()}},100)">Tankowania</button>`:''}${perm('delete')?`<button class="danger smallBtn" onclick="archiveVehicle('${v.id}')">Do kosza</button>`:''}</div>${last?`<h4>Ostatni serwis</h4><div class="meta">${esc(last.type||'')} • ${fmt(last.date)} • ${money(last.cost)}</div>`:''}</div>`}).join(''):'<div class="empty">Brak pojazdów.</div>';
 }
 
 window.renderVehiclesModule=render;
@@ -78,16 +84,23 @@ window.openVehicleForm=id=>{
   $('vReg').value=v.reg||'';
   $('vVin').value=v.vin||'';
   $('vYear').value=v.year||'';
-  $('vMileage').value=v.mileage||'';
+  $('vMileage').value=v.id?effectiveMileage(v):(v.mileage||'');
   $('vInspection').value=v.inspectionUntil||'';
   $('vInsurance').value=v.insuranceUntil||'';
   $('vAc').value=v.acUntil||'';
   $('vPolicy').value=v.policy||'';
   $('vStatus').value=v.status||'Aktywny';
+  $('vServiceMileage').value=v.serviceMileage||'';
+  $('vServiceDate').value=v.serviceDate||'';
+  $('vServiceInterval').value=v.serviceInterval||'';
+  $('vTires').value=v.tires||'';
+  $('vTiresMileage').value=v.tiresMileage||'';
+  $('vTiresDate').value=v.tiresDate||'';
   $('vDocs').value=(v.docs||[]).join('\n');
   $('vNotes').value=v.notes||'';
   window._vehicleRepairs=(v.repairs||[]).map(x=>({...x}));
   renderRepairRows();
+  $('vehicleFormTitle').textContent=id?'Edytuj pojazd':'Nowy pojazd';
   card.classList.remove('hidden');
   card.scrollIntoView({behavior:'smooth',block:'start'});
 };
@@ -105,7 +118,7 @@ function renderRepairRows(){
 window.saveVehicleRecord=async()=>{
   const id=$('vId').value;
   if(!(id?perm('edit'):perm('add')))return alert('Brak uprawnienia.');
-  const data={companyId,ownerUid:profile?.ownerUid||auth.currentUser.uid,name:$('vName').value.trim(),brand:$('vBrand').value.trim(),model:$('vModel').value.trim(),reg:$('vReg').value.trim(),vin:$('vVin').value.trim(),year:Number($('vYear').value||0),mileage:Number($('vMileage').value||0),inspectionUntil:$('vInspection').value,insuranceUntil:$('vInsurance').value,acUntil:$('vAc').value,policy:$('vPolicy').value.trim(),status:$('vStatus').value,docs:$('vDocs').value.split(/\n/).map(x=>x.trim()).filter(Boolean),notes:$('vNotes').value.trim(),repairs:(window._vehicleRepairs||[]).map(r=>({...r,mileage:Number(r.mileage||0),cost:Number(r.cost||0)})),updatedAt:new Date().toISOString()};
+  const data={companyId,ownerUid:profile?.ownerUid||auth.currentUser.uid,name:$('vName').value.trim(),brand:$('vBrand').value.trim(),model:$('vModel').value.trim(),reg:$('vReg').value.trim(),vin:$('vVin').value.trim(),year:Number($('vYear').value||0),mileage:Number($('vMileage').value||0),inspectionUntil:$('vInspection').value,insuranceUntil:$('vInsurance').value,acUntil:$('vAc').value,policy:$('vPolicy').value.trim(),status:$('vStatus').value,serviceMileage:Number($('vServiceMileage').value||0),serviceDate:$('vServiceDate').value,serviceInterval:Number($('vServiceInterval').value||0),tires:$('vTires').value,tiresMileage:Number($('vTiresMileage').value||0),tiresDate:$('vTiresDate').value,docs:$('vDocs').value.split(/\n/).map(x=>x.trim()).filter(Boolean),notes:$('vNotes').value.trim(),repairs:(window._vehicleRepairs||[]).map(r=>({...r,mileage:Number(r.mileage||0),cost:Number(r.cost||0)})),updatedAt:new Date().toISOString()};
   if(!data.name&&!data.reg)return alert('Podaj nazwę lub numer rejestracyjny.');
   if(id)await setDoc(doc(db,'vehicles',id),data,{merge:true});else await addDoc(collection(db,'vehicles'),{...data,createdAt:new Date().toISOString()});
   closeVehicleForm();
@@ -114,4 +127,4 @@ window.saveVehicleRecord=async()=>{
 
 onAuthStateChanged(auth,u=>{if(u)setTimeout(load,250);else{profile=null;companyId=null;vehicles=[];fuel=[]}});
 window.SerwisantModules=window.SerwisantModules||{};
-window.SerwisantModules.vehicles={name:'Samochody',version:'10.10',loaded:true,reload:load};
+window.SerwisantModules.vehicles={name:'Samochody',version:'10.17',loaded:true,reload:load};
