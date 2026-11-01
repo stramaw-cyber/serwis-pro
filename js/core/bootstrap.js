@@ -56,7 +56,7 @@ async function safeImport(url) {
       "vehicles","fuel","buildings","finance","certificates","bhp","firstaid",
       "notes","links","messages","i18n","weather"
     ];
-    const moduleVersions={buildings:"10.18",certificates:"10.14",bhp:"10.14",firstaid:"10.16",notes:"10.19",links:"10.19",messages:"10.21","hr-permissions":"10.13"};
+    const moduleVersions={buildings:"10.18",certificates:"10.14",bhp:"10.14",firstaid:"10.16",notes:"10.19",links:"10.19",messages:"10.21",i18n:"10.1","hr-permissions":"10.13"};
     for(const f of files){
       const base=new URL(`../modules/${f}.js`, import.meta.url).href;
       const url=moduleVersions[f]?`${base}?v=${moduleVersions[f]}`:base;
