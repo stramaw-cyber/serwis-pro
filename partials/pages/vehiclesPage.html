@@ -1,6 +1,6 @@
 <section class="page" id="vehiclesPage">
 <div class="pageHomeBar"><button class="secondary" onclick="go('dashboard')">← Strona główna</button></div>
-<div class="pageHeader"><div><h2>🚐 Samochody</h2><div class="meta">Flota firmy, terminy, przebieg, serwis i koszty.</div></div><button onclick="openVehicleForm()">+ Dodaj pojazd</button></div>
+<div class="pageHeader"><div><h2>🚐 Samochody</h2><div class="meta">Flota firmy, terminy, przebieg, serwis, opony i koszty.</div></div><button onclick="openVehicleForm()">+ Dodaj pojazd</button></div>
 <div id="vehicleAlerts"></div>
 <div class="grid homeKpis" id="vehicleKpis"></div>
 <div class="card"><input id="vehicleSearch" placeholder="Szukaj po nazwie, rejestracji, VIN..." oninput="renderVehiclesModule()"></div>
@@ -11,6 +11,9 @@
 <div class="grid3"><div><label>Nr rejestracyjny</label><input id="vReg"></div><div><label>VIN</label><input id="vVin"></div><div><label>Rok</label><input id="vYear" type="number"></div></div>
 <div class="grid3"><div><label>Przebieg [km]</label><input id="vMileage" type="number"></div><div><label>Przegląd techniczny do</label><input id="vInspection" type="date"></div><div><label>OC do</label><input id="vInsurance" type="date"></div></div>
 <div class="grid3"><div><label>AC do</label><input id="vAc" type="date"></div><div><label>Nr polisy</label><input id="vPolicy"></div><div><label>Status</label><select id="vStatus"><option>Aktywny</option><option>Serwis</option><option>Wyłączony</option></select></div></div>
+<h3>Serwis okresowy</h3>
+<div class="grid3"><div><label>Olej / serwis przy [km]</label><input id="vServiceMileage" type="number" placeholder="np. 180000"></div><div><label>Olej / serwis do dnia</label><input id="vServiceDate" type="date"></div><div><label>Interwał serwisu [km]</label><input id="vServiceInterval" type="number" placeholder="np. 15000"></div></div>
+<div class="grid3"><div><label>Opony</label><select id="vTires"><option value="">—</option><option>Letnie</option><option>Zimowe</option><option>Całoroczne</option></select></div><div><label>Wymiana opon przy [km]</label><input id="vTiresMileage" type="number"></div><div><label>Termin wymiany opon</label><input id="vTiresDate" type="date"></div></div>
 <label>Linki do dokumentów / zdjęć — jeden w linii</label><textarea id="vDocs" placeholder="Dowód rejestracyjny: https://...&#10;Zdjęcie auta: https://..."></textarea>
 <label>Notatki</label><textarea id="vNotes"></textarea>
 <h3>Serwis / naprawy</h3><div id="repairRows"></div><button class="secondary smallBtn" onclick="addVehicleRepairRow()">+ Dodaj wpis serwisowy</button>
