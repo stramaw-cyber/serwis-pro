@@ -51,11 +51,11 @@ async function safeImport(url) {
   try{
     await buildInterface();
 
-    // Splash musi zacząć nasłuchiwać logowania przed głównym app.js.
-    const splashUrl=new URL("../modules/splash.js", import.meta.url).href+"?v=10.5";
-    await safeImport(splashUrl);
+    // Ekran startowy musi być aktywny zanim główny app.js uruchomi Firebase Auth.
+    await safeImport(new URL("../modules/splash.js?v=10.6", import.meta.url).href);
 
-    await import("./app.js");
+    await import("./app.js?v=10.6");
+
     const files = [
       "clients","devices","orders","inspections","service","employees","worktime","users","hr-permissions",
       "vehicles","fuel","buildings","finance","certificates","bhp","firstaid",
