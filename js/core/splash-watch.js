@@ -1,5 +1,5 @@
 (()=>{
-  const LOGO='./assets/logo.jpg';
+  const LOGO='./assets/logo_fumanka_animated.gif?v=1';
   let lastLoggedIn=false;
   let splashVisible=false;
 
@@ -10,8 +10,7 @@
     s.textContent=`
       #serwisantSplashWatch{position:fixed;inset:0;z-index:2147483647;background:#fff;display:flex;align-items:center;justify-content:center;opacity:1;transition:opacity .35s ease}
       #serwisantSplashWatch.hide{opacity:0;pointer-events:none}
-      #serwisantSplashWatch img{max-width:min(78vw,460px);max-height:58vh;object-fit:contain;animation:serwisantSplashIn .35s ease both}
-      @keyframes serwisantSplashIn{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
+      #serwisantSplashWatch img{max-width:min(78vw,460px);max-height:58vh;object-fit:contain}
     `;
     document.head.appendChild(s);
   }
@@ -23,7 +22,10 @@
     document.getElementById('serwisantSplashWatch')?.remove();
     const el=document.createElement('div');
     el.id='serwisantSplashWatch';
-    el.innerHTML=`<img src="${LOGO}" alt="Logo firmy">`;
+    const img=document.createElement('img');
+    img.src=`${LOGO}&t=${Date.now()}`;
+    img.alt='Logo firmy';
+    el.appendChild(img);
     document.body.appendChild(el);
     setTimeout(()=>{
       el.classList.add('hide');
