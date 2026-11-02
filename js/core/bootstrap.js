@@ -50,13 +50,18 @@ async function safeImport(url) {
 (async()=>{
   try{
     await buildInterface();
+
+    // Splash musi zacząć nasłuchiwać logowania przed głównym app.js.
+    const splashUrl=new URL("../modules/splash.js", import.meta.url).href+"?v=10.5";
+    await safeImport(splashUrl);
+
     await import("./app.js");
     const files = [
       "clients","devices","orders","inspections","service","employees","worktime","users","hr-permissions",
       "vehicles","fuel","buildings","finance","certificates","bhp","firstaid",
-      "notes","links","messages","splash","weather"
+      "notes","links","messages","weather"
     ];
-    const moduleVersions={buildings:"10.18",certificates:"10.14",bhp:"10.14",firstaid:"10.16",notes:"10.19",links:"10.19",messages:"10.21",splash:"10.4","hr-permissions":"10.13"};
+    const moduleVersions={buildings:"10.18",certificates:"10.14",bhp:"10.14",firstaid:"10.16",notes:"10.19",links:"10.19",messages:"10.21","hr-permissions":"10.13"};
     for(const f of files){
       const base=new URL(`../modules/${f}.js`, import.meta.url).href;
       const url=moduleVersions[f]?`${base}?v=${moduleVersions[f]}`:base;
